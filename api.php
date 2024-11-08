@@ -16,25 +16,25 @@ class GenericAPI
     {
         header('Content-Type: application/json');
         $method = $_SERVER['REQUEST_METHOD'];
-        
+       
         switch ($method) {
-            case 'GET': 
+            case 'GET': // Consulta
                 $this->getData();
                 break;
 
-            case 'POST': 
+            case 'POST': // Inserta
                 $this->saveData();
                 break;
 
-            case 'PUT': 
+            case 'PUT': // Actualiza
                 $this->updateData();
                 break;
 
-            case 'DELETE': 
+            case 'DELETE': // Elimina
                 $this->deleteData();
                 break;
 
-            default: 
+            default: // Método NO soportado
                 echo json_encode(['status' => 'error', 'message' => 'Método no soportado']);
                 break;
         }
@@ -47,7 +47,7 @@ class GenericAPI
     {
         http_response_code($code);
         if (!empty($status) && !empty($message)) {
-            $response = ["status" => $status, "message" => $message];
+            $response = array("status" => $status, "message" => $message);
             echo json_encode($response, JSON_PRETTY_PRINT);
         }
     }
@@ -58,22 +58,14 @@ class GenericAPI
     private function getData()
     {
         if (isset($_GET['action']) && $_GET['action'] === $this->entity) {
-            try {
-                if (isset($_GET['id'])) {
-                    // Obtener un solo registro si existe el ID
-                    $stmt = $this->db->prepare("SELECT * FROM {$this->entity} WHERE id = :id");
-                    $stmt->bindParam(':id', $_GET['id'], PDO::PARAM_INT);
-                    $stmt->execute();
-                    $response = $stmt->fetch(PDO::FETCH_ASSOC);
-                } else {
-                    // Obtener todos los registros
-                    $stmt = $this->db->prepare("SELECT * FROM {$this->entity}");
-                    $stmt->execute();
-                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                }
+            if (isset($_GET['id'])) {
+                // Mostrar un solo registro si existe el ID
+                $response = $this->db->getRecord($this->entity, $_GET['id']);
                 echo json_encode($response, JSON_PRETTY_PRINT);
-            } catch (Exception $e) {
-                $this->response(500, "error", "Error al obtener los datos");
+            } else {
+                // Mostrar todos los registros
+                $response = $this->db->getAllRecords($this->entity);
+                echo json_encode($response, JSON_PRETTY_PRINT);
             }
         } else {
             $this->response(400, "error", "Acción no válida");
@@ -86,26 +78,24 @@ class GenericAPI
     private function saveData()
     {
         if (isset($_GET['action']) && $_GET['action'] === $this->entity) {
-            $data = json_decode(file_get_contents('php://input'), true);
+            // Decodificar JSON
+            $obj = json_decode(file_get_contents('php://input'));
+            $objArr = (array)$obj;
 
-            if (empty($data)) {
+            if (empty($objArr)) {
                 $this->response(422, "error", "Nada para agregar. Verifica el JSON");
             } else {
-                try {
-                    // Generar la consulta con parámetros preparados
-                    $fields = implode(", ", array_keys($data));
-                    $placeholders = ":" . implode(", :", array_keys($data));
-                    $stmt = $this->db->prepare("INSERT INTO {$this->entity} ($fields) VALUES ($placeholders)");
-
-                    foreach ($data as $key => $value) {
-                        $stmt->bindValue(":$key", $value);
+                // Validación condicional según la entidad
+               /* if ($this->entity === 'usuarios' || $this->entity === 'clientes') {
+                    if (!isset($obj->name)) {
+                        $this->response(422, "error", "La propiedad 'name' no está definida");
+                        return;
                     }
+                }*/
 
-                    $stmt->execute();
-                    $this->response(200, "success", "Nuevo registro agregado");
-                } catch (Exception $e) {
-                    $this->response(500, "error", "Error al agregar el registro");
-                }
+                // Insertar los datos en la base de datos
+                $this->db->insert($this->entity, $obj);
+                $this->response(200, "success", "Nuevo registro agregado");
             }
         } else {
             $this->response(400, "error", "Acción no válida");
@@ -118,29 +108,24 @@ class GenericAPI
     private function updateData()
     {
         if (isset($_GET['action']) && isset($_GET['id']) && $_GET['action'] === $this->entity) {
-            $data = json_decode(file_get_contents('php://input'), true);
+            // Decodificar JSON
+            $obj = json_decode(file_get_contents('php://input'));
+            $objArr = (array)$obj;
 
-            if (empty($data)) {
+            if (empty($objArr)) {
                 $this->response(422, "error", "Nada para actualizar. Verifica el JSON");
             } else {
-                try {
-                    $updates = [];
-                    foreach ($data as $key => $value) {
-                        $updates[] = "$key = :$key";
+                // Validación condicional según la entidad
+              /*  if ($this->entity === 'usuarios' || $this->entity === 'clientes') {
+                    if (!isset($obj->name)) {
+                        $this->response(422, "error", "La propiedad 'name' no está definida");
+                        return;
                     }
-                    $updateString = implode(", ", $updates);
-                    $stmt = $this->db->prepare("UPDATE {$this->entity} SET $updateString WHERE id = :id");
+                }*/
 
-                    foreach ($data as $key => $value) {
-                        $stmt->bindValue(":$key", $value);
-                    }
-                    $stmt->bindValue(':id', $_GET['id'], PDO::PARAM_INT);
-
-                    $stmt->execute();
-                    $this->response(200, "success", "Registro actualizado");
-                } catch (Exception $e) {
-                    $this->response(500, "error", "Error al actualizar el registro");
-                }
+                // Actualizar los datos en la base de datos
+                $this->db->update($this->entity, $_GET['id'], $obj);
+                $this->response(200, "success", "Registro actualizado");
             }
         } else {
             $this->response(400, "error", "Acción o ID no válido");
@@ -150,17 +135,12 @@ class GenericAPI
     /**
      * Eliminar un registro
      */
-    private function deleteData()
+    public function deleteData()
     {
         if (isset($_GET['action']) && isset($_GET['id']) && $_GET['action'] === $this->entity) {
-            try {
-                $stmt = $this->db->prepare("DELETE FROM {$this->entity} WHERE id = :id");
-                $stmt->bindParam(':id', $_GET['id'], PDO::PARAM_INT);
-                $stmt->execute();
-                $this->response(200, "success", "Registro eliminado");
-            } catch (Exception $e) {
-                $this->response(500, "error", "Error al eliminar el registro");
-            }
+            $this->db->delete($this->entity, $_GET['id']);
+            // Enviar respuesta JSON de éxito
+            $this->response(200, "success", "Registro eliminado");
         } else {
             $this->response(400, "error", "Acción o ID no válido");
         }
