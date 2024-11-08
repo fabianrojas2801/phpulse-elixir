@@ -1,9 +1,12 @@
 // genericEntityManager.js
 
+// Obtener la configuración desde el HTML usando data-attributes
+const entityManagerContainer = document.getElementById('entityManagerComponent');
+
 const config = {
-    apiUrl: 'index.php', // Cambia esta URL a la de tu API
-    defaultEntity: 'usuarios',               // Entidad de carga por defecto
-    displayColumns: ['id', 'nombre', 'email']  // Columnas a mostrar
+    apiUrl: entityManagerContainer.getAttribute('data-api-url') || 'index.php',
+    defaultEntity: entityManagerContainer.getAttribute('data-default-entity') || 'usuarios',
+    displayColumns: (entityManagerContainer.getAttribute('data-display-columns') || 'id,nombre,email').split(',')
 };
 
 let entity = config.defaultEntity;
