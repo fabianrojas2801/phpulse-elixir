@@ -8,7 +8,7 @@
     <script>
         // Función para hacer solicitudes a la API
         function obtenerDatos(entidad) {
-            const apiUrl = `http://localhost/EntornoServidor/PHPulse/index.php?action=${entidad}`;
+            const apiUrl = `index.php?action=${entidad}`;
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => mostrarDatos(entidad, data))
@@ -76,8 +76,8 @@
 
         // Eliminar un registro
         function eliminarDatos(entidad, id) {
-            const apiUrl = `http://localhost/EntornoServidor/PHPulse/index.php?action=${entidad}&id=${id}`;
-            fetch(apiUrl, { method: 'DELETE' })
+       const apiUrl = `index.php?action=${entidad}&id=${id}`;
+           fetch(apiUrl, { method: 'DELETE' })
                 .then(response => response.json())
                 .then(data => obtenerDatos(entidad)) // Actualizar la lista de datos de la entidad
                 .catch(error => console.error("Hubo un problema con la eliminación:", error));
@@ -101,7 +101,8 @@
 
         // Obtener los datos de un registro por ID y rellenar el formulario para editar
         function obtenerRegistroPorId(entidad, id) {
-            const apiUrl = `http://localhost/EntornoServidor/PHPulse/index.php?action=${entidad}&id=${id}`;
+
+            const apiUrl = `index.php?action=${entidad}&id=${id}`;
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
@@ -170,7 +171,9 @@
             const data = {};
             formData.forEach((value, key) => data[key] = value);
 
-            fetch(`http://localhost/EntornoServidor/PHPulse/index.php?action=${entidad}`, {
+
+            fetch(`index.php?action=${entidad}`, {
+
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -186,7 +189,8 @@
             const data = {};
             formData.forEach((value, key) => data[key] = value);
 
-            fetch(`http://localhost/EntornoServidor/PHPulse/index.php?action=${entidad}&id=${id}`, {
+
+            fetch(`index.php?action=${entidad}&id=${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -201,7 +205,9 @@
         // Función para buscar un ID por nombre
 function buscarID(campoID, entidad) {
     const nombre = document.getElementById(campoID).value;
-    const apiUrl = `http://localhost/EntornoServidor/PHPulse/index.php?action=${entidad}&nombre=${nombre}`;
+
+    const apiUrl = `index.php?action=${entidad}&nombre=${nombre}`;
+
 
     fetch(apiUrl)
         .then(response => response.json())
