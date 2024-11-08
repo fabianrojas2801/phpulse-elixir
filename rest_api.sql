@@ -313,5 +313,44 @@ ALTER TABLE `roles`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
+--
+-- Estructura de tabla para la tabla `moviles`
+--
+
+CREATE TABLE `moviles` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
+  `modelo` text NOT NULL,
+  `sistema_operativo` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `moviles`
+--
+
+INSERT INTO `moviles` (`id`, `usuario_id`, `modelo`, `sistema_operativo`) VALUES
+(3, NULL, 'Apple', 'Appple');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `moviles`
+--
+ALTER TABLE `moviles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `moviles`
+--
+ALTER TABLE `moviles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+COMMIT;
+
 
 
