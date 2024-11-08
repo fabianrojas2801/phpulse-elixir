@@ -6,11 +6,19 @@ const entityManagerContainer = document.getElementById('entityManagerComponent')
 const config = {
     apiUrl: entityManagerContainer.getAttribute('data-api-url') || 'index.php',
     defaultEntity: entityManagerContainer.getAttribute('data-default-entity') || 'usuarios',
-    displayColumns: (entityManagerContainer.getAttribute('data-display-columns') || 'id,nombre,email').split(',')
+    displayColumns: (entityManagerContainer.getAttribute('data-display-columns') || 'id,nombre,email').split(','),
+    foreignKey: entityManagerContainer.getAttribute('data-foreign-key') || null // Clave externa en formato "entidad:campo"
 };
 
 let entity = config.defaultEntity;
 let selectedId = null;
+let foreignEntity = null;
+let foreignField = null;
+
+// Si existe una clave externa, dividirla en entidad y campo
+if (config.foreignKey) {
+    [foreignEntity, foreignField] = config.foreignKey.split(':');
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('entity').value = config.defaultEntity;
@@ -23,6 +31,78 @@ async function loadData() {
     const data = await response.json();
     renderTable(data);
     generateFormFields(data[0] || {});
+}
+
+// Función para generar campos de formulario, incluyendo el selector de la clave externa
+function generateFormFields(data) {
+    const formFields = document.getElementById('formFields');
+    formFields.innerHTML = '';
+
+    // Si existe una clave externa, generar un campo de selección
+    if (foreignEntity && foreignField) {
+        const foreignFieldContainer = document.createElement('div');
+        foreignFieldContainer.classList.add('mb-3');
+        
+        const label = document.createElement('label');
+        label.classList.add('form-label');
+        label.textContent = `Seleccionar ${foreignEntity}`;
+        foreignFieldContainer.appendChild(label);
+        
+        const select = document.createElement('select');
+        select.id = foreignField;
+        select.name = foreignField;
+        select.classList.add('form-control');
+        foreignFieldContainer.appendChild(select);
+        
+        formFields.appendChild(foreignFieldContainer);
+        
+        // Llenar el campo de selección con datos de la entidad relacionada
+        loadForeignOptions();
+    }
+
+    // Generar campos para las columnas configuradas
+    config.displayColumns.forEach(column => {
+        if (column === foreignField) return; // Omitir la clave externa, ya que ya tiene su campo
+
+        const formGroup = document.createElement('div');
+        formGroup.classList.add('mb-3');
+
+        const label = document.createElement('label');
+        label.classList.add('form-label');
+        label.textContent = column;
+        label.setAttribute('for', column);
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = column;
+        input.id = column;
+        input.classList.add('form-control');
+
+        formGroup.appendChild(label);
+        formGroup.appendChild(input);
+        formFields.appendChild(formGroup);
+    });
+}
+
+// Función para cargar las opciones de la entidad relacionada en el selector de búsqueda
+async function loadForeignOptions() {
+    const response = await fetch(`${config.apiUrl}?action=${foreignEntity}`);
+    const data = await response.json();
+
+    const select = document.getElementById(foreignField);
+    select.innerHTML = '';
+
+    data.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.id; // Asume que la entidad relacionada tiene un campo 'id' como identificador
+        option.textContent = item.nombre || item.name || item.id; // Muestra 'nombre', 'name', o 'id' según esté disponible
+        select.appendChild(option);
+    });
+}
+
+function prepareCreate() {
+    selectedId = null;
+    document.getElementById('dataForm').reset();
 }
 
 function renderTable(data) {
@@ -61,37 +141,6 @@ function renderTable(data) {
         row.appendChild(actionsTd);
         tbody.appendChild(row);
     });
-}
-
-function generateFormFields(data) {
-    const formFields = document.getElementById('formFields');
-    formFields.innerHTML = '';
-
-    Object.keys(data).forEach(key => {
-        if (key === 'id' || !config.displayColumns.includes(key)) return;
-        const formGroup = document.createElement('div');
-        formGroup.classList.add('mb-3');
-
-        const label = document.createElement('label');
-        label.classList.add('form-label');
-        label.textContent = key;
-        label.setAttribute('for', key);
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.name = key;
-        input.id = key;
-        input.classList.add('form-control');
-
-        formGroup.appendChild(label);
-        formGroup.appendChild(input);
-        formFields.appendChild(formGroup);
-    });
-}
-
-function prepareCreate() {
-    selectedId = null;
-    document.getElementById('dataForm').reset();
 }
 
 function editRecord(id) {
