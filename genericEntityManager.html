@@ -1,0 +1,38 @@
+<!-- genericEntityManager.html -->
+<div class="container mt-5" id="entityManagerContainer">
+    <h1 class="text-center">Gestión Genérica de Entidades</h1>
+
+    <div class="mb-3 mt-4">
+        <label for="entity" class="form-label">Nombre de la entidad:</label>
+        <input type="text" id="entity" class="form-control" placeholder="Ej: usuarios" required>
+        <button class="btn btn-primary mt-3" onclick="loadData()">Cargar Datos</button>
+        <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#dataModal" onclick="prepareCreate()">Nuevo Registro</button>
+    </div>
+
+    <h2 class="mt-5">Listado de Registros</h2>
+    <table class="table table-striped mt-3" id="dataTable">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<!-- Modal para Crear/Actualizar Registro -->
+<div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="dataForm" onsubmit="handleSubmit(event)">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dataModalLabel">Nuevo/Actualizar Registro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="formFields" class="form-group"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
