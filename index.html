@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo de llamada a API REST</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        // Función para hacer solicitudes a la API
+        function obtenerDatos(entidad) {
+            const apiUrl = `http://localhost/dashboard/API-REST-with-PHP/index.php?action=${entidad}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => mostrarDatos(entidad, data))
+                .catch(error => console.error("Hubo un problema con la solicitud:", error));
+        }
+
+        // Función para mostrar los datos en la página
+        function mostrarDatos(entidad, data) {
+            const contenedor = document.getElementById(`resultados-${entidad}`);
+            contenedor.innerHTML = ""; // Limpiar contenido actual
+
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(item => {
+                    const div = document.createElement("div");
+                    div.innerHTML = generateEntityHTML(entidad, item);
+                    contenedor.appendChild(div);
+                });
+            } else {
+                contenedor.innerHTML = "<p>No se encontraron datos.</p>";
+            }
+        }
+
+        // Generar HTML dinámico para cada entidad
+        function generateEntityHTML(entidad, item) {
+            switch (entidad) {
+                case "clientes":
+                    return `<p><strong>Nombre:</strong> ${item.nombre}</p>
+                            <p><strong>Dirección:</strong> ${item.direccion}</p>
+                            <p><strong>Teléfono:</strong> ${item.telefono}</p>
+                            <button onclick="eliminarDatos('${entidad}', ${item.id})" class="btn btn-danger btn-sm">Eliminar</button>
+                            <button onclick="abrirModalEdicion('${entidad}', ${item.id})" class="btn btn-primary btn-sm">Editar</button><hr>`;
+                case "usuarios":
+                    return `<p><strong>Nombre:</strong> ${item.nombre}</p>
+                            <p><strong>Email:</strong> ${item.email}</p>
+                            <button onclick="eliminarDatos('${entidad}', ${item.id})" class="btn btn-danger btn-sm">Eliminar</button>
+                            <button onclick="abrirModalEdicion('${entidad}', ${item.id})" class="btn btn-primary btn-sm">Editar</button><hr>`;
+                case "pedidos":
+                    return `<p><strong>Cliente ID:</strong> ${item.cliente_id}</p>
+                            <p><strong>Total:</strong> $${item.total}</p>
+                            <p><strong>Estado:</strong> ${item.estado}</p>
+                            <button onclick="eliminarDatos('${entidad}', ${item.id})" class="btn btn-danger btn-sm">Eliminar</button>
+                            <button onclick="abrirModalEdicion('${entidad}', ${item.id})" class="btn btn-primary btn-sm">Editar</button><hr>`;
+                case "mensajes":
+                    return `<p><strong>Usuario ID:</strong> ${item.usuario_id}</p>
+                            <p><strong>Cliente ID:</strong> ${item.cliente_id}</p>
+                            <p><strong>Contenido:</strong> ${item.contenido}</p>
+                            <button onclick="eliminarDatos('${entidad}', ${item.id})" class="btn btn-danger btn-sm">Eliminar</button>
+                            <button onclick="abrirModalEdicion('${entidad}', ${item.id})" class="btn btn-primary btn-sm">Editar</button><hr>`;
+                case "log":
+                    return `<p><strong>Usuario ID:</strong> ${item.usuario_id}</p>
+                            <p><strong>Acción:</strong> ${item.accion}</p>
+                            <p><strong>Descripción:</strong> ${item.descripcion}</p>
+                            <button onclick="eliminarDatos('${entidad}', ${item.id})" class="btn btn-danger btn-sm">Eliminar</button>
+                            <button onclick="abrirModalEdicion('${entidad}', ${item.id})" class="btn btn-primary btn-sm">Editar</button><hr>`;
+                default:
+                    return `<p>Entidad no reconocida</p>`;
+            }
+        }
+
+        // Eliminar un registro
+        function eliminarDatos(entidad, id) {
+            const apiUrl = `http://localhost/dashboard/API-REST-with-PHP/index.php?action=${entidad}&id=${id}`;
+            fetch(apiUrl, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(data => obtenerDatos(entidad)) // Actualizar la lista de datos de la entidad
+                .catch(error => console.error("Hubo un problema con la eliminación:", error));
+        }
+
+        // Abrir modal de creación o edición
+        function abrirModalCreacion(entidad) {
+            document.getElementById('entidad-form').textContent = ''; // Limpiar formulario
+            document.getElementById('entidad').value = entidad; // Asignar entidad al campo oculto
+            document.getElementById('btn-guardar').onclick = crearEntidad;
+            generarCamposFormulario(entidad);
+            new bootstrap.Modal(document.getElementById('modal-crear')).show();
+        }
+
+        function abrirModalEdicion(entidad, id) {
+            document.getElementById('entidad-form').textContent = ''; // Limpiar formulario
+            document.getElementById('entidad').value = entidad; // Asignar entidad al campo oculto
+            document.getElementById('btn-guardar').onclick = () => actualizarEntidad(entidad, id);
+            obtenerRegistroPorId(entidad, id);
+        }
+
+        // Obtener los datos de un registro por ID y rellenar el formulario para editar
+        function obtenerRegistroPorId(entidad, id) {
+            const apiUrl = `http://localhost/dashboard/API-REST-with-PHP/index.php?action=${entidad}&id=${id}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    generarCamposFormulario(entidad, data);
+                    new bootstrap.Modal(document.getElementById('modal-crear')).show();
+                })
+                .catch(error => console.error("Error al obtener los datos del registro:", error));
+        }
+
+        // Generar campos de formulario dinámicos para creación o edición
+        function generarCamposFormulario(entidad, data = {}) {
+            switch (entidad) {
+                case 'usuarios':
+                    agregarCampo('nombre', 'Nombre', data.nombre);
+                    agregarCampo('email', 'Email', data.email);
+                    agregarCampo('password', 'Password', data.password || '');
+                    break;
+                case 'clientes':
+                    agregarCampo('nombre', 'Nombre', data.nombre);
+                    agregarCampo('direccion', 'Dirección', data.direccion);
+                    agregarCampo('telefono', 'Teléfono', data.telefono);
+                    agregarCampo('email', 'Email', data.email);
+                    break;
+                case 'pedidos':
+                    agregarCampo('cliente_id', 'Cliente ID', data.cliente_id, true, 'clientes');
+                    agregarCampo('total', 'Total', data.total);
+                    agregarCampo('estado', 'Estado', data.estado);
+                    break;
+                case 'mensajes':
+                    agregarCampo('usuario_id', 'Usuario ID', data.usuario_id, true, 'usuarios');
+                    agregarCampo('cliente_id', 'Cliente ID', data.cliente_id, true, 'clientes');
+                    agregarCampo('contenido', 'Contenido', data.contenido);
+                    break;
+                case 'log':
+                    agregarCampo('usuario_id', 'Usuario ID', data.usuario_id, true, 'usuarios');
+                    agregarCampo('accion', 'Acción', data.accion);
+                    agregarCampo('descripcion', 'Descripción', data.descripcion);
+                    break;
+            }
+        }
+
+        // Agregar campo al formulario, con valor predefinido para edición
+        function agregarCampo(nombre, label, valor = '', isSearchable = false, searchEntity = '') {
+            const form = document.getElementById('entidad-form');
+            const div = document.createElement('div');
+            div.className = 'mb-3';
+            div.innerHTML = `<label for="${nombre}" class="form-label">${label}</label>
+                             <input type="text" class="form-control" id="${nombre}" name="${nombre}" value="${valor}">`;
+
+            if (isSearchable && searchEntity) {
+                div.innerHTML += `<button type="button" class="btn btn-secondary btn-sm mt-2" onclick="buscarID('${nombre}', '${searchEntity}')">Buscar ${label}</button>
+                                  <div id="resultados-${nombre}" class="mt-2"></div>`;
+            }
+            form.appendChild(div);
+        }
+
+        // Crear una nueva entidad
+        function crearEntidad() {
+            const entidad = document.getElementById('entidad').value;
+            const formData = new FormData(document.getElementById('form-crear'));
+            const data = {};
+            formData.forEach((value, key) => data[key] = value);
+
+            fetch(`http://localhost/dashboard/API-REST-with-PHP/index.php?action=${entidad}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => obtenerDatos(entidad)) // Refrescar datos
+            .catch(error => console.error("Hubo un problema al crear la entidad:", error));
+        }
+
+        // Actualizar una entidad
+        function actualizarEntidad(entidad, id) {
+            const formData = new FormData(document.getElementById('form-crear'));
+            const data = {};
+            formData.forEach((value, key) => data[key] = value);
+
+            fetch(`http://localhost/dashboard/API-REST-with-PHP/index.php?action=${entidad}&id=${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => obtenerDatos(entidad)) // Refrescar datos
+            .catch(error => console.error("Hubo un problema al actualizar la entidad:", error));
+        }
+
+
+
+        // Función para buscar un ID por nombre
+function buscarID(campoID, entidad) {
+    const nombre = document.getElementById(campoID).value;
+    const apiUrl = `http://localhost/dashboard/API-REST-with-PHP/index.php?action=${entidad}&nombre=${nombre}`;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => mostrarResultadosBusqueda(campoID, data))
+        .catch(error => console.error("Error en la búsqueda:", error));
+}
+
+// Mostrar los resultados de búsqueda en el campo adecuado
+function mostrarResultadosBusqueda(campoID, data) {
+    const resultadosDiv = document.getElementById(`resultados-${campoID}`);
+    resultadosDiv.innerHTML = ""; // Limpiar resultados actuales
+
+    if (Array.isArray(data) && data.length > 0) {
+        data.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-outline-primary btn-sm';
+            btn.innerText = `${item.nombre} (ID: ${item.id})`;
+            btn.onclick = () => {
+                document.getElementById(campoID).value = item.id;
+                resultadosDiv.innerHTML = ""; // Limpiar resultados después de seleccionar
+            };
+            resultadosDiv.appendChild(btn);
+        });
+    } else {
+        resultadosDiv.innerHTML = "<p>No se encontraron resultados.</p>";
+    }
+}
+
+
+// Agregar campo al formulario, con valor predefinido para edición
+function agregarCampo(nombre, label, valor = '', isSearchable = false, searchEntity = '') {
+    const form = document.getElementById('entidad-form');
+    const div = document.createElement('div');
+    div.className = 'mb-3';
+    div.innerHTML = `<label for="${nombre}" class="form-label">${label}</label>
+                     <input type="text" class="form-control" id="${nombre}" name="${nombre}" value="${valor}">`;
+
+    if (isSearchable && searchEntity) {
+        div.innerHTML += `<button type="button" class="btn btn-secondary btn-sm mt-2" onclick="buscarID('${nombre}', '${searchEntity}')">Buscar ${label}</button>
+                          <div id="resultados-${nombre}" class="mt-2"></div>`;
+    }
+    form.appendChild(div);
+}
+
+    </script>
+</head>
+<body class="bg-light">
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Dashboard de Gestión de Entidades</h1>
+
+        <div class="row">
+            <!-- Columna 1: Clientes y Usuarios -->
+            <div class="col-md-6">
+                <!-- Sección Clientes -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Clientes</h5>
+                        <div>
+                            <button onclick="obtenerDatos('clientes')" class="btn btn-primary btn-sm">Cargar</button>
+                            <button onclick="abrirModalCreacion('clientes')" class="btn btn-success btn-sm">Nuevo Cliente</button>
+                        </div>
+                    </div>
+                    <div class="card-body bg-white p-3" id="resultados-clientes">
+                        <!-- Resultados de Clientes -->
+                    </div>
+                </div>
+
+                <!-- Sección Usuarios -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Usuarios</h5>
+                        <div>
+                            <button onclick="obtenerDatos('usuarios')" class="btn btn-primary btn-sm">Cargar</button>
+                            <button onclick="abrirModalCreacion('usuarios')" class="btn btn-success btn-sm">Nuevo Usuario</button>
+                        </div>
+                    </div>
+                    <div class="card-body bg-white p-3" id="resultados-usuarios">
+                        <!-- Resultados de Usuarios -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna 2: Pedidos, Mensajes y Log -->
+            <div class="col-md-6">
+                <!-- Sección Pedidos -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Pedidos</h5>
+                        <div>
+                            <button onclick="obtenerDatos('pedidos')" class="btn btn-primary btn-sm">Cargar</button>
+                            <button onclick="abrirModalCreacion('pedidos')" class="btn btn-success btn-sm">Nuevo Pedido</button>
+                        </div>
+                    </div>
+                    <div class="card-body bg-white p-3" id="resultados-pedidos">
+                        <!-- Resultados de Pedidos -->
+                    </div>
+                </div>
+
+                <!-- Sección Mensajes -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Mensajes</h5>
+                        <div>
+                            <button onclick="obtenerDatos('mensajes')" class="btn btn-primary btn-sm">Cargar</button>
+                            <button onclick="abrirModalCreacion('mensajes')" class="btn btn-success btn-sm">Nuevo Mensaje</button>
+                        </div>
+                    </div>
+                    <div class="card-body bg-white p-3" id="resultados-mensajes">
+                        <!-- Resultados de Mensajes -->
+                    </div>
+                </div>
+
+                <!-- Sección Log -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Log</h5>
+                        <div>
+                            <button onclick="obtenerDatos('log')" class="btn btn-primary btn-sm">Cargar</button>
+                            <button onclick="abrirModalCreacion('log')" class="btn btn-success btn-sm">Nuevo Log</button>
+                        </div>
+                    </div>
+                    <div class="card-body bg-white p-3" id="resultados-log">
+                        <!-- Resultados de Log -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Crear y Editar Entidades -->
+    <div class="modal fade" id="modal-crear" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-crearLabel">Crear/Editar Entidad</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-crear">
+                        <input type="hidden" id="entidad" name="entidad">
+                        <div id="entidad-form"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="btn-guardar" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
