@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión Genérica de Entidades</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f4f4f4; }
+        form { margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>Gestión Genérica de Entidades</h1>
+    <label for="entity">Nombre de la entidad:</label>
+    <input type="text" id="entity" placeholder="Ej: usuarios" required>
+    <button onclick="loadData()">Cargar Datos</button>
+
+    <h2>Listado de Registros</h2>
+    <table id="dataTable">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+
+    <h2>Nuevo/Actualizar Registro</h2>
+    <form id="dataForm" onsubmit="handleSubmit(event)">
+        <div id="formFields"></div>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <script>
+        let apiUrl = 'http://localhost/dashboard/API-REST-with-PHP/index.php'; // Ajusta la URL de tu API
+        let entity = '';
+        let selectedId = null;
+
+        async function loadData() {
+            entity = document.getElementById('entity').value;
+            const response = await fetch(`${apiUrl}?action=${entity}`);
+            const data = await response.json();
+            renderTable(data);
+            generateFormFields(data[0] || {}); // Genera campos de formulario basados en los datos
+        }
+
+        function renderTable(data) {
+            const table = document.getElementById('dataTable');
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+
+            // Clear existing content
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+
+            if (data.length === 0) return;
+
+            // Headers
+            const headers = Object.keys(data[0]);
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            const actionsTh = document.createElement('th');
+            actionsTh.textContent = 'Acciones';
+            headerRow.appendChild(actionsTh);
+            thead.appendChild(headerRow);
+
+            // Rows
+            data.forEach(record => {
+                const row = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.textContent = record[header];
+                    row.appendChild(td);
+                });
+                const actionsTd = document.createElement('td');
+                actionsTd.innerHTML = `
+                    <button onclick="editRecord(${record.id})">Editar</button>
+                    <button onclick="deleteRecord(${record.id})">Eliminar</button>
+                `;
+                row.appendChild(actionsTd);
+                tbody.appendChild(row);
+            });
+        }
+
+        function generateFormFields(data) {
+            const formFields = document.getElementById('formFields');
+            formFields.innerHTML = '';
+
+            Object.keys(data).forEach(key => {
+                if (key === 'id') return; // No editar el ID
+                const label = document.createElement('label');
+                label.textContent = key;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = key;
+                input.id = key;
+                formFields.appendChild(label);
+                formFields.appendChild(input);
+            });
+        }
+
+        function editRecord(id) {
+            selectedId = id;
+            fetch(`${apiUrl}?action=${entity}&id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    Object.keys(data).forEach(key => {
+                        if (document.getElementById(key)) {
+                            document.getElementById(key).value = data[key];
+                        }
+                    });
+                });
+        }
+
+        function deleteRecord(id) {
+            fetch(`${apiUrl}?action=${entity}&id=${id}`, {
+                method: 'DELETE'
+            }).then(() => loadData());
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const formData = {};
+            Array.from(document.getElementById('dataForm').elements).forEach(input => {
+                if (input.name) formData[input.name] = input.value;
+            });
+
+            const method = selectedId ? 'PUT' : 'POST';
+            const url = selectedId ? `${apiUrl}?action=${entity}&id=${selectedId}` : `${apiUrl}?action=${entity}`;
+
+            fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            }).then(() => {
+                loadData();
+                document.getElementById('dataForm').reset();
+                selectedId = null;
+            });
+        }
+    </script>
+
+</body>
+</html>
