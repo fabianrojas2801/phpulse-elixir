@@ -40,6 +40,9 @@ class DB
         $columns = implode(", ", array_keys($filteredData));
         $placeholders = ":" . implode(", :", array_keys($filteredData));
 
+
+
+        
         $stmt = $this->pdo->prepare("INSERT INTO $entity ($columns) VALUES ($placeholders)");
 
         foreach ($filteredData as $key => $value) {
