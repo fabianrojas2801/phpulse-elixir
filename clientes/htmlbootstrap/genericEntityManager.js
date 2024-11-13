@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadData() {
+  //  alert(1);
     entity = document.getElementById('entity').value || config.defaultEntity;
     const response = await fetch(`${config.apiUrl}?action=${entity}`);
     const data = await response.json();
