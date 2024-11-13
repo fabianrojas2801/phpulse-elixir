@@ -8,7 +8,7 @@
     <script>
         // Función para hacer solicitudes a la API
         function obtenerDatos(entidad) {
-            const apiUrl = `index.php?action=${entidad}`;
+            const apiUrl = `../../index.php?action=${entidad}`;
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => mostrarDatos(entidad, data))
@@ -76,7 +76,7 @@
 
         // Eliminar un registro
         function eliminarDatos(entidad, id) {
-       const apiUrl = `index.php?action=${entidad}&id=${id}`;
+       const apiUrl = `../../index.php?action=${entidad}&id=${id}`;
            fetch(apiUrl, { method: 'DELETE' })
                 .then(response => response.json())
                 .then(data => obtenerDatos(entidad)) // Actualizar la lista de datos de la entidad
@@ -102,7 +102,7 @@
         // Obtener los datos de un registro por ID y rellenar el formulario para editar
         function obtenerRegistroPorId(entidad, id) {
 
-            const apiUrl = `index.php?action=${entidad}&id=${id}`;
+            const apiUrl = `../../index.php?action=${entidad}&id=${id}`;
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
@@ -172,7 +172,7 @@
             formData.forEach((value, key) => data[key] = value);
 
 
-            fetch(`index.php?action=${entidad}`, {
+            fetch(`../../index.php?action=${entidad}`, {
 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -190,7 +190,7 @@
             formData.forEach((value, key) => data[key] = value);
 
 
-            fetch(`index.php?action=${entidad}&id=${id}`, {
+            fetch(`../../index.php?action=${entidad}&id=${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -206,7 +206,7 @@
 function buscarID(campoID, entidad) {
     const nombre = document.getElementById(campoID).value;
 
-    const apiUrl = `index.php?action=${entidad}&nombre=${nombre}`;
+    const apiUrl = `../../index.php?action=${entidad}&nombre=${nombre}`;
 
 
     fetch(apiUrl)
