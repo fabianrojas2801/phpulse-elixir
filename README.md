@@ -29,7 +29,7 @@
 
 1. Clona el repositorio en tu máquina local:
    ```bash
-   git clone https://github.com/tu-usuario/PHPulseDeck.git
+   git clone https://github.com/CarlosBasulto/PHPulse
    cd PHPulseDeck
    ```
 
