@@ -16,8 +16,14 @@
 
 - **PHP**: Backend para las operaciones CRUD.
 - **Bootstrap**: Diseño y estilización de la interfaz.
+- **SCSS**: Pendiente de subir cliente HTML con scss.
+- **ANDROID**: Pendiente de subir cliente Android.
 - **JavaScript y Fetch API**: Comunicación asincrónica con el backend para una experiencia de usuario sin interrupciones.
 - **MySQL**: Base de datos relacional para almacenar y manejar la información de las entidades.
+- **API FOTOS NASA**: Tabla photos con las fotos de la API pública de la NASA
+
+
+
 
 ## Instalación
 
@@ -53,6 +59,7 @@
 - **`DB.php`**: Configuración de la base de datos y funciones de CRUD para las entidades.
 - **`api.php`**: Lógica para manejar los métodos `GET`, `POST`, `PUT`, y `DELETE` en el backend.
 - **`modal-crear` y `form-crear`**: Modales dinámicos que permiten la creación y edición de registros.
+- **Carpetas con clientes**: Se crean directorios de clientes para consumir la API, Android, HTML con bootraps y html con scss
   
 ## Scripts SQL
 
