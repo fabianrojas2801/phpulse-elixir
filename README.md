@@ -1,7 +1,7 @@
 
 # PHPulseDeck
 
-**PHPulseDeck** es un completo backend API RESTful desarrollado en PHP, diseñado para la administración eficiente de datos y la creación de interfaces de gestión. Este proyecto facilita operaciones CRUD para varias entidades en una interfaz organizada, intuitiva y atractiva.
+**PHPulseDeck** es un proyecto educativo orientado al backend API RESTful desarrollado en PHP, diseñado para la administración eficiente de datos y la creación de interfaces de gestión. Este proyecto facilita operaciones CRUD para varias entidades en una interfaz organizada, intuitiva y atractiva.
 
 ## Características
 
