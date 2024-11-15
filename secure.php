@@ -1,0 +1,1 @@
+//Clase en php resposnable de comprobar las entidades que deben ser seguras, asi como la resposnabilidad de ectualizar el token
