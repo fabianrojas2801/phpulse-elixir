@@ -151,7 +151,7 @@ class GenericAPI
     }
 
 
-    // GenericAPI.php
+//Permite realizar una búsqueda en las entidades por key:value, aplicado al Where de forma automática
 public function checkRow()
 {
     if (isset($_GET['action']) && $_GET['action'] === $this->entity) {
