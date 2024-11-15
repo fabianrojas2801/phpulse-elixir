@@ -353,4 +353,27 @@ ALTER TABLE `moviles`
 COMMIT;
 
 
+--Tabla para guardar los token
+CREATE TABLE sesiones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    token VARCHAR(512) NOT NULL,  -- Token JWT (o cualquier token que utilices)
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_expiracion TIMESTAMP NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+
+
+--Para definir las llamadas a las entidades que van protegidas
+
+CREATE TABLE entidades (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,  -- Nombre o identificador de la entidad
+    descripcion TEXT,             -- Descripción opcional de la entidad
+    esta_protegida BOOLEAN DEFAULT FALSE,  -- Indica si la entidad está protegida por sesión
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 
