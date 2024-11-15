@@ -93,5 +93,31 @@ class DB
 
         return $columns;
     }
+
+
+
+        // DB.php
+public function checkRow($entity, $conditions)
+{
+    $where = "";
+    foreach ($conditions as $key => $value) {
+        $where .= "$key = :$key AND ";
+    }
+    $where = rtrim($where, " AND ");
+
+    $sql = "SELECT COUNT(*) as count FROM $entity WHERE $where";
+    $stmt = $this->pdo->prepare($sql);
+
+    foreach ($conditions as $key => $value) {
+        $stmt->bindValue(":$key", $value);
+    }
+
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result['count'] > 0;
+}
+
+
 }
 ?>

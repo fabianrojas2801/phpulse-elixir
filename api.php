@@ -22,8 +22,12 @@ class GenericAPI
                 $this->getData();
                 break;
 
-            case 'POST': // Inserta
+            case 'POST': // Inserta //check buscar
+                if (isset($_GET['check']) && $_GET['check'] === 'true') {
+                    $this->checkRow();
+                } else {
                 $this->saveData();
+                }
                 break;
 
             case 'PUT': // Actualiza
@@ -145,6 +149,36 @@ class GenericAPI
             $this->response(400, "error", "Acción o ID no válido");
         }
     }
+
+
+    // GenericAPI.php
+public function checkRow()
+{
+    if (isset($_GET['action']) && $_GET['action'] === $this->entity) {
+        // Decodificar el JSON con los campos para verificar
+        $obj = json_decode(file_get_contents('php://input'));
+        $objArr = (array)$obj;
+
+        if (empty($objArr)) {
+            $this->response(422, "error", "No se proporcionaron datos para verificar.");
+            return;
+        }
+
+        try {
+            $exists = $this->db->checkRow($this->entity, $objArr);
+            if ($exists) {
+                $this->response(200, "success", "La fila existe en la tabla.");
+            } else {
+                $this->response(404, "error", "No se encontró ninguna fila con los datos proporcionados.");
+            }
+        } catch (Exception $e) {
+            $this->response(500, "error", "Error al verificar los datos: " . $e->getMessage());
+        }
+    } else {
+        $this->response(400, "error", "Acción no válida.");
+    }
+}
+
 }
 
 ?>
