@@ -155,7 +155,7 @@ class GenericAPI
     }
 
 /**
- * Permite realizar una búsqueda en las entidades por key:value, aplicado al Where de forma automática
+ * Permite realizar una búsqueda en las entidades por key:value, aplicado al Where de forma automática TODO: REvisar funcionamiento
  */
 
  //GET /api/your_entity?action=your_entity&name=John&age=30&check=true
