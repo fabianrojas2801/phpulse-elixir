@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class DataService {
 
-  private apiUrl = 'http://localhost/phpulse/index.php';  // URL base de la API
+  private apiUrl = 'http://localhost/dashboard/PHPulse/index.php';  // URL base de la API
 
   constructor(private http: HttpClient) { }
 

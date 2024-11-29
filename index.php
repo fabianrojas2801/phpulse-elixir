@@ -1,4 +1,18 @@
 <?php
+
+// Permitir acceso desde cualquier origen
+header("Access-Control-Allow-Origin: *");
+
+// Permitir ciertos métodos (GET, POST, PUT, DELETE, OPTIONS)
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+
+// Permitir ciertos encabezados (headers) en las solicitudes
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+
+// Permitir la pre-solicitud (preflight) CORS
+header("Access-Control-Allow-Credentials: true");
+
+
 // Incluir la configuración desde config.php
 $config = require 'config.php';
 require_once('api.php'); // Asegúrate de que el nombre del archivo es correcto
