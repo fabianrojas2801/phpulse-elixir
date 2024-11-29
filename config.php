@@ -3,12 +3,12 @@
 return [
     'database' => [
         'host' => 'localhost',
-        'dbname' => 'mi_base_de_datos',
-        'user' => 'mi_usuario',
-        'password' => 'mi_contraseña',
+        'dbname' => 'api_rest', //Modificar con el nombre de tu base de datos
+        'user' => 'root',
+        'password' => '',
     ],
     'app' => [
-        'debug' => true,
-        'base_url' => 'http://mi-app.local',
+        'debug' => true,  // Cambiar a false para producción
+        'base_url' => 'https://sandbox.phpulse.es/',  // Base URL de tu aplicación (ajustar para producción)
     ],
 ];

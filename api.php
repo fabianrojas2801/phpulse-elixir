@@ -210,6 +210,7 @@ class GenericAPI
          $this->response(400, "error", "Acción no válida.");
      }
  }
+}
  
 
 ?>
