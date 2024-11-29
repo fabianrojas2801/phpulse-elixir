@@ -19,7 +19,11 @@ class GenericAPI
        
         switch ($method) {
             case 'GET': // Consulta
+                if (isset($_GET['check']) && $_GET['check'] === 'true') {
+                $this->checkRow();
+                } else {
                 $this->getData();
+                }
                 break;
 
             case 'POST': // Inserta //check buscar
@@ -154,33 +158,58 @@ class GenericAPI
  * Permite realizar una búsqueda en las entidades por key:value, aplicado al Where de forma automática
  */
 
-public function checkRow()
+ //GET /api/your_entity?action=your_entity&name=John&age=30&check=true
+
+ /*
+ POST /api/your_entity?action=your_entity&check=true
 {
-    if (isset($_GET['action']) && $_GET['action'] === $this->entity) {
-        // Decodificar el JSON con los campos para verificar
-        $obj = json_decode(file_get_contents('php://input'));
-        $objArr = (array)$obj;
-
-        if (empty($objArr)) {
-            $this->response(422, "error", "No se proporcionaron datos para verificar.");
-            return;
-        }
-
-        try {
-            $exists = $this->db->checkRow($this->entity, $objArr);
-            if ($exists) {
-                $this->response(200, "success", "La fila existe en la tabla.");
-            } else {
-                $this->response(404, "error", "No se encontró ninguna fila con los datos proporcionados.");
-            }
-        } catch (Exception $e) {
-            $this->response(500, "error", "Error al verificar los datos: " . $e->getMessage());
-        }
-    } else {
-        $this->response(400, "error", "Acción no válida.");
-    }
+  "name": "John",
+  "age": 30
 }
 
-}
+ 
+ */
+ public function checkRow()
+ {
+     if (isset($_GET['action']) && $_GET['action'] === $this->entity) {
+         // Verificar si la solicitud es GET o POST
+         $data = [];
+ 
+         // Si es una solicitud GET, obtenemos los parámetros de la URL
+         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+             foreach ($_GET as $key => $value) {
+                 // Aquí se omite 'action' y cualquier otro parámetro irrelevante
+                 if ($key !== 'action' && $key !== 'check') {
+                     $data[$key] = $value;
+                 }
+             }
+         } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+             // Si es una solicitud POST, se lee el cuerpo JSON
+             $obj = json_decode(file_get_contents('php://input'));
+             $data = (array)$obj; // Convertimos a array
+         }
+ 
+         // Si no se proporcionan datos para verificar
+         if (empty($data)) {
+             $this->response(422, "error", "No se proporcionaron datos para verificar.");
+             return;
+         }
+ 
+         try {
+             // Llamamos al método checkRow de DB con los parámetros construidos
+             $exists = $this->db->checkRow($this->entity, $data);
+             if ($exists) {
+                 $this->response(200, "success", "La fila existe en la tabla.");
+             } else {
+                 $this->response(404, "error", "No se encontró ninguna fila con los datos proporcionados.");
+             }
+         } catch (Exception $e) {
+             $this->response(500, "error", "Error al verificar los datos: " . $e->getMessage());
+         }
+     } else {
+         $this->response(400, "error", "Acción no válida.");
+     }
+ }
+ 
 
 ?>
