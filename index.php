@@ -1,5 +1,5 @@
 <?php
-
+$config = require 'config.php';
 require_once('api.php'); // Asegúrate de que el nombre del archivo es correcto
 
 // Obtener la entidad a partir del parámetro 'action'

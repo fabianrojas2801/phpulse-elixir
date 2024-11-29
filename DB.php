@@ -5,9 +5,9 @@ class DB
 
     public function __construct()
     {
-        $this->pdo = new PDO('mysql:host=localhost;dbname=rest_api', 'root', '');
+        $this->pdo = new PDO('mysql:host=localhost;dbname=$config['database']['dbname']', 'root', '');
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }
+    }   
 
     // Obtener un registro
     public function getRecord($entity, $id)
