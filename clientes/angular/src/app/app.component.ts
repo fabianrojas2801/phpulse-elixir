@@ -23,7 +23,7 @@ export class AppComponent {
 
 
   getClientes(): void {
-    this.dataService.getData('clientes').subscribe({
+    this.dataService.getData('usuarios').subscribe({
       next: (data) => {
         this.usuarios = data;  // Asignar los datos de productos
         this.data = data;  // Asignar la respuesta a la variable 'data'
@@ -40,7 +40,7 @@ export class AppComponent {
 
 
   getClientesFilter(): void {
-    this.dataService.getData('clientes&nombre=carlos').subscribe({
+    this.dataService.getData('usuarios&nombre=pablo&checkData=true').subscribe({
       next: (data) => {
         this.usuarios = data;  // Asignar los datos de productos
         this.data = data;  // Asignar la respuesta a la variable 'data'

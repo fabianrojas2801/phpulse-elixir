@@ -21,6 +21,8 @@ class GenericAPI
             case 'GET': // Consulta
                 if (isset($_GET['check']) && $_GET['check'] === 'true') {
                 $this->checkRow();
+                } else if  elseif (isset($_GET['checkData']) && $_GET['checkData'] === 'true') {
+                    $this->checkData();  // Nueva posibilidad checkData
                 } else {
                 $this->getData();
                 }
@@ -210,6 +212,51 @@ class GenericAPI
          $this->response(400, "error", "Acción no válida.");
      }
  }
+
+ public function checkData()
+{
+    if (isset($_GET['action']) && $_GET['action'] === $this->entity) {
+        // Verificar si la solicitud es GET o POST
+        $data = [];
+
+        // Si es una solicitud GET, obtenemos los parámetros de la URL
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            foreach ($_GET as $key => $value) {
+                // Aquí se omite 'action' y cualquier otro parámetro irrelevante
+                if ($key !== 'action' && $key !== 'checkData') {
+                    $data[$key] = $value;
+                }
+            }
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Si es una solicitud POST, se lee el cuerpo JSON
+            $obj = json_decode(file_get_contents('php://input'));
+            $data = (array)$obj; // Convertimos a array
+        }
+
+        // Si no se proporcionan datos para verificar
+        if (empty($data)) {
+            $this->response(422, "error", "No se proporcionaron datos para verificar.");
+            return;
+        }
+
+        try {
+            // Llamamos al método checkRow de DB con los parámetros construidos
+            $record = $this->db->checkRow($this->entity, $data);
+            if ($record) {
+                // Si se encuentra la fila, la devolvemos como JSON
+                $this->response(200, "success", "Registro encontrado:", $record);
+            } else {
+                $this->response(404, "error", "No se encontró ninguna fila con los datos proporcionados.");
+            }
+        } catch (Exception $e) {
+            $this->response(500, "error", "Error al verificar los datos: " . $e->getMessage());
+        }
+    } else {
+        $this->response(400, "error", "Acción no válida.");
+    }
+}
+
+
 }
  
 
