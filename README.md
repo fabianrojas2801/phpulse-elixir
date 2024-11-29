@@ -1,7 +1,7 @@
 
 # PHPulse
 
-**PHPulse** es un proyecto educativo orientado al backend API RESTful desarrollado en PHP, diseñado para la administración eficiente de datos y la creación de interfaces de gestión. Este proyecto facilita operaciones CRUD para varias entidades en una interfaz organizada, intuitiva y atractiva.
+**PHPulse** es un proyecto educativo orientado al backend API RESTful desarrollado en PHP y un conjunto de clientes que usan dicha api, como clientes html5, android, angular etc... diseñado para la administración eficiente de datos y la creación de interfaces de gestión. Este proyecto facilita operaciones CRUD para varias entidades en una interfaz organizada, intuitiva y atractiva.
 
 ## Características
 
