@@ -1,22 +1,7 @@
 <?php
-
+// Incluir la configuración desde config.php
 $config = require 'config.php';
-
-
-//No subir producción solo desarrollo
-header("Access-Control-Allow-Origin: *");
-
-// Permitir ciertos métodos (GET, POST, PUT, DELETE, etc.)
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-
-// Permitir ciertos encabezados (headers) en las solicitudes.
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-//FIN No subir producción solo desarrollo
-
-
-
 require_once('api.php'); // Asegúrate de que el nombre del archivo es correcto
-
 // Obtener la entidad a partir del parámetro 'action'
 $entity = isset($_GET['action']) ? $_GET['action'] : null;
 
@@ -32,7 +17,7 @@ if ($entity) {
     header('Content-Type: application/json');
     echo json_encode([
         'status' => 'error',
-        'message' => 'No se ha especificado ninguna acción válida'
+        'message' => 'No se ha especificado ninguna action válida. Prueba a enviar por GET ?action=NombreTabla'
     ]);
 }
 
