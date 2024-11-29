@@ -1,0 +1,11 @@
+{
+    "/api": {
+      "target": "http://sandbox.phpulse.es/index.php",  // La URL de tu API externa
+      "secure": false,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api": ""  // Opcional: Reescribe el prefijo '/api' si la API no lo necesita
+      }
+    }
+  }
+  
