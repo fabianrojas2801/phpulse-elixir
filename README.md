@@ -31,11 +31,11 @@
 1. Clona el repositorio en tu máquina local:
    ```bash
    git clone https://github.com/CarlosBasulto/PHPulse
-   cd PHPulseDeck
+   cd PHPulse
    ```
 
 2. Importa la estructura de la base de datos `SQL` en tu servidor MySQL local:
-   - Crea una base de datos llamada `phpulsedeck`.
+   - Crea una base de datos llamada `phpulse`.
    - Importa el archivo/s de la carpeta modelo `*BD.sql` incluido en este proyecto.
 
 3. Configura el acceso a la base de datos en el archivo `config.php`:
@@ -56,9 +56,9 @@
 
 4. Inicia el servidor local (por ejemplo, usando XAMPP o MAMP) y asegúrate de que el proyecto esté en el directorio `htdocs`.
 
-5. Accede a `http://localhost/PHPulseDeck/` te dará acceso a la api rest, puedes probar http://localhost/PHPulseDeck/?action=usuarios
+5. Accede a `http://localhost/PHPulse/` te dará acceso a la api rest, puedes probar http://localhost/PHPulse/?action=usuarios
 
-## Uso (Pendiente de mejorar el uso de clientes en readme)
+## Uso (Pendiente de mejorar el uso de clientes en readme). Puedes probar clientes/htmlbootstrap/
 
 1. **Cargar Datos**: Usa los botones de "Cargar" para cada entidad (Clientes, Usuarios, etc.) para obtener y ver los registros existentes.
 2. **Crear Nuevos Registros**: Usa el botón "Nuevo" para agregar registros a cualquier entidad en el dashboard.
