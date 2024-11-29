@@ -1,13 +1,15 @@
 <?php
+
+
+
 class DB
 {
     private $pdo;
 
     public function __construct()
     {
-        //$this->pdo = new PDO('mysql:host=localhost;dbname=$config['database']['dbname']', 'root', '');
+        $config = require 'config.php';
         $this->pdo = new PDO('mysql:host=' . $config['database']['host'] . ';dbname=' . $config['database']['dbname'], $config['database']['user'], $config['database']['password']);
-
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }   
 
@@ -41,8 +43,6 @@ class DB
 
         $columns = implode(", ", array_keys($filteredData));
         $placeholders = ":" . implode(", :", array_keys($filteredData));
-
-
 
         
         $stmt = $this->pdo->prepare("INSERT INTO $entity ($columns) VALUES ($placeholders)");

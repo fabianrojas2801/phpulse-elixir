@@ -3,7 +3,7 @@
 return [
     'database' => [
         'host' => 'localhost',
-        'dbname' => 'api_rest', //Modificar con el nombre de tu base de datos
+        'dbname' => 'rest_api', //Modificar con el nombre de tu base de datos
         'user' => 'root',
         'password' => '',
     ],
@@ -12,8 +12,6 @@ return [
         'base_url' => 'https://sandbox.phpulse.es/',  // Base URL de tu aplicación (ajustar para producción)
     ],
 ];
-
-
 
 // No subir a producción solo desarrollo
 if ($config['app']['debug']) {
