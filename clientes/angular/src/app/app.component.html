@@ -1,0 +1,10 @@
+
+<div *ngIf="loading">Cargando...</div>
+<div *ngIf="!loading">
+  <h2>Datos obtenidos:</h2>
+  <pre>{{ data | json }}</pre>
+</div>
+
+<router-outlet></router-outlet>
+
+<router-outlet></router-outlet>

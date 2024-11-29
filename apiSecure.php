@@ -164,7 +164,7 @@ public function checkRow()
         if (empty($objArr)) {
             $this->response(422, "error", "No se proporcionaron datos para verificar.");
             return;
-        }
+        } 
 
         try {
             $exists = $this->db->checkRow($this->entity, $objArr);
