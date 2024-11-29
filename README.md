@@ -21,6 +21,7 @@
 - **JavaScript y Fetch API**: Comunicación asincrónica con el backend para una experiencia de usuario sin interrupciones.
 - **MySQL**: Base de datos relacional para almacenar y manejar la información de las entidades.
 - **API FOTOS NASA**: Tabla photos con las fotos de la API pública de la NASA
+- **ANGULAR**: Servicio para pruebas de angular hacia la API
 
 
 
