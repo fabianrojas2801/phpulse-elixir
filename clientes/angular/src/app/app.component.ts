@@ -16,12 +16,14 @@ export class AppComponent {
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
-    this.getProductos();  // Cargar los datos cuando el componente se inicializa
+    this.getClientesFilter();  // Cargar los datos cuando el componente se inicializa
+
+  //  this.getClientes();  // Cargar los datos cuando el componente se inicializa
   }
 
 
-  getProductos(): void {
-    this.dataService.getData('usuarios').subscribe({
+  getClientes(): void {
+    this.dataService.getData('clientes').subscribe({
       next: (data) => {
         this.usuarios = data;  // Asignar los datos de productos
         this.data = data;  // Asignar la respuesta a la variable 'data'
@@ -33,6 +35,25 @@ export class AppComponent {
       }
     });
   }
+
+
+
+
+  getClientesFilter(): void {
+    this.dataService.getData('clientes&nombre=carlos').subscribe({
+      next: (data) => {
+        this.usuarios = data;  // Asignar los datos de productos
+        this.data = data;  // Asignar la respuesta a la variable 'data'
+        this.loading = false;   // Detener el indicador de carga
+      },
+      error: (err) => {
+        this.error = 'Error al cargar productos';  // Manejar errores
+        console.error(err);
+      }
+    });
+  }
+
+
 /*
 
    // Crear un nuevo usuario (ejemplo con POST)
