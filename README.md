@@ -36,18 +36,29 @@
 
 2. Importa la estructura de la base de datos `SQL` en tu servidor MySQL local:
    - Crea una base de datos llamada `phpulsedeck`.
-   - Importa el archivo `database.sql` incluido en este proyecto.
+   - Importa el archivo/s de la carpeta modelo `*BD.sql` incluido en este proyecto.
 
-3. Configura el acceso a la base de datos en el archivo `DB.php`:
+3. Configura el acceso a la base de datos en el archivo `config.php`:
    ```php
-   $this->pdo = new PDO('mysql:host=localhost;dbname=phpulsedeck', 'usuario', 'contraseña');
+   return [
+    'database' => [
+        'host' => 'localhost',
+        'dbname' => 'api_rest', //Modificar con el nombre de tu base de datos
+        'user' => 'root',
+        'password' => '',
+    ],
+    'app' => [
+        'debug' => true,  // Cambiar a false para producción
+        'base_url' => 'https://sandbox.phpulse.es/',  // Base URL de tu aplicación (ajustar para producción)
+    ],
+];
    ```
 
 4. Inicia el servidor local (por ejemplo, usando XAMPP o MAMP) y asegúrate de que el proyecto esté en el directorio `htdocs`.
 
-5. Accede a `http://localhost/PHPulseDeck/` en tu navegador para empezar a usar la aplicación.
+5. Accede a `http://localhost/PHPulseDeck/` te dará acceso a la api rest, puedes probar http://localhost/PHPulseDeck/?action=usuarios
 
-## Uso
+## Uso (Pendiente de mejorar el uso de clientes en readme)
 
 1. **Cargar Datos**: Usa los botones de "Cargar" para cada entidad (Clientes, Usuarios, etc.) para obtener y ver los registros existentes.
 2. **Crear Nuevos Registros**: Usa el botón "Nuevo" para agregar registros a cualquier entidad en el dashboard.
