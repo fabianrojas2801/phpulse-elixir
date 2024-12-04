@@ -146,7 +146,7 @@ INSERT INTO `people` (`id`, `name`) VALUES
 CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL UNIQUE,
   `password` varchar(255) NOT NULL,
   `creado_en` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
