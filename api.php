@@ -21,7 +21,7 @@ class GenericAPI
             case 'GET': // Consulta
                 if (isset($_GET['check']) && $_GET['check'] === 'true') {
                 $this->checkRow();
-                } else if  elseif (isset($_GET['checkData']) && $_GET['checkData'] === 'true') {
+                }  else if (isset($_GET['checkData']) && $_GET['checkData'] === 'true') {
                     $this->checkData();  // Nueva posibilidad checkData
                 } else {
                 $this->getData();
