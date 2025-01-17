@@ -30,8 +30,8 @@ CREATE TABLE is_made_of (
 );
 
 CREATE VIEW measures AS
-	SELECT cocktails.id "cocktail", is_made_of.measure, ingredients.name FROM cocktails, ingredients, is_made_of
-    	WHERE cocktails.id = is_made_of.cocktail AND ingredients.id = is_made_of.ingredient;
+	SELECT cocktails.id "cocktail", ingredients.id "ingredient", is_made_of.measure, ingredients.name FROM cocktails, ingredients, is_made_of
+		WHERE cocktails.id = is_made_of.cocktail AND ingredients.id = is_made_of.ingredient;
 
 -- COCTELES
 INSERT INTO cocktails VALUES (11000,'Mojito','Cocktail','Alcoholic','Highball glass','Muddle mint leaves with sugar and lime juice. Add a splash of soda water and fill the glass with cracked ice. Pour the rum and top with soda water. Garnish and serve with straw.');
