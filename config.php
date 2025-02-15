@@ -3,7 +3,7 @@
 return [
     'database' => [
         'host' => 'localhost',
-        'dbname' => 'elixir', //Modificar con el nombre de tu base de datos
+        'dbname' => 'elixir_multimedia', //Modificar con el nombre de tu base de datos
         'user' => 'root',
         'password' => '',
     ],

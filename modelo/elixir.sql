@@ -1,3402 +1,6264 @@
--- Fabián Gabriel Rojas Guerrero
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Feb 06, 2025 at 07:30 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
-DROP VIEW IF EXISTS measures;
-DROP TABLE IF EXISTS is_made_of;
-DROP TABLE IF EXISTS cocktails;
-DROP TABLE IF EXISTS ingredients;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
-CREATE TABLE cocktails (
-	id INT PRIMARY KEY,
-	name VARCHAR(255) NOT NULL,
-	category VARCHAR(100) NOT NULL,
-	type VARCHAR(16) NOT NULL,
-	glass VARCHAR(100) NOT NULL,
-	instructions VARCHAR(1024) NOT NULL,
-	CONSTRAINT CK_COCKTAILS_TYPE CHECK(type IN ('Alcoholic', 'Non alcoholic', 'Optional alcohol'))
-);
 
-CREATE TABLE ingredients (
-	id INT PRIMARY KEY,
-	name VARCHAR(255) NOT NULL
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-CREATE TABLE is_made_of (
-	cocktail INT NOT NULL,
-	ingredient INT NOT NULL,
-	measure VARCHAR(100),
-	PRIMARY KEY(cocktail,ingredient),
-	CONSTRAINT FK_ISMADEOF_COCKTAILS FOREIGN KEY(cocktail) REFERENCES cocktails(id),
-	CONSTRAINT FK_ISMADEOF_INGREDIENTS FOREIGN KEY(ingredient) REFERENCES ingredients(id)
-);
+--
+-- Database: `elixir_multimedia`
+--
 
-CREATE VIEW measures AS
-	SELECT cocktails.id "cocktail", ingredients.id "ingredient", is_made_of.measure, ingredients.name FROM cocktails, ingredients, is_made_of
-		WHERE cocktails.id = is_made_of.cocktail AND ingredients.id = is_made_of.ingredient;
+-- --------------------------------------------------------
 
--- COCTELES
-INSERT INTO cocktails VALUES (11000,'Mojito','Cocktail','Alcoholic','Highball glass','Muddle mint leaves with sugar and lime juice. Add a splash of soda water and fill the glass with cracked ice. Pour the rum and top with soda water. Garnish and serve with straw.');
-INSERT INTO cocktails VALUES (11001,'Old Fashioned','Cocktail','Alcoholic','Old-fashioned glass','Place sugar cube in old fashioned glass and saturate with bitters, add a dash of plain water. Muddle until dissolved. Fill the glass with ice cubes and add whiskey. Garnish with orange twist, and a cocktail cherry.');
-INSERT INTO cocktails VALUES (11002,'Long Island Tea','Ordinary Drink','Alcoholic','Highball glass','Combine all ingredients (except cola) and pour over ice in a highball glass. Add the splash of cola for color. Decorate with a slice of lemon and serve.');
-INSERT INTO cocktails VALUES (11003,'Negroni','Ordinary Drink','Alcoholic','Old-fashioned glass','Stir into glass over ice, garnish and serve.');
-INSERT INTO cocktails VALUES (11004,'Whiskey Sour','Ordinary Drink','Alcoholic','Old-fashioned glass','Shake with ice. Strain into chilled glass, garnish and serve. If served ''On the rocks'', strain ingredients into old-fashioned glass filled with ice.');
-INSERT INTO cocktails VALUES (11005,'Dry Martini','Cocktail','Alcoholic','Cocktail glass','Straight: Pour all ingredients into mixing glass with ice cubes. Stir well. Strain in chilled martini cocktail glass. Squeeze oil from lemon peel onto the drink, or garnish with olive.');
-INSERT INTO cocktails VALUES (11006,'Daiquiri','Ordinary Drink','Alcoholic','Cocktail glass','Pour all ingredients into shaker with ice cubes. Shake well. Strain in chilled cocktail glass.');
-INSERT INTO cocktails VALUES (11007,'Margarita','Ordinary Drink','Alcoholic','Cocktail glass','Rub the rim of the glass with the lime slice to make the salt stick to it. Take care to moisten only the outer rim and sprinkle the salt on it. The salt should present to the lips of the imbiber and never mix into the cocktail. Shake the other ingredients with ice, then carefully pour into the glass.');
-INSERT INTO cocktails VALUES (11008,'Manhattan','Cocktail','Alcoholic','Cocktail glass','Stirred over ice, strained into a chilled glass, garnished, and served up.');
-INSERT INTO cocktails VALUES (11009,'Moscow Mule','Punch / Party Drink','Alcoholic','Copper Mug','Combine vodka and ginger beer in a highball glass filled with ice. Add lime juice. Stir gently. Garnish.');
-INSERT INTO cocktails VALUES (11010,'After Dinner Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients (except lime wedge) with ice and strain into a cocktail glass. Add the wedge of lime and serve.');
-INSERT INTO cocktails VALUES (11011,'After Supper Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11012,'Alabama Slammer','Ordinary Drink','Alcoholic','Highball glass','Pour all ingredients (except for lemon juice) over ice in a highball glass. Stir, add a dash of lemon juice, and serve.');
-INSERT INTO cocktails VALUES (11013,'Alaska Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients with ice, strain contents into a cocktail glass. Drop in a twist of lemon and serve.');
-INSERT INTO cocktails VALUES (11014,'Alexander','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice and strain contents into a cocktail glass. Sprinkle nutmeg on top and serve.');
-INSERT INTO cocktails VALUES (11016,'Brandy Alexander','Ordinary Drink','Alcoholic','Whiskey Glass','Shake all ingredients (except nutmeg) with ice and strain contents into a cocktail glass. Sprinkle nutmeg on top and serve.');
-INSERT INTO cocktails VALUES (11019,'Alfie Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Combine and shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11020,'Algonquin','Ordinary Drink','Alcoholic','Cocktail glass','Combine and shake all ingredients with ice, strain contents into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11021,'Allegheny','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients (except lemon peel) with ice and strain into a cocktail glass. Top with the twist of lemon peel and serve.');
-INSERT INTO cocktails VALUES (11022,'Allies Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients with ice, strain contents into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11023,'Almeria','Ordinary Drink','Alcoholic','Cocktail glass','In a shaker half-filled with ice cubes, combine all of the ingredients. Shake well. Strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (11024,'Almond Joy','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11025,'Amaretto And Cream','Ordinary Drink','Alcoholic','Cocktail glass','Shake well with cracked ice, strain contents into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11026,'Amaretto Mist','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour amaretto in an old-fashioned glass over crushed ice. Add the wedge of lime and serve. (A wedge of lemon may be substituted for lime, if preferred.)');
-INSERT INTO cocktails VALUES (11027,'Amaretto Rose','Ordinary Drink','Alcoholic','Collins glass','Pour amaretto and lime juice over ice in a collins glass. Fill with club soda and serve.');
-INSERT INTO cocktails VALUES (11028,'Amaretto Stinger','Ordinary Drink','Alcoholic','Cocktail glass','Shake ingredients well with cracked ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11029,'Amaretto Tea','Ordinary Drink','Alcoholic','Pousse cafe glass','Pour hot tea into a pousse-cafe glass, using a spoon in glass to prevent cracking. Add amaretto, but do not stir. Top with chilled whipped cream and serve.');
-INSERT INTO cocktails VALUES (11034,'Angel Face','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice and strain contents into a cocktail glass.');
-INSERT INTO cocktails VALUES (11046,'Applecar','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11050,'Apricot Lady','Ordinary Drink','Alcoholic','Old-fashioned glass','In a shaker half-filled with ice cubes, combine the rum, apricot brandy, triple sec, lemon juice, and egg white. Shake well. Strain into an old-fashioned glass almost filled with ice cubes. Garnish with the orange slice.');
-INSERT INTO cocktails VALUES (11052,'Archbishop','Ordinary Drink','Alcoholic','Old-fashioned glass','In an old-fashioned glass almost filled with ice cubes, combine all of the ingredients. Stir well.');
-INSERT INTO cocktails VALUES (11053,'Arise My Love','Ordinary Drink','Alcoholic','Champagne flute','Put creme de menthe into a champagne flute. Fill with chilled champagne and serve.');
-INSERT INTO cocktails VALUES (11054,'Arthur Tompkins','Ordinary Drink','Alcoholic','Whiskey sour glass','In a shaker half-filled with ice cubes, combine the gin, Grand Marnier, and lemon juice. Shake well. Strain into a sour glass and garnish with the lemon twist.');
-INSERT INTO cocktails VALUES (11055,'Artillery','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11060,'Balmoral','Ordinary Drink','Alcoholic','Cocktail glass','In a mixing glass half-filled with ice cubes, combine all of the ingredients. Stir well. Strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (11064,'Banana Daiquiri','Ordinary Drink','Alcoholic','Champagne flute','Pour all ingredients into shaker with ice cubes. Shake well. Strain in chilled cocktail glass.');
-INSERT INTO cocktails VALUES (11084,'Bermuda Highball','Ordinary Drink','Alcoholic','Highball glass','Pour brandy, gin, and dry vermouth into a highball glass over ice cubes. Fill with carbonated water and stir. Add the twist of lemon and serve. (Ginger ale may be substituted for carbonated water, if preferred.)');
-INSERT INTO cocktails VALUES (11102,'Black Russian','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour the ingredients into an old fashioned glass filled with ice cubes. Stir gently.');
-INSERT INTO cocktails VALUES (11106,'Blackthorn','Ordinary Drink','Alcoholic','Cocktail glass','Stir sloe gin and vermouth with ice and strain into a cocktail glass. Add the twist of lemon peel and serve.');
-INSERT INTO cocktails VALUES (11112,'Bloody Maria','Ordinary Drink','Alcoholic','Old-fashioned glass','Shake all ingredients (except lemon slice) with cracked ice and strain into an old-fashioned glass over ice cubes. Add the slice of lemon and serve.');
-INSERT INTO cocktails VALUES (11113,'Bloody Mary','Ordinary Drink','Alcoholic','Old-fashioned glass','Stirring gently, pour all ingredients into highball glass. Garnish.');
-INSERT INTO cocktails VALUES (11117,'Blue Lagoon','Ordinary Drink','Alcoholic','Highball glass','Pour vodka and curacao over ice in a highball glass. Fill with lemonade, top with the cherry, and serve.');
-INSERT INTO cocktails VALUES (11118,'Blue Margarita','Ordinary Drink','Alcoholic','Cocktail glass','Rub rim of cocktail glass with lime juice. Dip rim in coarse salt. Shake tequila, blue curacao, and lime juice with ice, strain into the salt-rimmed glass, and serve.');
-INSERT INTO cocktails VALUES (11119,'Blue Mountain','Ordinary Drink','Alcoholic','Old-fashioned glass','In a shaker half-filled with ice cubes, combine all of the ingredients. Shake well. Strain into an old-fashioned glass almost filled with ice cubes.');
-INSERT INTO cocktails VALUES (11120,'Bluebird','Ordinary Drink','Alcoholic','Cocktail glass','In a mixing glass half-filled with crushed ice, combine the gin, triple sec, Curacao, and bitters. Stir well. Strain into a cocktail glass and garnish with the lemon twist and the cherry.');
-INSERT INTO cocktails VALUES (11121,'Bobby Burns Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients (except lemon peel) with ice and strain into a cocktail glass. Add the twist of lemon peel and serve.');
-INSERT INTO cocktails VALUES (11124,'Boomerang','Ordinary Drink','Alcoholic','Cocktail glass','In a mixing glass half-filled with ice cubes, combine the gin, vermouth, bitters, and maraschino liqueur. Stir well. Strain into a cocktail glass and garnish with the cherry.');
-INSERT INTO cocktails VALUES (11128,'Boston Sidecar','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11129,'Boston Sour','Ordinary Drink','Alcoholic','Whiskey sour glass','Shake juice of lemon, powdered sugar, blended whiskey, and egg white with cracked ice and strain into a whiskey sour glass. Add the slice of lemon, top with the cherry, and serve.');
-INSERT INTO cocktails VALUES (11145,'Classic Old-Fashioned','Ordinary Drink','Alcoholic','Old-fashioned glass','In an old-fashioned glass, muddle the bitters and water into the sugar cube, using the back of a teaspoon. Almost fill the glass with ice cubes and add the bourbon. Garnish with the orange slice and the cherry. Serve with a swizzle stick.');
-INSERT INTO cocktails VALUES (11146,'Bourbon Sling','Ordinary Drink','Alcoholic','Highball glass','In a shaker half-filled with ice cubes, combine the sugar, water, lemon juice, and bourbon. Shake well. Strain well. Strain into a highball glass. Garnish with the lemon twist.');
-INSERT INTO cocktails VALUES (11147,'Bourbon Sour','Ordinary Drink','Alcoholic','Whiskey sour glass','In a shaker half-filled with ice cubes, combine the bourbon, lemon juice, and sugar. Shake well. Strain into a whiskey sour glass, garnish with the orange slice and cherry.');
-INSERT INTO cocktails VALUES (11149,'Boxcar','Ordinary Drink','Alcoholic','Whiskey sour glass','In a shaker half-filled with ice cubes, combine all of the ingredients. Shake well. Strain into a sour glass.');
-INSERT INTO cocktails VALUES (11157,'Brandy Cobbler','Ordinary Drink','Alcoholic','Old-fashioned glass','In an old-fashioned glass, dissolve the sugar in the club soda. Add crushed ice until the glass is almost full. Add the brandy. Stir well. Garnish with the cherry and the orange and lemon slices.');
-INSERT INTO cocktails VALUES (11164,'Brandy Flip','Ordinary Drink','Alcoholic','Whiskey sour glass','In a shaker half-filled with ice cubes, combine the brandy, egg, sugar, and cream. Shake well. Strain into a sour glass and garnish with the nutmeg.');
-INSERT INTO cocktails VALUES (11170,'Brandy Sour','Ordinary Drink','Alcoholic','Whiskey sour glass','Shake brandy, juice of lemon, and powdered sugar with ice and strain into a whiskey sour glass. Decorate with the lemon slice, top with the cherry, and serve.');
-INSERT INTO cocktails VALUES (11202,'Caipirinha','Ordinary Drink','Alcoholic','Old-fashioned glass','Place lime and sugar into old fashioned glass and muddle (mash the two ingredients together using a muddler or a wooden spoon). Fill the glass with ice and add the Cachaça.');
-INSERT INTO cocktails VALUES (11205,'California Lemonade','Ordinary Drink','Alcoholic','Collins glass','Shake all ingredients (except carbonated water) with ice and strain into a collins glass over shaved ice. Fill with carbonated water and stir. Decorate with slices of orange and lemon. Add the cherry and serve with a straw.');
-INSERT INTO cocktails VALUES (11222,'Casa Blanca','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11224,'Casino Royale','Ordinary Drink','Alcoholic','Whiskey sour glass','In a shaker half-filled with ice cubes, combine all of the ingredients. Shake well. Strain into a sour glass.');
-INSERT INTO cocktails VALUES (11227,'Champagne Cocktail','Ordinary Drink','Alcoholic','Champagne flute','Add dash of Angostura bitter onto sugar cube and drop it into champagne flute. Add cognac followed by gently pouring chilled champagne. Garnish with orange slice and maraschino cherry.');
-INSERT INTO cocktails VALUES (11239,'Cherry Rum','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11242,'Chicago Fizz','Ordinary Drink','Alcoholic','Highball glass','Shake all ingredients (except carbonated water) with ice and strain into a highball glass over two ice cubes. Fill with carbonated water, stir, and serve.');
-INSERT INTO cocktails VALUES (11243,'Chocolate Black Russian','Ordinary Drink','Alcoholic','Champagne flute','Combine all ingredients in an electric blender and blend at a low speed for a short length of time. Pour into a chilled champagne flute and serve.');
-INSERT INTO cocktails VALUES (11251,'City Slicker','Ordinary Drink','Alcoholic','Cocktail glass','In a shaker half-filled with ice cubes, combine all of the ingredients. Shake well. Strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (11255,'Clove Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11288,'Cuba Libre','Ordinary Drink','Alcoholic','Highball glass','Build all ingredients in a Collins glass filled with ice. Garnish with lime wedge.');
-INSERT INTO cocktails VALUES (11320,'Dragonfly','Ordinary Drink','Alcoholic','Highball glass','In a highball glass almost filled with ice cubes, combine the gin and ginger ale. Stir well. Garnish with the lime wedge.');
-INSERT INTO cocktails VALUES (11324,'Dry Rob Roy','Ordinary Drink','Alcoholic','Cocktail glass','In a mixing glass half-filled with ice cubes, combine the Scotch and vermouth. Stir well. Strain into a cocktail glass. Garnish with the lemon twist.');
-INSERT INTO cocktails VALUES (11326,'Dubonnet Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients (except lemon peel) with ice and strain into a cocktail glass. Add the twist of lemon peel and serve.');
-INSERT INTO cocktails VALUES (11338,'English Highball','Ordinary Drink','Alcoholic','Highball glass','Pour brandy, gin, and sweet vermouth into a highball glass over ice cubes. Fill with carbonated water. Add the twist of lemon peel, stir, and serve. (Ginger ale may be substituted for carbonated water, if preferred.)');
-INSERT INTO cocktails VALUES (11339,'English Rose Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Rub rim of cocktail glass with lemon juice and dip rim of glass in powdered sugar. Shake all ingredients (except cherry) with ice and strain into sugar-rimmed glass. Top with the cherry and serve.');
-INSERT INTO cocktails VALUES (11368,'Flying Dutchman','Ordinary Drink','Alcoholic','Old-fashioned glass','In an old-fashioned glass almost filled with ice cubes, combine the gin and triple sec. Stir well.');
-INSERT INTO cocktails VALUES (11369,'Flying Scotchman','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11375,'Foxy Lady','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a chilled cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11382,'Frisco Sour','Ordinary Drink','Alcoholic','Whiskey sour glass','Shake all ingredients (except slices of lemon and lime) with ice and strain into a whiskey sour glass. Decorate with the slices of lemon and lime and serve.');
-INSERT INTO cocktails VALUES (11387,'Frozen Daiquiri','Ordinary Drink','Alcoholic','Champagne flute','Combine all ingredients (except for the cherry) in an electric blender and blend at a low speed for five seconds, then blend at a high speed until firm. Pour contents into a champagne flute, top with the cherry, and serve.');
-INSERT INTO cocktails VALUES (11390,'Frozen Mint Daiquiri','Ordinary Drink','Alcoholic','Old-fashioned glass','Combine all ingredients with 1 cup of crushed ice in an electric blender. Blend at a low speed for a short length of time. Pour into an old-fashioned glass and serve.');
-INSERT INTO cocktails VALUES (11391,'Frozen Pineapple Daiquiri','Ordinary Drink','Alcoholic','Cocktail Glass','Combine all ingredients with 1 cup of crushed ice in an electric blender. Blend at a low speed for a short length of time. Pour into a cocktail glass and serve.');
-INSERT INTO cocktails VALUES (11396,'Gentleman''s Club','Ordinary Drink','Alcoholic','Old-fashioned glass','In an old-fashioned glass almost filled with ice cubes, combine all of the ingredients. Stir well.');
-INSERT INTO cocktails VALUES (11403,'Gin And Tonic','Ordinary Drink','Alcoholic','Highball glass','Pour the gin and the tonic water into a highball glass almost filled with ice cubes. Stir well. Garnish with the lime wedge.');
-INSERT INTO cocktails VALUES (11407,'Gin Cooler','Ordinary Drink','Alcoholic','Collins glass','Stir powdered sugar and 2 oz. carbonated water in a collins glass. Fill glass with ice and add gin. Fill with carbonated water and stir. Add the lemon peel and the orange spiral so that the end of the orange spiral dangles over rim of glass.');
-INSERT INTO cocktails VALUES (11408,'Gin Daisy','Ordinary Drink','Alcoholic','Old-fashioned glass','In a shaker half-filled with ice cubes, combine the gin, lemon juice, sugar, and grenadine. Shake well. Pour into an old-fashioned glass and garnish with the cherry and the orange slice.');
-INSERT INTO cocktails VALUES (11410,'Gin Fizz','Ordinary Drink','Alcoholic','Highball glass','Shake all ingredients with ice cubes, except soda water. Pour into glass. Top with soda water.');
-INSERT INTO cocktails VALUES (11415,'Gin Sling','Ordinary Drink','Alcoholic','Old-fashioned glass','Dissolve powdered sugar in mixture of water and juice of lemon. Add gin. Pour into an old-fashioned glass over ice cubes and stir. Add the twist of orange peel and serve.');
-INSERT INTO cocktails VALUES (11416,'Gin Smash','Ordinary Drink','Alcoholic','Old-fashioned glass','Muddle sugar with carbonated water and mint sprigs in an old-fashioned glass. Add gin and 1 ice cube. Stir, add the orange slice and the cherry, and serve.');
-INSERT INTO cocktails VALUES (11417,'Gin Sour','Ordinary Drink','Alcoholic','Whiskey sour glass','In a shaker half-filled with ice cubes, combine the gin, lemon juice, and sugar. Shake well. Strain into a sour glass and garnish with the orange slice and the cherry.');
-INSERT INTO cocktails VALUES (11418,'Gin Squirt','Ordinary Drink','Alcoholic','Highball glass','Stir gin, grenadine, and powdered sugar with ice and strain into a highball glass over ice cubes. Fill with carbonated water and stir. Decorate with the pineapple chunks and the strawberries and serve.');
-INSERT INTO cocktails VALUES (11419,'Gin Swizzle','Ordinary Drink','Alcoholic','Highball glass','In a shaker half-filled with ice cubes, combine the lime juice, sugar, gin, and bitters. Shake well. Almost fill a colling glass with ice cubes. Stir until the glass is frosted. Strain the mixture in the shaker into the glass and add the club soda.');
-INSERT INTO cocktails VALUES (11420,'Gin Toddy','Ordinary Drink','Alcoholic','Old-fashioned glass','Mix powdered sugar and water in an old-fashioned glass. Add gin and one ice cube. Stir, add the twist of lemon peel, and serve.');
-INSERT INTO cocktails VALUES (11422,'Godchild','Ordinary Drink','Alcoholic','Champagne flute','Shake all ingredients well with cracked ice, strain into a champagne flute, and serve.');
-INSERT INTO cocktails VALUES (11423,'Godfather','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour all ingredients directly into old fashioned glass filled with ice cubes. Stir gently.');
-INSERT INTO cocktails VALUES (11424,'Godmother','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour vodka and amaretto into an old-fashioned glass over ice and serve.');
-INSERT INTO cocktails VALUES (11433,'Grass Skirt','Ordinary Drink','Alcoholic','Old-fashioned glass','In a shaker half-filled with ice cubes, combine the gin, triple sec, pineapple juice, and grenadine. Shake well. Pour into an old-fashioned glass and garnish with the pineapple slice.');
-INSERT INTO cocktails VALUES (11462,'Harvey Wallbanger','Ordinary Drink','Alcoholic','Collins glass','Stir the vodka and orange juice with ice in the glass, then float the Galliano on top. Garnish and serve.');
-INSERT INTO cocktails VALUES (11470,'Havana Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','In a shaker half-filled with ice cubes, combine all of the ingredients. Shake well. Strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (11472,'Hawaiian Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11476,'Highland Fling Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients (except olive) with ice and strain into a cocktail glass. Add the olive and serve.');
-INSERT INTO cocktails VALUES (11524,'Imperial Fizz','Ordinary Drink','Alcoholic','Highball glass','Shake all ingredients (except carbonated water) with ice and strain into a highball glass over two ice cubes. Fill with carbonated water, stir, and serve.');
-INSERT INTO cocktails VALUES (11528,'Irish Spring','Ordinary Drink','Alcoholic','Collins glass','Pour all ingredients (except orange slice and cherry) into a collins glass over ice cubes. Garnish with the slice of orange, add the cherry on top, and serve.');
-INSERT INTO cocktails VALUES (11542,'Jack Rose Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11558,'Japanese Fizz','Ordinary Drink','Alcoholic','Highball glass','Shake all ingredients (except carbonated water) with ice and strain into a highball glass over two ice cubes. Fill with carbonated water, stir, and serve.');
-INSERT INTO cocktails VALUES (11566,'Jewel Of The Nile','Ordinary Drink','Alcoholic','Cocktail glass','In a mixing glass half-filled with ice cubes, combine all of the ingredients. Stir well. Strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (11580,'John Collins','Ordinary Drink','Alcoholic','Collins glass','Pour all ingredients directly into highball glass filled with ice. Stir gently. Garnish. Add a dash of Angostura bitters.');
-INSERT INTO cocktails VALUES (11600,'Kamikaze','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients together with ice. Strain into glass, garnish and serve.');
-INSERT INTO cocktails VALUES (11602,'Kentucky B And B','Ordinary Drink','Alcoholic','Brandy snifter','Pour the bourbon and Benedictine into a brandy snifter.');
-INSERT INTO cocktails VALUES (11604,'Kentucky Colonel','Ordinary Drink','Alcoholic','Cocktail glass','In a shaker half-filled with ice cubes combine the courbon and Benedictine. Shake and strain into a cocktail glass. Garnish with the lemon twist.');
-INSERT INTO cocktails VALUES (11634,'Lady Love Fizz','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients (except carbonated water) with ice and strain into a cocktail glass over two ice cubes. Fill with carbonated water, stir, and serve.');
-INSERT INTO cocktails VALUES (11658,'Loch Lomond','Ordinary Drink','Alcoholic','Cocktail glass','In a mixing glass half-filled with ice cubes, combine the Scotch, Drambuie, and vermouth. Stir well. Strain into a cocktail glass. Garnish with the lemon twist.');
-INSERT INTO cocktails VALUES (11662,'London Town','Ordinary Drink','Alcoholic','Cocktail glass','In a mixing glass half-filled with ice cubes, combine all of the ingredients. Stir well. Strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (11664,'Lone Tree Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11666,'Lone Tree Cooler','Ordinary Drink','Alcoholic','Collins glass','Stir powdered sugar and 2 oz. carbonated water in a collins glass. Fill glass with ice, add gin and vermouth, and stir. Fill with carbonated water and stir again. Add the twist of lemon peel and the orange spiral so that the end dangles over rim of glass.');
-INSERT INTO cocktails VALUES (11670,'Lord And Lady','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour the rum and Tia Maria into an old-fashioned glass almost filled with ice cubes. Stir well.');
-INSERT INTO cocktails VALUES (11690,'Mai Tai','Ordinary Drink','Alcoholic','Collins glass','Shake all ingredients with ice. Strain into glass. Garnish and serve with straw.');
-INSERT INTO cocktails VALUES (11720,'Martinez Cocktail','Cocktail','Alcoholic','Cocktail glass','Stir all ingredients (except cherry) with ice and strain into a cocktail glass. Top with the cherry and serve.');
-INSERT INTO cocktails VALUES (11728,'Martini','Cocktail','Alcoholic','Cocktail glass','Straight: Pour all ingredients into mixing glass with ice cubes. Stir well. Strain in chilled martini cocktail glass. Squeeze oil from lemon peel onto the drink, or garnish with olive.');
-INSERT INTO cocktails VALUES (11766,'Midnight Cowboy','Ordinary Drink','Alcoholic','Cocktail glass','In a shaker half-filled with ice cubes, combine all of the ingredients. Shake well. Strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (11786,'Mississippi Planters Punch','Ordinary Drink','Alcoholic','Collins glass','Shake all ingredients (except carbonated water) with ice and strain into a collins glass over ice cubes. Fill with carbonated water, stir, and serve.');
-INSERT INTO cocktails VALUES (11798,'Monkey Wrench','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour all of the ingredients into an old-fashioned glass almost filled with ice cubes. Stir well.');
-INSERT INTO cocktails VALUES (11844,'New York Sour','Ordinary Drink','Alcoholic','Whiskey sour glass','Shake blended whiskey, juice of lemon, and powdered sugar with ice and strain into a whiskey sour glass. Float claret on top. Decorate with the half-slice of lemon and the cherry and serve.');
-INSERT INTO cocktails VALUES (11870,'Orange Oasis','Ordinary Drink','Alcoholic','Highball glass','Shake brandy, gin, and orange juice with ice and strain into a highball glass over ice cubes. Fill with ginger ale, stir, and serve.');
-INSERT INTO cocktails VALUES (11872,'Orgasm','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a chilled cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11936,'Pink Gin','Ordinary Drink','Alcoholic','White wine glass','Pour the bitters into a wine glass. Swirl the glass to coat the inside with the bitters, shake out the excess. Pour the gin into the glass. Do not add ice.');
-INSERT INTO cocktails VALUES (11938,'Pink Lady','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11959,'Poppy Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11961,'Port And Starboard','Ordinary Drink','Alcoholic','Pousse cafe glass','Pour carefully into a pousse-cafe glass, so that creme de menthe floats on grenadine. Serve without mixing.');
-INSERT INTO cocktails VALUES (11963,'Port Wine Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11965,'Port Wine Flip','Ordinary Drink','Alcoholic','Whiskey sour glass','Shake all ingredients (except nutmeg) with ice and strain into a whiskey sour glass. Sprinkle nutmeg on top and serve.');
-INSERT INTO cocktails VALUES (11983,'Quaker''s Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11985,'Quarter Deck Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11987,'Queen Bee','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11989,'Queen Charlotte','Ordinary Drink','Alcoholic','Collins glass','Pour red wine and grenadine into a collins glass over ice cubes. Fill with lemon-lime soda, stir, and serve.');
-INSERT INTO cocktails VALUES (11991,'Queen Elizabeth','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (11993,'Quentin','Ordinary Drink','Alcoholic','Cocktail glass','In a shaker half-filled with ice cubes, combine the rum, Kahlua, and cream. Shake well. Strain into a cocktail glass and garnish with the nutmeg.');
-INSERT INTO cocktails VALUES (12055,'Royal Fizz','Ordinary Drink','Alcoholic','Collins glass','Shake all ingredients (except cola) with ice and strain into a chilled collins glass. Fill with cola and serve.');
-INSERT INTO cocktails VALUES (12057,'Royal Gin Fizz','Ordinary Drink','Alcoholic','Highball glass','Shake all ingredients (except carbonated water) with ice and strain into a highball glass over two ice cubes. Fill with carbonated water, stir, and serve.');
-INSERT INTO cocktails VALUES (12067,'Rum Cobbler','Ordinary Drink','Alcoholic','Old-fashioned glass','In an old-fashioned glass, dissolve the sugar in the club soda. Add crushed ice until the glass is almost full. Add the rum. Stir well. Garnish with the cherry and the orange and lemon slices.');
-INSERT INTO cocktails VALUES (12071,'Rum Cooler','Ordinary Drink','Alcoholic','Collins glass','Pour the rum and soda into a collins glass almost filled with ice cubes. Stir well and garnish with the lemon wedge.');
-INSERT INTO cocktails VALUES (12087,'Rum Milk Punch','Ordinary Drink','Alcoholic','Collins glass','Shake all ingredients (except nutmeg) with ice and strain into a collins glass. Sprinkle nutmeg on top and serve.');
-INSERT INTO cocktails VALUES (12089,'Rum Old-fashioned','Ordinary Drink','Alcoholic','Old-fashioned glass','Stir powdered sugar, water, and bitters in an old-fashioned glass. When sugar has dissolved add ice cubes and light rum. Add the twist of lime peel, float 151 proof rum on top, and serve.');
-INSERT INTO cocktails VALUES (12091,'Rum Screwdriver','Ordinary Drink','Alcoholic','Highball glass','Pour rum into a highball glass over ice cubes. Add orange juice, stir, and serve.');
-INSERT INTO cocktails VALUES (12093,'Rum Sour','Ordinary Drink','Alcoholic','Whiskey sour glass','In a shaker half-filled with ice cubes, combine the rum, lemon juice, and sugar. Shake well. Strain into a sour glass and garnish with the orange slice and the cherry.');
-INSERT INTO cocktails VALUES (12097,'Rum Toddy','Ordinary Drink','Alcoholic','Old-fashioned glass','Dissolve powdered sugar in water in an old-fashioned glass. Add rum and one ice cube and stir. Add the twist of lemon peel and serve.');
-INSERT INTO cocktails VALUES (12101,'Rusty Nail','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour the Scotch and Drambuie into an old-fashioned glass almost filled with ice cubes. Stir well. Garnish with the lemon twist.');
-INSERT INTO cocktails VALUES (12107,'Salty Dog','Ordinary Drink','Alcoholic','Highball glass','Pour all ingredients over ice cubes in a highball glass. Stir well and serve. (Vodka may be substituted for gin, if preferred.)');
-INSERT INTO cocktails VALUES (12127,'Sazerac','Ordinary Drink','Alcoholic','Old-fashioned glass','Rinse a chilled old-fashioned glass with the absinthe, add crushed ice, and set it aside. Stir the remaining ingredients over ice and set it aside. Discard the ice and any excess absinthe from the prepared glass, and strain the drink into the glass. Add the lemon peel for garnish.');
-INSERT INTO cocktails VALUES (12130,'Scooter','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients well with cracked ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (12138,'Scotch Cobbler','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour scotch, brandy, and curacao over ice in an old-fashioned glass. Add the orange slice, top with the mint sprig, and serve.');
-INSERT INTO cocktails VALUES (12158,'Scotch Sour','Ordinary Drink','Alcoholic','Whiskey sour glass','Shake scotch, juice of lime, and powdered sugar with ice and strain into a whiskey sour glass. Decorate with 1/2 slice lemon, top with the cherry, and serve.');
-INSERT INTO cocktails VALUES (12162,'Screwdriver','Ordinary Drink','Alcoholic','Highball glass','Mix in a highball glass with ice. Garnish and serve.');
-INSERT INTO cocktails VALUES (12186,'Shanghai Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (12188,'Sherry Eggnog','Ordinary Drink','Alcoholic','Collins glass','Shake sherry, powdered sugar, and egg with ice and strain into a collins glass. Fill with milk and stir. Sprinkle nutmeg on top and serve.');
-INSERT INTO cocktails VALUES (12190,'Sherry Flip','Ordinary Drink','Alcoholic','Nick and Nora Glass','Shake all ingredients (except nutmeg) with ice and strain into a whiskey sour glass. Sprinkle nutmeg on top and serve.');
-INSERT INTO cocktails VALUES (12196,'Sidecar','Ordinary Drink','Alcoholic','Cocktail glass','Pour all ingredients into cocktail shaker filled with ice. Shake well and strain into cocktail glass.');
-INSERT INTO cocktails VALUES (12198,'Sidecar Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (12214,'Singapore Sling','Ordinary Drink','Alcoholic','Hurricane glass','Pour all ingredients into cocktail shaker filled with ice cubes. Shake well. Strain into highball glass. Garnish with pineapple and cocktail cherry.');
-INSERT INTO cocktails VALUES (12224,'Sloe Gin Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (12256,'Sol Y Sombra','Ordinary Drink','Alcoholic','Brandy snifter','Shake ingredients with ice, strain into a brandy snifter, and serve. (The English translation of the name of this drink is "Sun and Shade", and after sampling this drink, you''ll understand why. Thanks, Kirby.)');
-INSERT INTO cocktails VALUES (12308,'Stone Sour','Ordinary Drink','Alcoholic','Whiskey sour glass','Shake all ingredients with ice, strain into a chilled whiskey sour glass, and serve.');
-INSERT INTO cocktails VALUES (12316,'Strawberry Daiquiri','Ordinary Drink','Alcoholic','Cocktail glass','Pour all ingredients into shaker with ice cubes. Shake well. Strain in chilled cocktail glass.');
-INSERT INTO cocktails VALUES (12322,'Strawberry Margarita','Ordinary Drink','Alcoholic','Cocktail glass','Rub rim of cocktail glass with lemon juice and dip rim in salt. Shake schnapps, tequila, triple sec, lemon juice, and strawberries with ice, strain into the salt-rimmed glass, and serve.');
-INSERT INTO cocktails VALUES (12362,'Tequila Fizz','Ordinary Drink','Alcoholic','Collins glass','Shake all ingredients (except ginger ale) with ice and strain into a collins glass over ice cubes. Fill with ginger ale, stir, and serve.');
-INSERT INTO cocktails VALUES (12370,'Tequila Sour','Ordinary Drink','Alcoholic','Whiskey sour glass','Shake tequila, juice of lemon, and powdered sugar with ice and strain into a whiskey sour glass. Add the half-slice of lemon, top with the cherry, and serve.');
-INSERT INTO cocktails VALUES (12388,'Thriller','Ordinary Drink','Alcoholic','Cocktail glass','In a shaker half-filled with ice cubes, combine all of the ingredients. Shake well. Strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (12402,'Tom Collins','Ordinary Drink','Alcoholic','Collins glass','In a shaker half-filled with ice cubes, combine the gin, lemon juice, and sugar. Shake well. Strain into a collins glass alomst filled with ice cubes. Add the club soda. Stir and garnish with the cherry and the orange slice.');
-INSERT INTO cocktails VALUES (12418,'Turf Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients (except orange peel) with ice and strain into a cocktail glass. Add the twist of orange peel and serve.');
-INSERT INTO cocktails VALUES (12420,'Tuxedo Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients with ice and strain into a cocktail glass. Garnish with a cherry and a twist of lemon zest.');
-INSERT INTO cocktails VALUES (12434,'Valencia Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (12436,'Van Vleet','Ordinary Drink','Alcoholic','Old-fashioned glass','Shake all ingredients with ice, strain into an old-fashioned glass over ice cubes, and serve.');
-INSERT INTO cocktails VALUES (12442,'Vermouth Cassis','Ordinary Drink','Alcoholic','Highball glass','Stir vermouth and creme de cassis in a highball glass with ice cubes. Fill with carbonated water, stir again, and serve.');
-INSERT INTO cocktails VALUES (12444,'Vesuvio','Ordinary Drink','Alcoholic','Old-fashioned glass','Shake all ingredients with ice, strain into an old-fashioned glass over ice cubes, and serve.');
-INSERT INTO cocktails VALUES (12446,'Veteran','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour the rum and cherry brandy into an old-fashioned glass almost filled with ice cubes. Stir well.');
-INSERT INTO cocktails VALUES (12450,'Victor','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (12452,'Victory Collins','Ordinary Drink','Alcoholic','Collins glass','Shake all ingredients (except orange slice) with ice and strain into a collins glass over ice cubes. Add the slice of orange and serve.');
-INSERT INTO cocktails VALUES (12460,'Vodka And Tonic','Ordinary Drink','Alcoholic','Highball glass','Pour vodka into a highball glass over ice cubes. Fill with tonic water, stir, and serve.');
-INSERT INTO cocktails VALUES (12474,'Waikiki Beachcomber','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (12518,'Whisky Mac','Ordinary Drink','Alcoholic','Collins Glass','Pour both of the ingredients into a wine goblet with no ice.');
-INSERT INTO cocktails VALUES (12528,'White Russian','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour vodka and coffee liqueur over ice cubes in an old-fashioned glass. Fill with light cream and serve.');
-INSERT INTO cocktails VALUES (12560,'Afterglow','Cocktail','Non alcoholic','Highball Glass','Mix. Serve over ice.');
-INSERT INTO cocktails VALUES (12562,'Alice Cocktail','Cocktail','Non alcoholic','Cocktail glass','Shake well, strain into a large cocktail glass.');
-INSERT INTO cocktails VALUES (12564,'Apple Karate','Cocktail','Non alcoholic','Highball Glass','Place all ingredients in the blender jar - cover and whiz on medium speed until well blended. Pour in one tall, 2 medium or 3 small glasses and drink up.');
-INSERT INTO cocktails VALUES (12572,'Bora Bora','Cocktail','Non alcoholic','Highball glass','Prepare in a blender or shaker, serve in a highball glass on the rocks. Garnish with 1 slice of pineapple and one cherry.');
-INSERT INTO cocktails VALUES (12618,'Orangeade','Cocktail','Non alcoholic','Highball glass','Place some ice cubes in a large tumbler or highball glass, add lemon juice, orange juice, sugar syrup, and stir well. Top up with cold soda water, serve with a drinking straw.');
-INSERT INTO cocktails VALUES (12630,'Rail Splitter','Cocktail','Non alcoholic','Highball glass','Mix sugar syrup with lemon juice in a tall glass. Fill up with ginger ale.');
-INSERT INTO cocktails VALUES (12654,'Banana Milk Shake','Shake','Non alcoholic','White wine glass','Blend very well, preferably in a household mixer. Serve in a wine glass, garnish with whipped cream and a piece of banana.');
-INSERT INTO cocktails VALUES (12656,'Banana Strawberry Shake','Shake','Non alcoholic','Highball Glass','Blend all together in a blender until smooth.');
-INSERT INTO cocktails VALUES (12658,'Banana Strawberry Shake Daiquiri','Shake','Non alcoholic','Cocktail Glass','Blend all together in a blender until smooth.');
-INSERT INTO cocktails VALUES (12668,'Egg Cream','Other / Unknown','Non alcoholic','Coffee mug','Mix syrup and milk in a fountain glass. Add soda water, serve with a straw.');
-INSERT INTO cocktails VALUES (12670,'Fruit Cooler','Other / Unknown','Non alcoholic','Highball Glass','Toss strawberries with sugar, and let sit overnight in refrigerator. Cut lemon, reserve two slices. Juice the rest. Mix together the lemon juice, strawberries, apple juice, and soda water. Add slices of lemon (decor, really). In glasses, put ice cubes, and a slice of apple. Pour drink in, and serve.');
-INSERT INTO cocktails VALUES (12672,'Fruit Flip-Flop','Other / Unknown','Non alcoholic','Highball Glass','Place all ingredients in the blender jar - cover and whiz on medium speed until well blended. Pour in one tall, 2 medium or 3 small glasses and drink up.');
-INSERT INTO cocktails VALUES (12674,'Fruit Shake','Other / Unknown','Non alcoholic','Highball Glass','Blend til smooth.');
-INSERT INTO cocktails VALUES (12688,'Just a Moonmint','Shake','Non alcoholic','Highball Glass','Place all ingredients in the blender jar - cover and whiz on medium speed until well blended. Pour in one tall, 2 medium or 3 small glasses and drink up.');
-INSERT INTO cocktails VALUES (12690,'Lassi - A South Indian Drink','Other / Unknown','Non alcoholic','Highball Glass','Blend in a blender for 3 seconds. Lassi is one of the easiest things to make, and there are many ways of making it. Basically, it is buttermilk (yoghurt whisked with water), and you can choose almost any consistency that you like, from the thinnest to the thickest. Serve cold.');
-INSERT INTO cocktails VALUES (12692,'Lassi Khara','Other / Unknown','Non alcoholic','Highball Glass','Blend (frappe) in blender until frothy. Add torn curry leaves and serve cold.');
-INSERT INTO cocktails VALUES (12694,'Lassi Raita','Other / Unknown','Non alcoholic','Highball Glass','Blend the yoghurt and ice cubes together, until the yoghurt becomes more liquid. Add sugar to taste. The lemon/lime is optional but it gives it a slightly tart taste. Dash of salt. Raita is also good for the summer. Instead of having a traditional salad you can make raita instead.');
-INSERT INTO cocktails VALUES (12696,'Lassi - Sweet','Other / Unknown','Non alcoholic','Highball glass','Put all ingredients into a blender and blend until nice and frothy. Serve chilled.');
-INSERT INTO cocktails VALUES (12698,'Lassi - Mango','Other / Unknown','Non alcoholic','Highball glass','Put it all in a blender and pour over crushed ice. You can also use other fruits like strawberries and bananas.');
-INSERT INTO cocktails VALUES (12702,'Lemouroudji','Other / Unknown','Non alcoholic','Highball Glass','Juice the lemons. Peel and grate the ginger. Place the grated ginger and a liberal dash of the cayenne pepper into a piece of cheesecloth, and tie it into a knot. Let soak in the water. After 15 minutes or so, add the sugar, and the lemon juice. Chill, and serve.');
-INSERT INTO cocktails VALUES (12704,'Limeade','Other / Unknown','Non alcoholic','Highball glass','In a large glass, put the lime juice and sugar, and stir well. Add cold seltzer water to fill. Put the lime peels in the glass. Drink. Repeat until limes or soda run out.');
-INSERT INTO cocktails VALUES (12706,'Imperial Cocktail','Cocktail','Alcoholic','Cocktail glass','Shake with ice and strain into cocktail glass.');
-INSERT INTO cocktails VALUES (12708,'Banana Cantaloupe Smoothie','Other / Unknown','Non alcoholic','Highball Glass','Juice cantaloupe, pour juice into blender, add banana, and liquify.');
-INSERT INTO cocktails VALUES (12710,'Apple Berry Smoothie','Other / Unknown','Non alcoholic','Highball Glass','Throw everything into a blender and liquify.');
-INSERT INTO cocktails VALUES (12712,'Grape lemon pineapple Smoothie','Other / Unknown','Non alcoholic','Highball glass','Throw everything into a blender and liquify.');
-INSERT INTO cocktails VALUES (12714,'Kiwi Papaya Smoothie','Other / Unknown','Non alcoholic','Highball Glass','Throw everything into a blender and liquify.');
-INSERT INTO cocktails VALUES (12716,'Mango Orange Smoothie','Other / Unknown','Non alcoholic','Highball Glass','Throw everything into a blender and liquify.');
-INSERT INTO cocktails VALUES (12718,'Pineapple Gingerale Smoothie','Other / Unknown','Non alcoholic','Highball Glass','Throw everything into a blender and liquify.');
-INSERT INTO cocktails VALUES (12720,'Kill the cold Smoothie','Other / Unknown','Non alcoholic','Highball glass','Juice ginger and lemon and add it to hot water. You may add cardomom.');
-INSERT INTO cocktails VALUES (12722,'Strawberry Shivers','Other / Unknown','Non alcoholic','Highball glass','Place all ingredients in the blender jar - cover and whiz on medium speed until well blended. Pour in one tall, 2 medium or 3 small glasses and drink up.');
-INSERT INTO cocktails VALUES (12724,'Sweet Bananas','Shake','Non alcoholic','Highball Glass','Place all ingredients in the blender jar - cover and whiz on medium speed until well blended. Pour in one tall, 2 medium or 3 small glasses and drink up.');
-INSERT INTO cocktails VALUES (12726,'Tomato Tang','Other / Unknown','Non alcoholic','Highball glass','Place all ingredients in the blender jar - cover and whiz on medium speed until well blended. Pour in one tall, 2 medium or 3 small glasses and drink up.');
-INSERT INTO cocktails VALUES (12728,'Yoghurt Cooler','Other / Unknown','Non alcoholic','Highball Glass','Place all ingredients in the blender jar - cover and whiz on medium speed until well blended. Pour in one tall, 2 medium or 3 small glasses and drink up. Note: Use lots of ice in this one - great on hot days! To add ice: Remove the center of the cover while the blender is on - drop 3 or 4 ice cubs and blend until they''re completely crushed.');
-INSERT INTO cocktails VALUES (12730,'Castillian Hot Chocolate','Cocoa','Non alcoholic','Coffee mug','Shift the cocoa and sugar together into a medium-sized saucepan. Dissolve the cornstarch in the water, and stir into the cocoa and sugar until it is a smooth paste. Begin heating the mixture, stirring it with a whisk, and gradually pour in the milk. Continue stirring with the whisk as you bring the liquid to a simmer. Allow the chocolate to simmer for about 10 minutes, stirring often, until it is thick, glossy and completely smooth. Serve steaming hot in coffee mug. Serves six.');
-INSERT INTO cocktails VALUES (12732,'Chocolate Beverage','Cocoa','Non alcoholic','Coffee mug','Boil milk in the top of a deep double boiler five minutes. Remove from fire and add chocolate, mixed with the cinnamon, a little at a time, beating with molinillo or egg beater after each addition. When the chocolate is thoroughly blended, heat to the boiling point. Place over bottom of double boiler and add eggs, whipping constantly, until they are thoroughly blended and the mixture is frothing. Serve in coffee mug. Serves eight.');
-INSERT INTO cocktails VALUES (12734,'Chocolate Drink','Cocoa','Non alcoholic','Coffee mug','Melt the bar in a small amount of boiling water. Add milk. Cook over low heat, whipping gently (with a whisk, i would assume) until heated well. Don''t let it boil! Serve in coffee mug.');
-INSERT INTO cocktails VALUES (12736,'Drinking Chocolate','Cocoa','Non alcoholic','Coffee mug','Heat the cream and milk with the cinnamon and vanilla bean very slowly for 15-20 minutes. (If you don''t have any beans add 1-2 tsp of vanilla after heating). Remove the bean and cinnamon. Add the chocolate. Mix until fully melted. Serve topped with some very dense fresh whipped cream. Serves 1-2 depending upon how much of a glutton you are. For a richer chocolate, use 4 oz of milk, 4 oz of cream, 4 oz of chocolate. Serve in coffee mug.');
-INSERT INTO cocktails VALUES (12738,'Hot Chocolate to Die for','Cocoa','Non alcoholic','Coffee mug','Melt the chocolate, butter and vanilla in a double boiler. When just smooth stir in the cream.');
-INSERT INTO cocktails VALUES (12744,'Microwave Hot Cocoa','Cocoa','Non alcoholic','Coffee mug','Combine sugar, cocoa, salt and hot water in 1-quart micro-proof measuring cup (or coffee mug). Microwave at HIGH (100%) for 1 to 1 1/2 minutes or until boiling. Add milk, sitr and microwave an additonal 1 1/2 to 2 minutes or until hot. Stir in vanilla, blend well.');
-INSERT INTO cocktails VALUES (12746,'Nuked Hot Chocolate','Cocoa','Non alcoholic','Coffee mug','Mix with a bit of milk (1 oz or so) in coffee mug. Nuke mug for about 30-50 seconds. Stir until the heated cocoa dissolves. Fill mug with milk. Nuke for 1-2 minutes, depending on wattage and preferences as to burnt mouth parts.');
-INSERT INTO cocktails VALUES (12748,'Orange Scented Hot Chocolate','Cocoa','Non alcoholic','Coffee mug','Combine all ingredients in heavy medium saucepan. Stir over low heat until chocolate melts. Increase heat and bring just to a boil, stirring often. Remove from heat and whisk untily frothy. Return to heat and bring to boil again. Remove from heat, whisk until frothy. Repeat heating and whisking once again. Discard orange peel. (Can be prepared 2 hours ahead. Let stand at room temperature. Before serving, bring just to boil, remove from heat and whisk until frothy.) Pour hot chocolate into coffee mugs. Makes 2 servings.');
-INSERT INTO cocktails VALUES (12750,'Spanish chocolate','Cocoa','Non alcoholic','Coffee mug','Stir the milk with the chocolate and the cinnamon over low heat until the chocolate dissolves. Add the eggs and beat the mixture until it becomes thick, taking care not to boil. Serve in coffee mug.');
-INSERT INTO cocktails VALUES (12752,'Lemon Shot','Shot','Alcoholic','Shot glass','Mix Galliano and Absolut Citron in a shot glass, lay lemon wedge sprinkled with sugar over glass and pour a rum over wedge and glass. light rum with a lighter and let burn for a second. Do shot quickly and suck on lemon. If it is done correctly, this will taste like a shot of sweet lemonade.');
-INSERT INTO cocktails VALUES (12754,'Sex on the Beach','Ordinary Drink','Alcoholic','Highball glass','Build all ingredients in a highball glass filled with ice. Garnish with orange slice.');
-INSERT INTO cocktails VALUES (12756,'Autodafé','Ordinary Drink','Alcoholic','Highball glass','Mix and fill up with soda water. Drunk by finns on a sunny day any time of the year and day.');
-INSERT INTO cocktails VALUES (12758,'Gagliardo','Cocktail','Alcoholic','Cocktail glass','Shake well and serve in a cocktail glass. This is a home cocktail of American/Internet Bar del Pozzo, Pavia, Italy.');
-INSERT INTO cocktails VALUES (12760,'Surf City Lifesaver','Ordinary Drink','Alcoholic','Highball glass','Lots of ice and soda top up in tall glass with cherry and a grin.');
-INSERT INTO cocktails VALUES (12762,'Grizzly Bear','Ordinary Drink','Alcoholic','Collins Glass','Served over ice. Sounds nasty, but tastes great.');
-INSERT INTO cocktails VALUES (12764,'Karsk','Ordinary Drink','Alcoholic','Highball glass','Put a copper coin in a coffe-cup and fill up with coffee until you no longer see the coin, then add alcohol until you see the coin. Norwegian speciality.');
-INSERT INTO cocktails VALUES (12766,'Happy Skipper','Ordinary Drink','Alcoholic','Highball glass','Pour Captain Morgan''s Spiced Rum over ice, fill glass to top with Ginger Ale. Garnish with lime. Tastes like a cream soda. Named for the Gilligan''s Island reference ("The Captain" *in* "Ginger" is a Happy Skipper!)');
-INSERT INTO cocktails VALUES (12768,'Frappé','Coffee / Tea','Non alcoholic','Highball Glass','Mix together. Blend at highest blender speed for about 1 minute. Pour into a glass and drink with a straw. Notes: This works best if everything is cold (if you make fresh coffee, mix it with the milk and let it sit in the fridge for 1/2 hour. If it is not frothy, add more milk, or even just some more milk powder. The froth gradually turns to liquid at the bottom of the glass, so you will find that you can sit and drink this for about 1/2 hour, with more iced coffee continually appearing at the bottom. Very refreshing.');
-INSERT INTO cocktails VALUES (12770,'Iced Coffee','Coffee / Tea','Non alcoholic','Coffee mug','Mix together until coffee and sugar is dissolved. Add milk. Shake well. Using a blender or milk shake maker produces a very foamy drink. Serve in coffee mug.');
-INSERT INTO cocktails VALUES (12772,'Iced Coffee Fillip','Coffee / Tea','Alcoholic','Coffee mug','Mix together in a coffee mug and chill before serving.');
-INSERT INTO cocktails VALUES (12774,'Masala Chai','Coffee / Tea','Non alcoholic','Coffee Mug','Bring 2 cups of water to boil. Add all the ingredients and boil again for about 15 seconds. Let stand for a minute. Warm milk in a pot. Filter tea into cups. Add milk and sugar. That''s IT.');
-INSERT INTO cocktails VALUES (12776,'Melya','Coffee / Tea','Non alcoholic','Coffee mug','Brew espresso. In a coffee mug, place 1 teaspoon of unsweetened powdered cocoa, then cover a teaspoon with honey and drizzle it into the cup. Stir while the coffee brews, this is the fun part. The cocoa seems to coat the honey without mixing, so you get a dusty, sticky mass that looks as though it will never mix. Then all at once, presto! It looks like dark chocolate sauce. Pour hot espresso over the honey, stirring to dissolve. Serve with cream.');
-INSERT INTO cocktails VALUES (12780,'Spiking coffee','Coffee / Tea','Non alcoholic','Coffee mug','Incidentally, a pinch of cinnamon is indeed a nice addition to coffee but true heaven is a cardamom seed. Of course, you serve it in a coffee mug.');
-INSERT INTO cocktails VALUES (12782,'Thai Coffee','Coffee / Tea','Non alcoholic','Highball glass','Place the coffee and spices in the filter cone of your coffee maker. Brew coffee as usual, let it cool. In a tall glass, dissolve 1 or 2 teaspoons of sugar in an ounce of the coffee (it''s easier to dissolve than if you put it right over ice). Add 5-6 ice cubes and pour coffee to within about 1 inch of the top of the glass. Rest a spoon on top of the coffee and slowly pour whipping cream into the spoon. This will make the cream float on top of the coffee rather than dispersing into it right away.');
-INSERT INTO cocktails VALUES (12784,'Thai Iced Coffee','Coffee / Tea','Non alcoholic','Highball glass','Prepare a pot of coffee at a good European strength. In the ground coffee, add 2 or 3 freshly ground cardamom pods. Sweeten while hot, then cool quickly. Serve in highball glass over ice, with cream. To get the layered effect, place a spoon atop the coffee and pour the milk carefully into the spoon so that it floats on the top of the coffee.');
-INSERT INTO cocktails VALUES (12786,'Thai Iced Tea','Coffee / Tea','Non alcoholic','Highball glass','Combine Thai tea (i.e., the powder), boiling water, and sweetened condensed milk, stir until blended. Pour into 2 tall glasses filled with ice cubes. Garnish with mint leaves. Makes 2 servings.');
-INSERT INTO cocktails VALUES (12790,'Absinthe #2','Homemade Liqueur','Alcoholic','Jar','Mix together and let sit a few days. Strain through a coffee filter. To serve mix 1 part absinthe to 4 parts water, add ice, enjoy.');
-INSERT INTO cocktails VALUES (12792,'Amaretto Liqueur','Homemade Liqueur','Alcoholic','Collins Glass','Combine sugar and 3/4 cup water in a small saucepan. Bring to a boil, stirring constantly. Reduce heat and simmer until all sugar is dissolved. Remove from heat and cool. In an aging container, combine apricot halves, almond extract, grain alcohol with 1/2 cup water, and brandy. Stir in cooled sugar syrup mixture. Cap and let age for 2 days. Remove apricot halves. (Save apricot halves, can be used for cooking). Add food coloring and glycerine. Stir, recap and continue aging for 1 to 2 months. Re-bottle as desired. Liqueur is ready to serve but will continue to improve with additional aging.');
-INSERT INTO cocktails VALUES (12794,'Angelica Liqueur','Homemade Liqueur','Alcoholic','Collins Glass','Combine all herbs, nuts and spices with vodka in a 1 quart or larger aging container. Cap tightly and shake daily for 2 weeks. Strain through a fine muslin cloth or coffee filter, discarding solids. Clean out aging container. Place liquid back in container. Place sugar and water in saucepan and stir to combine over medium heat. When sugar is completely dissolved, set aside and let cool. When cool combine with food coloring and add to liqueur liquid. Cap and allow to age and mellow in a cool, dark place for one month.');
-INSERT INTO cocktails VALUES (12796,'Caribbean Orange Liqueur','Homemade Liqueur','Alcoholic','Collins Glass','Pare very thinly the bright-colored rind from the oranges (no white). Blot the peel on paper towels to remove any excess oil. Put peel in a 4 cup screw-top jar. Add 2 cups vodka. Close jar. Store in a cool, dark place for 2 days or until the vodka has absorbed the flavor. Remove peel and add remaining vodka. Close jar and add remaining cup of vodka. Close the jar and store in a cool dark place at least 1 month to age.');
-INSERT INTO cocktails VALUES (12798,'Coffee Liqueur','Homemade Liqueur','Alcoholic','Collins Glass','Combine coffee, sugar and water. Simmer 1 hour and let cool. Add vanilla and vodka. Age in sealed jar 2 to 3 weeks.');
-INSERT INTO cocktails VALUES (12800,'Coffee-Vodka','Homemade Liqueur','Alcoholic','Collins Glass','Boil water and sugar until dissolved. Turn off heat. Slowly add dry instant coffee and continue stirring. Add a chopped vanilla bean to the vodka, then combine the cooled sugar syrup and coffee solution with the vodka. Cover tightly and shake vigorously each day for 3 weeks. Strain and filter. Its also best to let the sugar mixture cool completely so the vodka won''t evaporate when its added. If you like a smoother feel to the liqueur you can add about 1 teaspoon of glycerine to the finished product.');
-INSERT INTO cocktails VALUES (12802,'Cranberry Cordial','Homemade Liqueur','Alcoholic','Collins Glass','Place the chopped cranberries in a 2 liter jar that has a tight-fitting lid. Add the sugar and rum. Adjust the lid securely and place the jar in a cool, dark place. Invert the jar and shake it every day for six weeks. Strain the cordial into bottles and seal with corks.');
-INSERT INTO cocktails VALUES (12808,'Creme de Menthe','Homemade Liqueur','Alcoholic','Collins Glass','Bring sugar and water to a boil and simmer for 10 minutes. Cool. Add the remaining ingredients and stir. Cover and let ripen for 1 month.');
-INSERT INTO cocktails VALUES (12820,'Irish Cream','Homemade Liqueur','Alcoholic','Irish coffee cup','Mix scotch and milk. Add half-and-half. Add rest.');
-INSERT INTO cocktails VALUES (12854,'Scottish Highland Liqueur','Homemade Liqueur','Alcoholic','Collins Glass','Combine all ingreds in aging container. Cover tightly and shake gently several times during the first 24 hrs. After 24 hrs, remove the lemon zest. Cover again and let stand in a cool, dark place for 2 weeks, shaking gently every other day. Strain through a wire sieve to remove the angelica root and fennel. Return to aging container, cover and let stand undisturbed in a cool dark place for 6 months. Siphon or pour clear liqueur into a sterile bottle. The cloudy dregs may be saved for cooking.');
-INSERT INTO cocktails VALUES (12856,'Tia-Maria','Homemade Liqueur','Alcoholic','Collins Glass','Boil water, sugar and coffe for 10 mins and let cool. Add rum and vanilla. Put in clean bottle(s) and leave for 1 week before using.');
-INSERT INTO cocktails VALUES (12862,'Aloha Fruit punch','Punch / Party Drink','Non alcoholic','Collins Glass','Add 1/4 cup water to ginger root. Boil 3 minutes. Strain. Add the liquid to the guava, lemon and pineapple juices. Make a syrup of sugar and remaining water. Cool. Combine with juices and pineapple. Chill throroughly.');
-INSERT INTO cocktails VALUES (12870,'Artillery Punch','Punch / Party Drink','Alcoholic','Punch bowl','Combine all the ingredients in a large punch bowl with a block of ice. If found too dry, sugar syrup may be added. Decorate with twists of lemon peel.');
-INSERT INTO cocktails VALUES (12876,'Berry Deadly','Punch / Party Drink','Alcoholic','Collins Glass','Add all ingredients to large bowl. Stir gently. Serve chilled.');
-INSERT INTO cocktails VALUES (12890,'Cranberry Punch','Punch / Party Drink','Non alcoholic','Punch Bowl','Combine first four ingredients. Stir until sugar is dissolved, chill. Then add ginger ale just before serving. Add ice ring to keep punch cold.');
-INSERT INTO cocktails VALUES (12944,'Gluehwein','Punch / Party Drink','Optional alcohol','Irish coffee cup','Boil sugar and spices in water, leave in the water for 30 minutes. Strain the spiced water and mix with the wine. Heat slowly until short of boiling temperature. (To remove alcohol, let it boil for a while.) You may add lemon or orange juice to taste. Serve in irish coffee cup.');
-INSERT INTO cocktails VALUES (12954,'Holloween Punch','Punch / Party Drink','Non alcoholic','Punch bowl','Take a bunch of grape juice and a bunch of fizzy stuff (club soda, ginger ale, lemonlime, whatever). Mix them in a punch bowl. Take orange sherbet and lime sherbet. Scoop out scoops and float them in the punch, let them melt a little so that a nasty film spreads all over the top of the punch but there are still "bubbles" in it in the form of sherbet scoops. Looks horrible, tastes just fine.');
-INSERT INTO cocktails VALUES (12988,'Mulled Wine','Punch / Party Drink','Alcoholic','Collins Glass','Simmer 3 cups water with, sugar, cloves, cinnamon sticks, and lemon peel in a stainless steel pot for 10 minutes. Add wine heat to a "coffee temperature" (DO NOT BOIL) then add the brandy.');
-INSERT INTO cocktails VALUES (13020,'Sangria','Punch / Party Drink','Alcoholic','Pitcher','Mix all together in a pitcher and refrigerate. Add cloves and cinnamon sticks to taste. Serve in wine glasses.');
-INSERT INTO cocktails VALUES (13024,'Sweet Sangria','Punch / Party Drink','Alcoholic','Pitcher','Dissolve the sugar in hot water and cool. Peel the citrus fruits and break into wedges. Mix the wine, sugar syrup, fruit, and Fresca in a pitcher and put in the fridge for a few hours. Serve in tall glasses with a straw.');
-INSERT INTO cocktails VALUES (13026,'Sangria The  Best','Punch / Party Drink','Alcoholic','Pitcher','Mix wine, sugar and fruit, and let sit in the fridge for 18-24 hours. The mixture will have a somewhat syrupy consistency. Before serving stir in brandy and cut the mixture with soda water until it have a thinner, more wine like consistency. Serve from a pitcher in wine glasses.');
-INSERT INTO cocktails VALUES (13032,'Spiced Peach Punch','Punch / Party Drink','Non alcoholic','Collins Glass','Combine peach nectar, orange juice and brown sugar in a large saucepan. Tie cinnamon and cloves in a small cheesecloth bag. Drop into saucepan. Heat slowly, stirring constantly, until sugar dissolves. Simmer 10 minutes. Stir in lime juice. Serve in hot mugs.');
-INSERT INTO cocktails VALUES (13036,'Strawberry Lemonade','Punch / Party Drink','Non alcoholic','Collins Glass','Throw everything into a blender and mix until fairly smooth. Serve over ice.');
-INSERT INTO cocktails VALUES (13058,'Wine Punch','Punch / Party Drink','Alcoholic','Collins Glass','Combine all of the ingredients and pour over a block of ice.');
-INSERT INTO cocktails VALUES (13066,'Bruce''s Puce','Shot','Alcoholic','Shot glass','In a regular-sized shot glass, layer, with a spoon or cherry, the grenadine , the Kahlua , then the Bailey''s Irish cream in equal portions. It goes down really smooth ,and you don''t even need a chaser. It tastes just like chocolate milk.(Really!)');
-INSERT INTO cocktails VALUES (13068,'Brave Bull Shooter','Shot','Alcoholic','Shot glass','Pour Tabasco into bottom of shot glass and fill with tequila.');
-INSERT INTO cocktails VALUES (13070,'Fahrenheit 5000','Shot','Alcoholic','Shot glass','Cover bottom of shot glass with Tabasco Sauce and then fill with half Firewater and half Absolut Peppar.');
-INSERT INTO cocktails VALUES (13072,'Popped cherry','Ordinary Drink','Alcoholic','Highball glass','Served over ice in a tall glass with a popped cherry (can add more popped cherries if in the mood)!');
-INSERT INTO cocktails VALUES (13086,'Atomic Lokade','Ordinary Drink','Alcoholic','Collins Glass','In a shaker, place lemonade, vodka, blue Curacao, and triple sec together. Shake with ice and strain into glass. Add sugar to taste');
-INSERT INTO cocktails VALUES (13128,'Diesel','Beer','Alcoholic','Pint glass','Pour the lager first then add the blackcurrant cordial. Top up with the cider. The colour sholud be very dark approaching the colour of Guiness.');
-INSERT INTO cocktails VALUES (13162,'Afternoon','Coffee / Tea','Alcoholic','Collins Glass','Build into a suiting glass, with no ice. Cream on top if wanted. Served directly.');
-INSERT INTO cocktails VALUES (13190,'Kool-Aid Shot','Shot','Alcoholic','Old-fashioned glass','Pour into a large glass with ice and stir. Add a little cranberry juice to taste.');
-INSERT INTO cocktails VALUES (13192,'National Aquarium','Ordinary Drink','Alcoholic','Collins Glass','Pour all ingredients into a shaker of ice. Shake well. Serve on the rocks.');
-INSERT INTO cocktails VALUES (13194,'Damned if you do','Shot','Alcoholic','Shot glass','Pour into shot glass. Put in mouth. Repeat as deemed necessary.');
-INSERT INTO cocktails VALUES (13196,'Long vodka','Ordinary Drink','Alcoholic','Highball glass','Shake a tall glass with ice cubes and Angostura, coating the inside of the glass. Por the vodka onto this, add 1 slice of lime and squeeze juice out of remainder, mix with tonic, stir and voila you have a Long Vodka');
-INSERT INTO cocktails VALUES (13198,'Quick F**K','Shot','Alcoholic','Shot glass','In a shot glass add 1/3 Kahlua first. Then 1/3 Miduri, topping it off with a 1/3 bailey''s irish cream');
-INSERT INTO cocktails VALUES (13200,'Owen''s Grandmother''s Revenge','Ordinary Drink','Alcoholic','Highball glass','Add ingredients and mix in blender.');
-INSERT INTO cocktails VALUES (13202,'Flaming Dr. Pepper','Shot','Alcoholic','Collins Glass','Add Amaretto, Bacardi, and vodka. Mix in the Dr. Pepper and beer');
-INSERT INTO cocktails VALUES (13204,'New York Lemonade','Cocktail','Alcoholic','Cocktail glass','Serve in a chilled cocktail glass. Lemon and sugar the rim. Stir and Strain.');
-INSERT INTO cocktails VALUES (13206,'Caipirissima','Ordinary Drink','Alcoholic','Collins Glass','Same as Caipirinha but instead of cachaca you add WHITE RUM. It''s great!!!!!!!!');
-INSERT INTO cocktails VALUES (13214,'Pisco Sour','Cocktail','Alcoholic','Cocktail glass','Vigorously shake and strain contents in a cocktail shaker with ice cubes, then pour into glass and garnish with bitters.');
-INSERT INTO cocktails VALUES (13222,'Big Red','Shot','Alcoholic','Shot glass','Pour ingredients into 1 ounce shot glass');
-INSERT INTO cocktails VALUES (13282,'Black & Tan','Beer','Alcoholic','Pint glass','Fill pint glass half full with Bass. Next pour Guiness over a spoon slowly until glass is full. If done correctly the Guiness will stay on top and the Bass on bottom hence the name Black & Tan.');
-INSERT INTO cocktails VALUES (13328,'Chocolate Milk','Shot','Alcoholic','Shot Glass','Put the milk in the bottom, pour the Liquer on top and add the dash of amaretto. Do not mix. SLAM IT!');
-INSERT INTO cocktails VALUES (13332,'B-53','Shot','Alcoholic','Collins Glass','Layer the Kahlua, Sambucca and Grand Marnier into a shot glas in that order. Better than B-52');
-INSERT INTO cocktails VALUES (13377,'Sea breeze','Ordinary Drink','Alcoholic','Highball glass','Build all ingredients in a highball glass filled with ice. Garnish with lime wedge.');
-INSERT INTO cocktails VALUES (13389,'Snake Bite (UK)','Beer','Alcoholic','Pint glass','Pour ingredients into a pint glass. Drink. Fall over.');
-INSERT INTO cocktails VALUES (13395,'Bob Marley','Shot','Alcoholic','Shot glass','Layer in a 2 oz shot glass or pony glass');
-INSERT INTO cocktails VALUES (13405,'Brainteaser','Shot','Alcoholic','Shot Glass','layered erin first, then sambuca and then avocart(should sit in middle of other two. To drink: use a straw to suck up avocart then shot the rest and then suck fumes up through straw.');
-INSERT INTO cocktails VALUES (13423,'Atlantic Sun','Ordinary Drink','Alcoholic','Collins Glass','Shake all the ingredients, top the drink with soda. Garnish with a slice of orange.');
-INSERT INTO cocktails VALUES (13497,'Green Goblin','Beer','Alcoholic','Pint glass','Cider First, Lager then Curacao');
-INSERT INTO cocktails VALUES (13499,'Oreo Mudslide','Ordinary Drink','Alcoholic','Collins Glass','Blend Vodka, Kahlua, Bailey''s, ice-cream and the Oreo well in a blender. Pour into a large frosted glass. Garnish with whipped cream and a cherry.');
-INSERT INTO cocktails VALUES (13501,'ABC','Shot','Alcoholic','Shot glass','Layered in a shot glass.');
-INSERT INTO cocktails VALUES (13535,'Pink Panty Pulldowns','Ordinary Drink','Alcoholic','Collins Glass','Shake well');
-INSERT INTO cocktails VALUES (13539,'Ice Pick','Ordinary Drink','Alcoholic','Collins Glass','Put Vodka in glass fill with iced tea. Stir in lemon to taste.');
-INSERT INTO cocktails VALUES (13581,'410 Gone','Ordinary Drink','Alcoholic','Collins Glass','Mix together and enjoy!');
-INSERT INTO cocktails VALUES (13621,'Tequila Sunrise','Cocktail','Alcoholic','Highball glass','Pour the tequila and orange juice into glass over ice. Add the grenadine, which will sink to the bottom. Stir gently to create the sunrise effect. Garnish and serve.');
-INSERT INTO cocktails VALUES (13625,'Screaming Orgasm','Ordinary Drink','Alcoholic','Cocktail glass','Pour first vodka, then Bailey''s, then Kahlua into a cocktail glass over crushed ice. Stir. Caution: use only high quality vodka. Cheap vodka can cause the Bailey''s to curdle. Test your brand of vodka by mixing 1 Tsp each of vodka and Bailey''s first.');
-INSERT INTO cocktails VALUES (13675,'Flander''s Flake-Out','Ordinary Drink','Alcoholic','Collins Glass','Bang ''em both in.');
-INSERT INTO cocktails VALUES (13683,'Apple Slammer','Shot','Alcoholic','Shot glass','pour into a shot glass and present to consumer, they are expected to cover the top of the shotglass with thier palm, raise the glass, slam it on the bar and the swallow quickly.');
-INSERT INTO cocktails VALUES (13731,'Amaretto Sour','Ordinary Drink','Alcoholic','Collins Glass','Shake and strain. Garnish with a cherry and an orange slice.');
-INSERT INTO cocktails VALUES (13751,'Cuba Libra','Ordinary Drink','Alcoholic','Highball glass','Fill tall glass with ice cubes. Add rum. Rub cut edge of lime on rim of glass then squeeze juice into glass. Fill with Coca-Cola. Garnish with lime slice. Enjoy!');
-INSERT INTO cocktails VALUES (13775,'Jelly Bean','Shot','Alcoholic','Cordial glass','mix equal parts in pony glass-tastes just like a jelly bean!');
-INSERT INTO cocktails VALUES (13807,'After Five','Shot','Alcoholic','Shot glass','1. Pour Kahlua into shot glass to about 1/2 full. 2. Using a spoon(inverted), slowly pour in the Peppermint Schnapps until glass is about 3/4 full. Done correctly, the Schnapps will flow under the Kahlua for a clear layer. 3. Again using a spoon, but this time right side up, slowly top off the glass with a layer of Bailey''s. Be careful to place the spoon right at the top of the Kahlua layer and to raise it as the glass fills up. Done correctly, this will provide a layer of Bailey''s floating over the Kahlua. 4. Toss it down all at once for something like a Peppermint Pattie, WITH A BANG!!! NOTE: Best if all ingredients are chilled');
-INSERT INTO cocktails VALUES (13825,'Midnight Manx','Ordinary Drink','Alcoholic','Old-fashioned glass','Fill a mixer with ice and add Baileys, Kahlua, Goldshlager, and cream. Shake for 5 seconds and Strain into a double rocks glass filled with ice. Add chilled coffee Stir and enjoy!');
-INSERT INTO cocktails VALUES (13837,'Kir Royale','Ordinary Drink','Alcoholic','Champagne Flute','Pour Creme de cassis in glass, gently pour champagne on top');
-INSERT INTO cocktails VALUES (13847,'Jackhammer','Ordinary Drink','Alcoholic','Collins Glass','Serve over ice- Warning,Deadly!');
-INSERT INTO cocktails VALUES (13861,'Nutty Irishman','Shake','Alcoholic','Highball Glass','Serve over ice');
-INSERT INTO cocktails VALUES (13899,'3 Wise Men','Shot','Alcoholic','Collins glass','put them them in a glass... and slam it to tha head.');
-INSERT INTO cocktails VALUES (13936,'Miami Vice','Cocktail','Alcoholic','Cocktail glass','First: Mix pina colada with 2.5 oz. of rum with ice(set aside). Second: Mix daiquiri with 2.5 oz. of rum with ice. Third: While frozen, add pina colda mix then daiquiri mix in glass (Making sure they do not get mixed together).');
-INSERT INTO cocktails VALUES (13938,'AT&T','Ordinary Drink','Alcoholic','Highball Glass','Pour Vodka and Gin over ice, add Tonic and Stir');
-INSERT INTO cocktails VALUES (13940,'69 Special','Ordinary Drink','Alcoholic','Collins Glass','Pour 2 oz. gin. Add 4 oz. 7-up. Add Lemon Juice for flavor. If you are weak, top up glass with more 7-Up.');
-INSERT INTO cocktails VALUES (13971,'Irish Coffee','Coffee / Tea','Alcoholic','Irish coffee cup','Heat the coffee, whiskey and sugar; do not boil. Pour into glass and top with cream; serve hot.');
-INSERT INTO cocktails VALUES (14029,'57 Chevy with a White License Plate','Cocktail','Alcoholic','Highball glass','1. Fill a rocks glass with ice 2.add white creme de cacao and vodka 3.stir');
-INSERT INTO cocktails VALUES (14053,'Mother''s Milk','Shot','Alcoholic','Shot glass','Shake over ice, strain. Serves two.');
-INSERT INTO cocktails VALUES (14065,'Zippy''s Revenge','Cocktail','Alcoholic','Old-fashioned glass','Mix Kool-Aid to taste then add Rum and ammaretto. shake well to disolve the sugar in the Kool-Aid... serve cold');
-INSERT INTO cocktails VALUES (14071,'Belgian Blue','Soft Drink','Alcoholic','Highball glass','Just pour all ingredients in the glass and stir...');
-INSERT INTO cocktails VALUES (14087,'Red Snapper','Shot','Alcoholic','Old-fashioned glass','One shot each, shake n shoot');
-INSERT INTO cocktails VALUES (14095,'Jamaica Kiss','Shake','Alcoholic','Hurricane glass','Fill a tumbler with ice cubes. Add a shot of Tia Maria and a shot of Jamaican light rum. Fill the tumbler with milk. Blend until smooth and serve immediately.');
-INSERT INTO cocktails VALUES (14107,'Absolut Summertime','Cocktail','Alcoholic','Collins glass','Add all ingredients except lemon to shaker filled with ice. Cover and shake vigorously. Strain contents into ice filled collins glass. Garnish with lemon.');
-INSERT INTO cocktails VALUES (14133,'Cosmopolitan Martini','Cocktail','Alcoholic','Cocktail Glass','Pour all ingredients in mixing glass half filled with ice, shake and strain into chilled Martini glass.');
-INSERT INTO cocktails VALUES (14157,'Ziemes Martini Apfelsaft','Ordinary Drink','Alcoholic','Collins Glass','Serve without ice. At least the juice shold have room temperature.');
-INSERT INTO cocktails VALUES (14167,'Vodka Martini','Ordinary Drink','Alcoholic','Cocktail glass','Shake the vodka and vermouth together with a number of ice cubes, strain into a cocktail glass, add the olive and serve.');
-INSERT INTO cocktails VALUES (14181,'Cafe Savoy','Coffee / Tea','Alcoholic','Coffee mug','Fill mug almost to top with coffee.Add milk, triple sec and brandy. Stir.');
-INSERT INTO cocktails VALUES (14195,'Snowball','Ordinary Drink','Alcoholic','Highball glass','Place one ice cube in the glass and add 1 1/2 oz of Advocaat. Fill up the glass with lemonade and decorate with a slice of lemon. Serve at once.');
-INSERT INTO cocktails VALUES (14209,'Mocha-Berry','Coffee / Tea','Alcoholic','Irish coffee cup','pour 6 oz. of coffee in a mug or Irish coffee cup. add coca mix and chambord, mix well and top off with whipped cream.');
-INSERT INTO cocktails VALUES (14229,'747','Shot','Alcoholic','Shot glass','pour kaluha, then Baileys, then Frangelico not chilled and not layered -- SERVE!!!');
-INSERT INTO cocktails VALUES (14272,'Addison Special','Cocktail','Alcoholic','Old-fashioned glass','Combine ingredients in the order listed into a shaker. Fill half full with ice and shake well. Strain into glass with ice and garnish with a cherry and orange wedge.');
-INSERT INTO cocktails VALUES (14282,'California Root Beer','Soft Drink','Alcoholic','Highball glass','Put Kahlua and Galliano in highball glass fill with soda');
-INSERT INTO cocktails VALUES (14306,'Amaretto Stone Sour','Other / Unknown','Alcoholic','Collins Glass','Shake and Serve over ice');
-INSERT INTO cocktails VALUES (14356,'Blind Russian','Shake','Alcoholic','Collins glass','Fill glass with ice. Add all liquers. Add milk. shake.');
-INSERT INTO cocktails VALUES (14360,'Absolut Sex','Shot','Alcoholic','Old-fashioned glass','Shake Absolut Kurant, Midori, and Cranberry juice in shaker with ice: Strain into rocks glass: Splash of seven on top.Absolut Sex.');
-INSERT INTO cocktails VALUES (14364,'Aztec Punch','Punch / Party Drink','Alcoholic','Punch bowl','Mix all ingredients in a pitcher. Mix thoroughly and pour into whatever is available, the bigger the better! This drink packs a big punch, so don''t over do it.');
-INSERT INTO cocktails VALUES (14366,'Lemon Drop','Cocktail','Alcoholic','Cocktail glass','Shake and strain into a chilled cocktail glass rimmed with sugar.');
-INSERT INTO cocktails VALUES (14372,'Absolut limousine','Other / Unknown','Alcoholic','Collins Glass','Fill Absolut into a glass. Add Lime juice. Add Ice and lime wedges.');
-INSERT INTO cocktails VALUES (14374,'Absolut Evergreen','Other / Unknown','Alcoholic','Collins Glass','Mix, pour over ice and top up with Bitter Lemon.');
-INSERT INTO cocktails VALUES (14378,'Lunch Box','Beer','Alcoholic','Pint glass','Fill a pint glass almost full with beer. Then fill the rest with orange juice (careful not to fill it to the top). Then take the shot of Amaretto and drop it in.');
-INSERT INTO cocktails VALUES (14446,'Kool-Aid Slammer','Shot','Alcoholic','Shot glass','Fill half the shot glass with the kool-aid first. Then put a paper towel over the top of the glass and slowly pour in the vodka. If you do it right, you should be able to see that the two liquids are separated, with the vodka on top. Now slam it! The last thing you''ll taste is the kool-aid.');
-INSERT INTO cocktails VALUES (14456,'Kurant Tea','Coffee / Tea','Alcoholic','Champagne flute','Pour Absolut Kurant into a comfortably big tea-cup. Add the not too hot(!) apple tea and, if you like, some sugar. Enjoy!');
-INSERT INTO cocktails VALUES (14466,'Dirty Nipple','Shot','Alcoholic','Shot glass','This is a layered shot - the Bailey''s must be on top');
-INSERT INTO cocktails VALUES (14482,'Darkwood Sling','Soft Drink','Alcoholic','Cocktail glass','There are many good cherry liqueurs you can use, but I prefere Heering. Add one share of the liqueur. Then you add one share of Soda. For a sour sling use Tonic (most people prefer the drink without Tonic). Afterwards you fill the glass with Orange Juice and ice cubes.');
-INSERT INTO cocktails VALUES (14510,'Bailey''s Dream Shake','Soft Drink','Alcoholic','Collins glass','Blend ingredients for 30 seconds. Definitely refreshing for a hot summer''s day !');
-INSERT INTO cocktails VALUES (14538,'Bumble Bee','Shot','Alcoholic','Shot glass','This is a layered shot. First pour the Bailey''s into the shot glass. Then take an upside down spoon and touch it to the inside wall of the glass. Carefully add the Kahlua. Repeat this process for the Sambuca. If done properly, the alcohol will stay separated and resemble a bumble bee. Enjoy!!!');
-INSERT INTO cocktails VALUES (14560,'A.D.M. (After Dinner Mint)','Cocktail','Alcoholic','Irish coffee cup','shake vigorously');
-INSERT INTO cocktails VALUES (14564,'A Splash of Nash','Shot','Alcoholic','Highball glass','Drop shot glass with banana & melon liquers into a 9 oz hi- ball glass containing soda water and cranberry juice. Drink in one shot.');
-INSERT INTO cocktails VALUES (14578,'Amaretto Sunrise','Ordinary Drink','Alcoholic','Collins Glass','Mix together the amaretto and orange juice. Pour into glass and then add the grenadine untill you see the sunrise.');
-INSERT INTO cocktails VALUES (14584,'Arizona Stingers','Cocktail','Alcoholic','Hurricane glass','Place ice cubes in the hurricane glass . Add the 2 HEAPING shots of Absolute Vodka (Note: You can add as many shots of Absolute as you want!) Fill the rest of glass with the Arizona Icetea with lemon. Stir to mix using a spoon. Drink up and enjoy!!!!!!!');
-INSERT INTO cocktails VALUES (14586,'Orange Push-up','Ordinary Drink','Alcoholic','Hurricane glass','Combine liquors in a blender. Add a half scoop of ice and blend. Garnish with an orange and cherry flag. So good it will melt in your mouth!!!');
-INSERT INTO cocktails VALUES (14588,'151 Florida Bushwacker','Shake','Alcoholic','Beer mug','Combine all ingredients. Blend until smooth. Garnish with chocolate shavings if desired.');
-INSERT INTO cocktails VALUES (14594,'Zizi Coin-coin','Punch / Party Drink','Alcoholic','Margarita/Coupette glass','Pour 5cl of Cointreau on ice, add 2cl of fresh lemon (or lime) juice, stir gently, and finally add slices of lemon/lime in glass.');
-INSERT INTO cocktails VALUES (14598,'50/50','Ordinary Drink','Alcoholic','Collins Glass','fill glass with crushed ice. Add vodka. Add a splash of grand-marnier. Fill with o.j.');
-INSERT INTO cocktails VALUES (14602,'Tequila Surprise','Shot','Alcoholic','Shot glass','Fill shot glass with Tequila. Add drops of Tobasco sauce.');
-INSERT INTO cocktails VALUES (14608,'Cream Soda','Cocktail','Alcoholic','Highball glass','Pour 1oz of Spiced Rum into a highball glass with ice. Fill with Ginger Ale.');
-INSERT INTO cocktails VALUES (14610,'ACID','Shot','Alcoholic','Shot glass','Poor in the 151 first followed by the 101 served with a Coke or Dr Pepper chaser.');
-INSERT INTO cocktails VALUES (14622,'Arctic Fish','Punch / Party Drink','Alcoholic','Beer pilsner','Fill glass with ice and fish, add vodka, grape soda and orange juice. DO NOT STIR!!!!! Serve well chilled.');
-INSERT INTO cocktails VALUES (14642,'Grim Reaper','Ordinary Drink','Alcoholic','Old-fashioned glass','Mix Kahlua and 151 in glass. Quickly add ice and pour grenadine over ice to give ice red tint.');
-INSERT INTO cocktails VALUES (14688,'Freddy Kruger','Shot','Alcoholic','Shot glass','make it an ample size shot!!');
-INSERT INTO cocktails VALUES (14730,'Bubble Gum','Shot','Alcoholic','Shot glass','Layer in order into a shot glass.');
-INSERT INTO cocktails VALUES (14752,'Kiwi Lemon','Ordinary Drink','Alcoholic','Highball glass','Mix in highball glass. Stirr. Garnish with slice of kiwi.');
-INSERT INTO cocktails VALUES (14782,'Hot Creamy Bush','Coffee / Tea','Alcoholic','Irish coffee cup','Combine all ingredients in glass');
-INSERT INTO cocktails VALUES (14842,'Midnight Mint','Cocktail','Alcoholic','Cocktail glass','If available, rim cocktail (Martini) glass with sugar syrup then dip into chocolate flakes or powder. Add ingredients into shaker with ice. Shake well then strain into cocktail glass.');
-INSERT INTO cocktails VALUES (14860,'Talos Coffee','Coffee / Tea','Alcoholic','Brandy snifter','Add your GM and then add your coffee.');
-INSERT INTO cocktails VALUES (14888,'Zinger','Soft Drink','Alcoholic','Highball glass','Get a shot glass and pour in three shots of the schnapps. Do the same with the Surge Cola. Then down it like Scheetz would.');
-INSERT INTO cocktails VALUES (14956,'Jello shots','Shot','Alcoholic','Shot glass','Boil 3 cups of water then add jello. Mix jello and water until jello is completely disolved. Add the two cups of vodka and mix together. Pour mixture into plastic shot glasses and chill until firm. Then, eat away...');
-INSERT INTO cocktails VALUES (14978,'Rum Punch','Punch / Party Drink','Alcoholic','Punch bowl','Mix all ingredients in a punch bowl and serve.');
-INSERT INTO cocktails VALUES (15006,'Turkeyball','Shot','Alcoholic','Shot glass','Shake with ice and strain into a shot glass.');
-INSERT INTO cocktails VALUES (15024,'Absolutely Cranberry Smash','Ordinary Drink','Alcoholic','Cocktail glass','Stir ingredients together. Serve over ice.');
-INSERT INTO cocktails VALUES (15026,'Kiss me Quick','Ordinary Drink','Alcoholic','Highball glass','mix in the glass');
-INSERT INTO cocktails VALUES (15082,'Royal Flush','Shot','Alcoholic','Old-fashioned glass','Pour all the ingredients into tumbler over ice. Strain into glass.');
-INSERT INTO cocktails VALUES (15086,'Limona Corona','Beer','Alcoholic','Beer Glass','Open the Corona. Fill the empty space in the neck in the bottle with the rum. The bottle should be filled to the top. Plug the bottle with your thumb or the palm of your hand. Turn the bottle upside-down so the rum and beer mix. Turn the bottle rightside-up, unplug, and drink.');
-INSERT INTO cocktails VALUES (15092,'Pysch Vitamin Light','Ordinary Drink','Non alcoholic','Collins Glass','Shake with ice.');
-INSERT INTO cocktails VALUES (15106,'Apello','Other / Unknown','Non alcoholic','Collins Glass','Stirr. Grnish with maraschino cherry.');
-INSERT INTO cocktails VALUES (15178,'Texas Rattlesnake','Shot','Alcoholic','Highball glass','Mix all ingredients and Shake well. Sweet at first, with a BITE at the end...');
-INSERT INTO cocktails VALUES (15182,'After sex','Ordinary Drink','Alcoholic','Highball glass','Pour the vodka and creme over some ice cubes in a tall glass and fill up with juice. to make it beuty full make the top of the glass with a grenadine and sugar');
-INSERT INTO cocktails VALUES (15184,'San Francisco','Ordinary Drink','Alcoholic','Highball glass','Take a tall glass and put in a few ice cubes, fill the vodka over it and fill with juice then the "creme", to end fill in the grenadine but very carefully at the side of the glass so it will lay down in the bottom. garnish with orange and strawberry.');
-INSERT INTO cocktails VALUES (15194,'Amaretto Shake','Ordinary Drink','Alcoholic','Collins Glass','Combine all ingredients in a blender and blend at high speed until smooth. Serve in chilled glass garnished with bittersweet chocolate shavings.');
-INSERT INTO cocktails VALUES (15200,'A Day at the Beach','Ordinary Drink','Alcoholic','Highball glass','Shake Rum, Amaretto, and Orange Juice in a shaker filled with ice. Strain over ice into a highball glass. Add Grenadine and garnish with a Pineapple Wedge and a Strawberry.');
-INSERT INTO cocktails VALUES (15224,'Malibu Twister','Cocktail','Alcoholic','Highball glass','Add rum & trister then, add cranberry jucie,stir');
-INSERT INTO cocktails VALUES (15226,'Space Odyssey','Ordinary Drink','Alcoholic','Highball glass','Fill glass with ice and add shots of Bacardi and Malibu. Add splash of pineapple juice and top with orange juice. Add grenadine for color and garnish with cherries.');
-INSERT INTO cocktails VALUES (15254,'Zenmeister','Ordinary Drink','Alcoholic','Collins Glass','Mix together and enjoy');
-INSERT INTO cocktails VALUES (15266,'Avalon','Ordinary Drink','Alcoholic','Highball glass','Fill a tall glass with ice. Layer the Finlandia Vodka, lemon and apple juices, Pisang Ambon, and top up with lemonade. Stir slightly and garnish with a spiralled cucumber skin and a red cherry. The cucumber provides zest and looks attractive. This drink, created by Timo Haimi, took first prize in the 1991 Finlandia Vodka Long Drink Competition.');
-INSERT INTO cocktails VALUES (15288,'252','Shot','Alcoholic','Shot glass','Add both ingredients to shot glass, shoot, and get drunk quick');
-INSERT INTO cocktails VALUES (15300,'3-Mile Long Island Iced Tea','Ordinary Drink','Alcoholic','Collins Glass','Fill 14oz glass with ice and alcohol. Fill 2/3 glass with cola and remainder with sweet & sour. Top with dash of bitters and lemon wedge.');
-INSERT INTO cocktails VALUES (15328,'Zorro','Coffee / Tea','Alcoholic','Coffee Mug','add all and pour black coffee and add whipped cream on top.');
-INSERT INTO cocktails VALUES (15330,'Orange Crush','Shot','Alcoholic','Shot glass','Add all ingredients to tumbler-Pour as shot');
-INSERT INTO cocktails VALUES (15346,'155 Belmont','Cocktail','Alcoholic','White wine glass','Blend with ice. Serve in a wine glass. Garnish with carrot.');
-INSERT INTO cocktails VALUES (15403,'Vodka Russian','Ordinary Drink','Alcoholic','Collins Glass','Mix it as a ordinary drink .');
-INSERT INTO cocktails VALUES (15409,'Danbooka','Coffee / Tea','Alcoholic','Coffee Mug','pour it in and mix it.');
-INSERT INTO cocktails VALUES (15423,'110 in the shade','Beer','Alcoholic','Beer Glass','Drop shooter in glass. Fill with beer');
-INSERT INTO cocktails VALUES (15427,'Grand Blue','Ordinary Drink','Alcoholic','Old-fashioned glass','Serve in an old fashioned glass.');
-INSERT INTO cocktails VALUES (15511,'Baby Eskimo','Shake','Alcoholic','Collins Glass','Leave ice-cream out for about 10 minutes. Add ingredients in order, stir with chopstick (butter knife or spoon works too). Consume immediately and often. Nice and light, great for following a heavy drink.');
-INSERT INTO cocktails VALUES (15515,'Tennesee Mud','Coffee / Tea','Alcoholic','Coffee Mug','Mix Coffee, Jack Daniels and Amaretto. Add Cream on top.');
-INSERT INTO cocktails VALUES (15521,'Swedish Coffee','Coffee / Tea','Alcoholic','Coffee Mug','Pour the coffee in an ordinary coffee cup. Add the aquavit. Add sugar by taste. Stir and have a nice evening (morning)');
-INSERT INTO cocktails VALUES (15567,'Adam Sunrise','Ordinary Drink','Alcoholic','Collins Glass','Fill blender up with ice. Fill half with Bartons Vodka. Put 10 tsp of sugar, add 1/2 can lemonade concentrate, fill to top with water. Blend for 60 seconds.');
-INSERT INTO cocktails VALUES (15597,'Absolut Stress #2','Ordinary Drink','Alcoholic','Collins Glass','Mix well. Garnish with Orange and Cherry. Enjoy');
-INSERT INTO cocktails VALUES (15639,'Texas Sling','Shake','Alcoholic','Wine Glass','Blend with Ice until smooth. Serve in a tulip glass, top with whip cream.');
-INSERT INTO cocktails VALUES (15675,'A midsummernight dream','Ordinary Drink','Alcoholic','Collins Glass','Mix the strawberrys in a blender Pour it together with the vodka,kirch and strawberry liquer over ice in a shaker. Shake well and pour in a highballglass. Fill up with the Russchian water');
-INSERT INTO cocktails VALUES (15691,'Zoksel','Soft Drink','Alcoholic','Beer pilsner','No specific mixing instructions, just poor every ingredient in one glass. The lemon goes with it.');
-INSERT INTO cocktails VALUES (15743,'Fuzzy Asshole','Coffee / Tea','Alcoholic','Coffee mug','fill coffe mug half full of coffee. Fill the other half full of Peach Schnapps. Stir and drink while hot.');
-INSERT INTO cocktails VALUES (15761,'Quick-sand','Ordinary Drink','Alcoholic','Highball glass','Simply add the orange juice, quite a quick pour in order to mix the sambucca with the orange juice. The juice MUST have fruit pulp!');
-INSERT INTO cocktails VALUES (15789,'Snakebite and Black','Beer','Alcoholic','Pint glass','Put blackcurrant squash in first up to about 1cm in glass. Then add the lager and cider one after another.');
-INSERT INTO cocktails VALUES (15801,'Zimadori Zinger','Punch / Party Drink','Alcoholic','Collins glass','Pour Zima in a collins glass over ice and then pour the shot of Midori. Don''t stir. Garnish with a cherry.');
-INSERT INTO cocktails VALUES (15813,'Herbal flame','Coffee / Tea','Alcoholic','Mason jar','Pour Hot Damn 100 in bottom of a jar or regular glass. Fill the rest of the glass with sweet tea. Stir with spoon, straw, or better yet a cinnamon stick and leave it in.');
-INSERT INTO cocktails VALUES (15825,'Jamaican Coffee','Coffee / Tea','Alcoholic','Champagne flute','Stir the rum, coffee and water together. Top with the whipped cream. Sprinkle with a pinch of well ground coffee and drink with a straw.');
-INSERT INTO cocktails VALUES (15841,'Mojito Extra','Cocktail','Alcoholic','Collins glass','Put mint with lemon juice in a glas, mash the mint with a spoon, ice, rum & fill up with club soda. Top it with Angostura.');
-INSERT INTO cocktails VALUES (15849,'Apricot punch','Punch / Party Drink','Alcoholic','Punch bowl','Pour all ingrediants into a large punch bowl. Add ice and 4 oranges that are peeled and divided.');
-INSERT INTO cocktails VALUES (15853,'B-52','Shot','Alcoholic','Shot glass','Layer ingredients into a shot glass. Serve with a stirrer.');
-INSERT INTO cocktails VALUES (15933,'Zambeer','Soft Drink','Alcoholic','Collins Glass','Mix sambuca with rootbeer and stir. Add ice');
-INSERT INTO cocktails VALUES (15941,'Americano','Ordinary Drink','Alcoholic','Collins glass','Pour the Campari and vermouth over ice into glass, add a splash of soda water and garnish with half orange slice.');
-INSERT INTO cocktails VALUES (15951,'Black Forest Shake','Shake','Alcoholic','Collins Glass','In a blender put ice cubes, chocolate syrup, cherry brandy, vodka, and milk. Blend very well.');
-INSERT INTO cocktails VALUES (16031,'Radler','Ordinary Drink','Alcoholic','Highball glass','Pour beer into large mug, slowly add the 7-up (or Sprite).');
-INSERT INTO cocktails VALUES (16041,'Mudslinger','Punch / Party Drink','Alcoholic','Punch bowl','Add all contents to a large jug or punch bowl. Stir well!');
-INSERT INTO cocktails VALUES (16047,'Campari Beer','Beer','Alcoholic','Beer mug','Use a 15 oz glass. Add Campari first. Fill with beer.');
-INSERT INTO cocktails VALUES (16082,'Almond Chocolate Coffee','Ordinary Drink','Alcoholic','Coffee mug','Pour in order into coffee cup. Top with whipped creme and chocolate shcvings.');
-INSERT INTO cocktails VALUES (16100,'Amaretto Stone Sour Alternative','Other / Unknown','Alcoholic','Highball glass','Shake sour mix, tequila and amaretto with ice. Strain into highball glass. Add a splash of OJ. Garnish with orange slice and a cherry.');
-INSERT INTO cocktails VALUES (16108,'9 1/2 Weeks','Cocktail','Alcoholic','Cocktail glass','Combine all ingredients in glass mixer. Chill and strain into Cocktail glass. Garnish with sliced strawberry.');
-INSERT INTO cocktails VALUES (16134,'Absolutly Screwed Up','Cocktail','Alcoholic','Collins glass','Shake it up it tasts better that way, but you can stir it if you want. 6 of those and you will be wasted for the rest of the night.');
-INSERT INTO cocktails VALUES (16158,'Whitecap Margarita','Other / Unknown','Alcoholic','Margarita/Coupette glass','Place all ingredients in a blender and blend until smooth. This makes one drink.');
-INSERT INTO cocktails VALUES (16176,'Bellini Martini','Ordinary Drink','Alcoholic','Cocktail glass','Add ice cubes to shaker. Add vodka. Add peach schnapps. Add peach nectar. Shake. Strain into glass. Add lemon twist peel.');
-INSERT INTO cocktails VALUES (16178,'Jitterbug','Cocktail','Alcoholic','Cocktail Glass','Wet glass, dip rim in sugar. Then add Ice. Then add everything else. It''s that simple!');
-INSERT INTO cocktails VALUES (16196,'Moranguito','Shot','Alcoholic','Shot glass','first you put rhe absinthe, then put tequila, then put the Granadine syrup.');
-INSERT INTO cocktails VALUES (16202,'Amaretto Sweet & Sour','Punch / Party Drink','Alcoholic','Margarita/Coupette glass','Fill the blender with 3/4 ice. Add sweet & sour mix to the top of the ice. Add about 1" of pineapple juice, 1/2" of melon liqeur, and 1/2 to 1/4" of amaretto. Then blend the mix until it is of margaritta consistency or thinner.');
-INSERT INTO cocktails VALUES (16250,'Rum Runner','Punch / Party Drink','Alcoholic','Cocktail glass','Mix all ingredients in glass & add ice.');
-INSERT INTO cocktails VALUES (16262,'H.D.','Coffee / Tea','Alcoholic','Beer mug','Mix the whisky and Baileys Cream in a beer-glass (at least 50 cl). Fill the rest of the glass with coffee.');
-INSERT INTO cocktails VALUES (16271,'The Evil Blue Thing','Cocktail','Alcoholic','Old-fashioned glass','Pour ingredients into glass, and drop in a blue whale! The blue whale isn''t really necessary, but it makes the drink more "fun".');
-INSERT INTO cocktails VALUES (16273,'Shark Attack','Cocktail','Alcoholic','Pitcher','Mix lemonade and water according to instructions on back of can. If the instructions say to add 4 1/3 cans of water do so. Mix into pitcher. Add 1 1/2 cup of Vodka (Absolut). Mix well. Pour into glass of crushed ice. Excellent!');
-INSERT INTO cocktails VALUES (16275,'Jack''s Vanilla Coke','Other / Unknown','Alcoholic','Old-fashioned glass','After pouring in your ingredients, and adding 3-5 ice cubes, according to taste. Stir the drink with a stirrer to get the Vanilla off the bottom.');
-INSERT INTO cocktails VALUES (16289,'Apple Grande','Punch / Party Drink','Alcoholic','Punch Bowl','Chill both ingredients!! Mix in a tumbler and enjoy!');
-INSERT INTO cocktails VALUES (16295,'Bleeding Surgeon','Soft Drink','Alcoholic','Collins glass','Pour Shot of Rum over slice of orange. Fill the remaining space in glass half way full of surge or similar drink. Finish off glass with cranberry juice. Be carefull, warm surge may foam over the glass.');
-INSERT INTO cocktails VALUES (16311,'Applejack','Cocktail','Alcoholic','Cocktail glass','Add all ingredients into mixing glass, chill and strain into cocktail glass');
-INSERT INTO cocktails VALUES (16333,'Adam Bomb','Punch / Party Drink','Alcoholic','Margarita/Coupette glass','Add ice to blender (or to glass if prefer on the rocks) then fruit, and fruite juice depending on personal prefference then add the Rum, Vodka, Tequila, and triple sec. blend till smooth, rim glass with sugar or salt and pour mixture in. garnish with lemon or lime slice.');
-INSERT INTO cocktails VALUES (16354,'Arizona Antifreeze','Shot','Alcoholic','Shot glass','Pour all ingredients into shot glass and slam !!!!');
-INSERT INTO cocktails VALUES (16403,'Black and Brown','Beer','Alcoholic','Beer pilsner','CAREFULLY to avoid explosive head formation: Pour Beer glass half full of favorite rootbeer and top off with Guinness.');
-INSERT INTO cocktails VALUES (16405,'A Piece of Ass','Other / Unknown','Alcoholic','Highball glass','Put ice in glass. Pour in shots. Fill with Sour Mix.');
-INSERT INTO cocktails VALUES (16419,'Avalanche','Shake','Alcoholic','Highball glass','Mix in highball glass over ice, shake well.');
-INSERT INTO cocktails VALUES (16447,'Brandon and Will''s Coke Float','Soft Drink','Alcoholic','Beer mug','Scoop two large scoops of vanilla ice-cream into frosted beer mug. Next, add 2 ounces Maker''s Mark. Then, pour in coke. Gently stir and enjoy.');
-INSERT INTO cocktails VALUES (16485,'Flaming Lamborghini','Cocktail','Alcoholic','Cocktail glass','Pour the Sambuca and Kahlua into the Cocktail Glass and give the drinker a straw. Pour the Baileys and Blue Curacao into two sepsrate shot glasses either side of the cocktail glass. Set light the concotion in the cocktail glass and start to drink through the straw (this drink should be drunk in one) , as the bottom of the glass is reached put out the fire by pouring the Baileys and Blue Curacao into the cocktail glass and keep drinking till it''s all gone!!');
-INSERT INTO cocktails VALUES (16942,'Zipperhead','Shot','Alcoholic','Whiskey sour glass','Fill glass with rocks, add straw before putting in liquor. Then add the ingredients in order, trying to keep layered as much as possible (i.e. Chambord on bottom, then Vodka, Then soda on top).');
-INSERT INTO cocktails VALUES (16943,'A Gilligan''s Island','Cocktail','Alcoholic','Collins glass','Shaken, not stirred!');
-INSERT INTO cocktails VALUES (16951,'Kioki Coffee','Coffee / Tea','Alcoholic','Coffee mug','Stir. Add whipped cream to the top.');
-INSERT INTO cocktails VALUES (16958,'Apple Pie with A Crust','Other / Unknown','Alcoholic','Collins Glass','Just mix the two liquids and sprinkle in the cinnamon. Serve either cold or heated.');
-INSERT INTO cocktails VALUES (16963,'Zorbatini','Cocktail','Alcoholic','Cocktail glass','Prepare like a Martini. Garnish with a green olive.');
-INSERT INTO cocktails VALUES (16967,'Vodka Fizz','Other / Unknown','Alcoholic','White wine glass','Blend all ingredients, save nutmeg. Pour into large white wine glass and sprinkle nutmeg on top.');
-INSERT INTO cocktails VALUES (16984,'Radioactive Long Island Iced Tea','Ordinary Drink','Alcoholic','Collins Glass','Pour all ingredients over ice in a very tall glass. Sip cautiously.');
-INSERT INTO cocktails VALUES (16985,'Shot-gun','Shot','Alcoholic','Shot glass','Pour one part Jack Daneils and one part Jim Beam into shot glass then float Wild Turkey on top.');
-INSERT INTO cocktails VALUES (16986,'Bible Belt','Other / Unknown','Alcoholic','Highball glass','Mix all ingredients, and pour over ice.');
-INSERT INTO cocktails VALUES (16987,'Irish Curdling Cow','Cocktail','Alcoholic','Highball glass','Pour Irish Cream, Vodka, and Bourbon in a glass. Add some ice and mix in the orange juice.');
-INSERT INTO cocktails VALUES (16990,'Sweet Tooth','Shake','Alcoholic','Highball Glass','Put 2 shots Godiva Liquour into a glass, add as much or as little milk as you would like.');
-INSERT INTO cocktails VALUES (16991,'Downshift','Punch / Party Drink','Alcoholic','Hurricane glass','Start with the Sprite. Next comes the tequila. After that, add the Minute Maid Fruit Punch, then float the 151. Rocks optional.');
-INSERT INTO cocktails VALUES (16992,'Pink Penocha','Punch / Party Drink','Alcoholic','Punch bowl','mix all ingredients into bowl keep iced stir frequently');
-INSERT INTO cocktails VALUES (16995,'Orange Whip','Other / Unknown','Alcoholic','Collins Glass','Pour ingredients over ice and stir.');
-INSERT INTO cocktails VALUES (16998,'Bruised Heart','Shot','Alcoholic','Shot glass','Pour all ingredients in a mixing tin over ice, stir, and strain into shot glass');
-INSERT INTO cocktails VALUES (17002,'Gideon''s Green Dinosaur','Ordinary Drink','Alcoholic','Collins glass','Add all ingredients in collins glass with ice and stir.');
-INSERT INTO cocktails VALUES (17005,'A True Amaretto Sour','Cocktail','Alcoholic','Old-fashioned glass','Rub the rim of an old fashioned glass with lemon, and dip repeatedly into granulated sugar until it has a good "frosted" rim. Shake a jigger of Amaretto with the juice of 1/2 a lemon. Strain into glass and add ice. Garnish with a Marachino Cherry.');
-INSERT INTO cocktails VALUES (17006,'Kool First Aid','Shot','Alcoholic','Shot glass','Add Kool Aid to a double shot glass, and top with rum. Slam and shoot.');
-INSERT INTO cocktails VALUES (17015,'Irish Russian','Beer','Alcoholic','Highball glass','Add the ingredients in the order listed in the recipe. Care must be taken when adding the Guinness to prevent an excess of foam. Do Not add ice.');
-INSERT INTO cocktails VALUES (17020,'Auburn Headbanger','Shot','Alcoholic','Shot glass','Mix in spread glass over ice. Strain and pour in shot glass. Sit down before shotting. ENJOY!!');
-INSERT INTO cocktails VALUES (17027,'Zima Blaster','Ordinary Drink','Alcoholic','Hurricane glass','Fill glass with ice. Pour in Chambord, then fill with Zima. Mix and enjoy.');
-INSERT INTO cocktails VALUES (17035,'Buccaneer','Beer','Alcoholic','Beer pilsner','Pour the corona into an 18oz beer glass pour the bacardi limon into the beer stir very gently');
-INSERT INTO cocktails VALUES (17044,'Homemade Kahlua','Homemade Liqueur','Alcoholic','Collins Glass','Dissolve sugar in 2 cups of boiling water and add corn syrup. Dissolve the instant coffee in the remaining water. Pour syrup and coffee in a gallon jug. Let it cool. Add vodka and vanilla when cold. For the best result, let the mixture "mature" for 4-5 weeks.');
-INSERT INTO cocktails VALUES (17060,'24k nightmare','Shot','Alcoholic','Shot glass','Add over ice,shake and pour.');
-INSERT INTO cocktails VALUES (17065,'Caribbean Boilermaker','Beer','Alcoholic','Beer pilsner','Pour the Corona into an 18oz beer glass pour the rum into the beer.');
-INSERT INTO cocktails VALUES (17066,'Army special','Cocktail','Alcoholic','Cocktail glass','Pour Vodka, Gin and lime cordial into glass, and top up with crushed ice. Wait for ice to melt slightly and sip without a straw.');
-INSERT INTO cocktails VALUES (17074,'Arizona Twister','Cocktail','Alcoholic','Hurricane glass','Just mix in the shots of rum, vodka, and tequila. Add splashes of the three juices, heavy on the pineapple. Top off with grenadine. Crushed ice should already be in glass. Top off the glass with a pineapple wedge.');
-INSERT INTO cocktails VALUES (17079,'Baby Guinness','Shot','Alcoholic','Shot glass','Pour Kahlua, almost filling shot glass. Then, carefully pour Baileys, using wall of shot glass. This will give the "Guinness" its "head".');
-INSERT INTO cocktails VALUES (17094,'Alice in Wonderland','Ordinary Drink','Alcoholic','Collins Glass','Just mix the three ingredients one to one to one');
-INSERT INTO cocktails VALUES (17105,'501 Blue','Ordinary Drink','Alcoholic','Collins Glass','Mix equal amounts into a glass with ice.');
-INSERT INTO cocktails VALUES (17108,'Coke and Drops','Soft Drink','Non alcoholic','Cocktail glass','Take a glass, pour the Coke in the glass, then you take 7 drops of lemon juice. Granish with a lemon slice on the rim of the glass.');
-INSERT INTO cocktails VALUES (17114,'Ruby Tuesday','Cocktail','Alcoholic','Highball glass','Pour gin and cranberry into a highball filled with ice cubes. Add grenadine and stir.');
-INSERT INTO cocktails VALUES (17118,'Arctic Mouthwash','Punch / Party Drink','Alcoholic','Cocktail glass','Blend all ingredients in a blender on high until ice is finely crushed. It should be of a slushy consistency. Pour immediately and serve.');
-INSERT INTO cocktails VALUES (17120,'Brain Fart','Punch / Party Drink','Alcoholic','Punch bowl','Mix all ingredients together. Slowly and gently. Works best if ice is added to punch bowl and soda''s are very cold.');
-INSERT INTO cocktails VALUES (17122,'Royal Bitch','Shot','Alcoholic','Shot glass','Into a shot glass layer the Crown Royal on top of the Frangelico.');
-INSERT INTO cocktails VALUES (17135,'Citrus Coke','Soft Drink','Alcoholic','Highball Glass','Pour half of coke in a glass. Then add Bacardi and top it off with the remaining coke. Stir and drink up!');
-INSERT INTO cocktails VALUES (17141,'Smut','Punch / Party Drink','Alcoholic','Beer mug','Throw it all together and serve real cold.');
-INSERT INTO cocktails VALUES (17167,'Raspberry Cooler','Other / Unknown','Alcoholic','Highball glass','Pour the raspberry vodka and soda into a highball glass almost filled with ice cubes. Stir well.');
-INSERT INTO cocktails VALUES (17168,'Amaretto Sunset','Ordinary Drink','Alcoholic','Collins Glass','Shake ingredients in bartender''s mixer quickly, just 5 shakes. Strain out ice, serve in glass immediately with a slice of orange.');
-INSERT INTO cocktails VALUES (17174,'Cherry Electric Lemonade','Cocktail','Alcoholic','Pint glass','Now stir vigorously and then pour over a large cup of ice. Now drink it with a straw and stir occasionally.');
-INSERT INTO cocktails VALUES (17175,'Girl From Ipanema','Ordinary Drink','Alcoholic','Wine Glass','Add the cachaca, lemon juice and syrup to your boston glass. Add ice and shake until ice cold. Pour into a chilled flute and top-up with Champagne');
-INSERT INTO cocktails VALUES (17176,'Ipamena','Ordinary Drink','Non alcoholic','Wine Glass','Cut half a lime into pieces, place in a shaker, add the sugar and crush. Measure the passion fruit juice, add it to the shaker and fill up with ice cubes. Close the shaker and shake vigorously. Pour the liquid into a glass, top up with ginger ale, stir with a teaspoon and then garnish the rim of the glass with a slice of lime');
-INSERT INTO cocktails VALUES (17177,'Dark Caipirinha','Cocktail','Alcoholic','Highball glass','Muddle the sugar into the lime wedges in an old-fashioned glass. Fill the glass with ice cubes. Pour the cachaca into the glass. Stir well.');
-INSERT INTO cocktails VALUES (17178,'Jam Donut','Shot','Alcoholic','Shot glass','Coat the rim of a shot glass with sugar using sugar syrup to stick. Add the Chambord raspberry liqueur to the shot glass, and carefully layer the Baileys Irish Cream on top. Serve.');
-INSERT INTO cocktails VALUES (17180,'Aviation','Cocktail','Alcoholic','Cocktail glass','Add all ingredients into cocktail shaker filled with ice. Shake well and strain into cocktail glass. Garnish with a cherry.');
-INSERT INTO cocktails VALUES (17181,'Dirty Martini','Cocktail','Alcoholic','Cocktail glass','Pour the vodka, dry vermouth and olive brine into a cocktail shaker with a handful of ice and shake well. Rub the rim of a martini glass with the wedge of lemon. Strain the contents of the cocktail shaker into the glass and add the olive. A dirty Martini contains a splash of olive brine or olive juice and is typically garnished with an olive.');
-INSERT INTO cocktails VALUES (17182,'Duchamp''s Punch','Cocktail','Alcoholic','Old-fashioned glass','Shake all ingredients. Double strain in a chilled double old fashioned glass with abig ice cube. Garnish with a couple of lavender sprigs');
-INSERT INTO cocktails VALUES (17183,'Bacardi Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake together with ice. Strain into glass and serve.');
-INSERT INTO cocktails VALUES (17184,'Between The Sheets','Ordinary Drink','Alcoholic','Cocktail glass','Pour all ingredients into shaker with ice cubes, shake, strain into chilled cocktail glass.');
-INSERT INTO cocktails VALUES (17185,'Casino','Ordinary Drink','Alcoholic','Cocktail glass','Pour all ingredients into shaker with ice cubes. Shake well. Strain into chilled cocktail glass. Garnish with a lemon twist and a maraschino cherry. Serve without a straw.');
-INSERT INTO cocktails VALUES (17186,'Clover Club','Ordinary Drink','Alcoholic','Cocktail glass','Dry shake ingredients to emulsify, add ice, shake and served straight up.');
-INSERT INTO cocktails VALUES (17187,'Derby','Ordinary Drink','Alcoholic','Cocktail glass','Pour all ingredients into a mixing glass with ice. Stir. Strain into a cocktail glass. Garnish with a sprig of fresh mint in the drink.');
-INSERT INTO cocktails VALUES (17188,'Mary Pickford','Cocktail','Alcoholic','Cocktail glass','Shake and strain into a chilled large cocktail glass');
-INSERT INTO cocktails VALUES (17189,'Monkey Gland','Ordinary Drink','Alcoholic','Cocktail glass','Shake well over ice cubes in a shaker, strain into a chilled cocktail glass.');
-INSERT INTO cocktails VALUES (17190,'Paradise','Ordinary Drink','Alcoholic','Cocktail glass','Shake together over ice. Strain into cocktail glass and serve chilled.');
-INSERT INTO cocktails VALUES (17191,'Planter''s Punch','Punch / Party Drink','Alcoholic','Collins glass','Pour all ingredients, except the bitters, into shaker filled with ice. Shake well. Pour into large glass, filled with ice. Add Angostura bitters, "on top". Garnish with cocktail cherry and pineapple.');
-INSERT INTO cocktails VALUES (17192,'Porto flip','Ordinary Drink','Alcoholic','Cocktail glass','Shake ingredients together in a mixer with ice. Strain into glass, garnish and serve.');
-INSERT INTO cocktails VALUES (17193,'Stinger','Ordinary Drink','Alcoholic','Cocktail glass','Pour in a mixing glass with ice, stir and strain into a cocktail glass. May also be served on rocks in a rocks glass.');
-INSERT INTO cocktails VALUES (17194,'White Lady','Ordinary Drink','Alcoholic','Cocktail glass','Add all ingredients into cocktail shaker filled with ice. Shake well and strain into large cocktail glass.');
-INSERT INTO cocktails VALUES (17195,'Bellini','Ordinary Drink','Alcoholic','Champagne Flute','Pour peach purée into chilled flute, add sparkling wine. Stir gently.');
-INSERT INTO cocktails VALUES (17196,'Cosmopolitan','Cocktail','Alcoholic','Cocktail glass','Add all ingredients into cocktail shaker filled with ice. Shake well and double strain into large cocktail glass. Garnish with lime wheel.');
-INSERT INTO cocktails VALUES (17197,'French 75','Ordinary Drink','Alcoholic','Collins glass','Combine gin, sugar, and lemon juice in a cocktail shaker filled with ice. Shake vigorously and strain into a chilled champagne glass. Top up with Champagne. Stir gently.');
-INSERT INTO cocktails VALUES (17198,'French Connection','Ordinary Drink','Alcoholic','Old-fashioned glass','Pour all ingredients directly into old fashioned glass filled with ice cubes. Stir gently.');
-INSERT INTO cocktails VALUES (17199,'Golden dream','Ordinary Drink','Alcoholic','Cocktail glass','Shake with cracked ice. Strain into glass and serve.');
-INSERT INTO cocktails VALUES (17200,'Grasshopper','Ordinary Drink','Alcoholic','Cocktail glass','Pour ingredients into a cocktail shaker with ice. Shake briskly and then strain into a chilled cocktail glass.');
-INSERT INTO cocktails VALUES (17201,'Hemingway Special','Ordinary Drink','Alcoholic','Cocktail glass','Pour all ingredients into a shaker with ice. Shake.');
-INSERT INTO cocktails VALUES (17202,'Horse''s Neck','Ordinary Drink','Alcoholic','Highball glass','Pour brandy and ginger ale directly into highball glass with ice cubes. Stir gently. Garnish with lemon zest. If desired, add dashes of Angostura Bitter.');
-INSERT INTO cocktails VALUES (17203,'Kir','Ordinary Drink','Alcoholic','Wine Glass','Add the crème de cassis to the bottom of the glass, then top up with wine.');
-INSERT INTO cocktails VALUES (17204,'Long Island Iced Tea','Ordinary Drink','Alcoholic','Highball glass','Mix all contents in a highball glass and sitr gently. Add dash of Coca-Cola for the coloring and garnish with lemon or lime twist.');
-INSERT INTO cocktails VALUES (17205,'Mimosa','Ordinary Drink','Alcoholic','Champagne flute','Ensure both ingredients are well chilled, then mix into the glass. Serve cold.');
-INSERT INTO cocktails VALUES (17206,'Mint Julep','Ordinary Drink','Alcoholic','Collins glass','In a highball glass gently muddle the mint, sugar and water. Fill the glass with cracked ice, add Bourbon and stir well until the glass is well frosted. Garnish with a mint sprig.');
-INSERT INTO cocktails VALUES (17207,'Pina Colada','Ordinary Drink','Alcoholic','Collins glass','Mix with crushed ice in blender until smooth. Pour into chilled glass, garnish and serve.');
-INSERT INTO cocktails VALUES (17208,'Rose','Ordinary Drink','Alcoholic','Cocktail glass','Shake together in a cocktail shaker, then strain into chilled glass. Garnish and serve.');
-INSERT INTO cocktails VALUES (17209,'Barracuda','Ordinary Drink','Alcoholic','Margarita glass','Shake pour ingredients with ice. Strain into glass, top with Sparkling wine.');
-INSERT INTO cocktails VALUES (17210,'Bramble','Ordinary Drink','Alcoholic','Old-Fashioned glass','Fill glass with crushed ice. Build gin, lemon juice and simple syrup over. Stir, and then pour blackberry liqueur over in a circular fashion to create marbling effect. Garnish with two blackberries and lemon slice.');
-INSERT INTO cocktails VALUES (17211,'Dark and Stormy','Ordinary Drink','Alcoholic','Highball glass','In a highball glass filled with ice add 6cl dark rum and top with ginger beer. Garnish with lime wedge.');
-INSERT INTO cocktails VALUES (17212,'Espresso Martini','Cocktail','Alcoholic','Cocktail glass','Pour ingredients into shaker filled with ice, shake vigorously, and strain into chilled martini glass');
-INSERT INTO cocktails VALUES (17213,'French Martini','Cocktail','Alcoholic','Cocktail glass','Pour all ingredients into shaker with ice cubes. Shake well and strain into a chilled cocktail glass. Squeeze oil from lemon peel onto the drink.');
-INSERT INTO cocktails VALUES (17214,'Russian Spring Punch','Ordinary Drink','Alcoholic','Highball glass','Pour the ingredients into an highball glass, top with Sparkling wine.');
-INSERT INTO cocktails VALUES (17215,'Spritz','Ordinary Drink','Alcoholic','Old-Fashioned glass','Build into glass over ice, garnish and serve.');
-INSERT INTO cocktails VALUES (17216,'Tommy''s Margarita','Ordinary Drink','Alcoholic','Old-Fashioned glass','Shake and strain into a chilled cocktail glass.');
-INSERT INTO cocktails VALUES (17217,'Vampiro','Ordinary Drink','Alcoholic','Old-Fashioned glass','Vampiros may be made in a tall glass or an old fashioned glass. Bartenders may first "rim" the glass with Kosher Salt, which is done by placing a layer of Kosher Salt on a chopping board, moistening the glass'' rim with lime juice or water, and then placing the upside down glass rim onto the Kosher Salt, so that the salt sticks to the moistened rim. The second step is to fill half the glass with ice and add one or two shooter glasses full of high quality Tequila. The next stage is to add the flavouring elements. This is done by squeezing a fresh lime into the glass, adding a few grains of salt, adding citrus-flavoured soda pop, until the glass is 4/5 full, and then adding spicy Viuda de Sanchez (or orange juice, lime juice and pico de gallo). The final step is to stir the ingredients so that the flavours are properly blended.');
-INSERT INTO cocktails VALUES (17218,'Vesper','Cocktail','Alcoholic','Cocktail glass','Shake over ice until well chilled, then strain into a deep goblet and garnish with a thin slice of lemon peel.');
-INSERT INTO cocktails VALUES (17219,'Yellow Bird','Cocktail','Alcoholic','Cocktail glass','Shake and strain into a chilled cocktail glass');
-INSERT INTO cocktails VALUES (17220,'Butter Baby','Shake','Alcoholic','Beer mug','Blend together in a blender. Serve in a chilled Beer mug with Fresh Blueberries and caramel for topping.');
-INSERT INTO cocktails VALUES (17221,'Boozy Snickers Milkshake','Shake','Alcoholic','Mason jar','Place the snickers bars in a plastic bag and roll over them with a rolling pin until crushed. Add crushed snickers pieces, ice cream, milk, caramel sauce, chocolate sauce, and chocolate liquor to a blender. Blend until shake is thick and frothy. Pour into glasses and top with chocolate liquor and whip cream.');
-INSERT INTO cocktails VALUES (17222,'A1','Cocktail','Alcoholic','Cocktail glass','Pour all ingredients into a cocktail shaker, mix and serve over ice into a chilled glass.');
-INSERT INTO cocktails VALUES (17223,'Abbey Martini','Cocktail','Alcoholic','Cocktail glass','Put all ingredients into a shaker and mix, then strain contents into a chilled cocktail glass.');
-INSERT INTO cocktails VALUES (17224,'Absolutely Fabulous','Cocktail','Alcoholic','Champagne flute','Mix the Vodka and Cranberry juice together in a shaker and strain into a glass. Top up with Champagne.');
-INSERT INTO cocktails VALUES (17225,'Ace','Cocktail','Alcoholic','Martini Glass','Shake all the ingredients in a cocktail shaker and ice then strain in a cold glass.');
-INSERT INTO cocktails VALUES (17226,'Adam & Eve','Cocktail','Alcoholic','Cocktail glass','Shake together all the ingredients and strain into a cold glass.');
-INSERT INTO cocktails VALUES (17227,'Addington','Cocktail','Alcoholic','Cocktail glass','Mix both the vermouth''s in a shaker and strain into a cold glass. Top up with a squirt of Soda Water.');
-INSERT INTO cocktails VALUES (17228,'Addison','Cocktail','Alcoholic','Martini Glass','Shake together all the ingredients and strain into a cold glass.');
-INSERT INTO cocktails VALUES (17229,'Adios Amigos Cocktail','Cocktail','Alcoholic','Martini Glass','Shake together all the ingredients and strain into a cold glass.');
-INSERT INTO cocktails VALUES (17230,'Gin Rickey','Cocktail','Alcoholic','Highball glass','Half-fill a tall glass with ice. Mix the gin and Grenadine together and pour over the ice. Add the lime or lemon juice and top off with soda water. Decorate the glass with lime and/or lemon slices.');
-INSERT INTO cocktails VALUES (17239,'Hunter''s Moon','Cocktail','Alcoholic','Balloon Glass','Put the Bombay Sapphire, Martini Bianco, sugar syrup & blackberries in a cocktail shaker with lots of ice and shake vigorously before pouring into a balloon glass, topping up with lemonade and garnishing with a wedge of orange.');
-INSERT INTO cocktails VALUES (17247,'The Last Word','Cocktail','Alcoholic','Cocktail glass','Shake with ice and strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (17248,'French Negroni','Cocktail','Alcoholic','Martini Glass','Add ice to a shaker and pour in all ingredients. Using a bar spoon, stir 40 to 45 revolutions or until thoroughly chilled. Strain into a martini glass or over ice into a rocks glass. Garnish with orange twist.');
-INSERT INTO cocktails VALUES (17249,'Pegu Club','Cocktail','Alcoholic','Cocktail glass','Shake, strain, up, cocktail glass');
-INSERT INTO cocktails VALUES (17250,'Corpse Reviver','Cocktail','Alcoholic','Cocktail glass','Shake, strain, straight up, cocktail glass rinsed with absinthe');
-INSERT INTO cocktails VALUES (17251,'Boulevardier','Cocktail','Alcoholic','Martini Glass','Stir with ice, strain, garnish and serve.');
-INSERT INTO cocktails VALUES (17252,'Greyhound','Cocktail','Alcoholic','Collins glass','Add the vodka to a Collins glass filled with ice. Top with grapefruit juice and stir.');
-INSERT INTO cocktails VALUES (17253,'Paloma','Cocktail','Alcoholic','Collins glass','Stir together and serve over ice.');
-INSERT INTO cocktails VALUES (17254,'Bijou','Cocktail','Alcoholic','Cocktail glass','Stir in mixing glass with ice and strain');
-INSERT INTO cocktails VALUES (17825,'Brigadier','Cocktail','Alcoholic','Coupe Glass','Mix ingredients in a warmed mug and stir.');
-INSERT INTO cocktails VALUES (17826,'The Jimmy Conway','Cocktail','Alcoholic','Whiskey sour glass','Fill glass with ice Pour in The Irishman and Disaronno Fill to the top with Cranberry Juice Garnish with a slice of lemon.');
-INSERT INTO cocktails VALUES (17827,'Old Pal','Cocktail','Alcoholic','Nick and Nora Glass','Chill cocktail glass. Add ingredients to a mixing glass, and fill 2/3 full with ice. Stir about 20 seconds. Empty cocktail glass and strain into the glass. Garnish with a twist of lemon peel.');
-INSERT INTO cocktails VALUES (17828,'Tipperary','Cocktail','Alcoholic','Nick and Nora Glass','Stir over ice. Strain into chilled glass. Cut a wide swath of orange peel, and express the orange oils over the drink. Discard orange twist.');
-INSERT INTO cocktails VALUES (17829,'Penicillin','Cocktail','Alcoholic','Old-fashioned glass','Shake blended Scotch, lemon juice, honey syrup and ginger syrup with ice. Strain over large ice in chilled rocks glass. Float smoky Scotch on top (be sure to use a smoky Scotch such as an Islay single malt). Garnish with candied ginger.');
-INSERT INTO cocktails VALUES (17830,'Corn n Oil','Cocktail','Alcoholic','Old-fashioned glass','Cut the half lime in half again. Add the lime, falernum, and bitters to a rocks glass. Muddle. Add the rum. (Aged Barbados rum such as Plantation 5 Year is recommended). Add ice and stir. Float the blackstrap rum on top. Serve with a straw.');
-INSERT INTO cocktails VALUES (17831,'A Furlong Too Late','Ordinary Drink','Alcoholic','Highball glass','Pour the rum and ginger beer into a highball glass almost filled with ice cubes. Stir well. Garnish with the lemon twist.');
-INSERT INTO cocktails VALUES (17832,'A Night In Old Mandalay','Ordinary Drink','Alcoholic','Highball glass','In a shaker half-filled with ice cubes, combine the light rum, añejo rum, orange juice, and lemon juice. Shake well. Strain into a highball glass almost filled with ice cubes. Top with the ginger ale. Garnish with the lemon twist.');
-INSERT INTO cocktails VALUES (17833,'A. J.','Ordinary Drink','Alcoholic','Cocktail glass','Shake ingredients with ice, strain into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (17834,'Abbey Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Shake all ingredients (except for the cherry) with ice and strain into a cocktail glass. Top with the cherry and serve.');
-INSERT INTO cocktails VALUES (17835,'Abilene','Ordinary Drink','Alcoholic','Highball glass','Pour all of the ingredients into a highball glass almost filled with ice cubes. Stir well.');
-INSERT INTO cocktails VALUES (17836,'Acapulco','Ordinary Drink','Alcoholic','Old-fashioned glass','Combine and shake all ingredients (except mint) with ice and strain into an old-fashioned glass over ice cubes. Add the sprig of mint and serve.');
-INSERT INTO cocktails VALUES (17837,'Adam','Ordinary Drink','Alcoholic','Cocktail glass','In a shaker half-filled with ice cubes, combine all of the ingredients. Shake well. Strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (17838,'Adonis Cocktail','Ordinary Drink','Alcoholic','Cocktail glass','Stir all ingredients with ice, strain contents into a cocktail glass, and serve.');
-INSERT INTO cocktails VALUES (17839,'Affair','Ordinary Drink','Alcoholic','Highball glass','Pour schnapps, orange juice, and cranberry juice over ice in a highball glass. Top with club soda and serve.');
-INSERT INTO cocktails VALUES (17840,'Affinity','Ordinary Drink','Alcoholic','Cocktail glass','In a mixing glass half-filled with ice cubes, combine all of the ingredients. Stir well. Strain into a cocktail glass.');
-INSERT INTO cocktails VALUES (178306,'Slippery Nipple','Shot','Alcoholic','Shot glass','Pour the Sambuca into a shot glass, then pour the Irish Cream on top so that the two liquids do not mix.');
-INSERT INTO cocktails VALUES (178307,'Tequila Slammer','Shot','Alcoholic','Hurricane glass','Mix carefully to avoid releasing the dissolved CO2.');
-INSERT INTO cocktails VALUES (178308,'Spritz Veneziano','Cocktail','Alcoholic','Wine Glass','Build into glass over ice, garnish and serve.');
-INSERT INTO cocktails VALUES (178309,'Espresso Rumtini','Cocktail','Alcoholic','Cocktail glass','Mix together in a cocktail glass. Garnish with some choclate powder and coffee beans');
-INSERT INTO cocktails VALUES (178310,'Brooklyn','Cocktail','Alcoholic','Cocktail glass','Combine ingredients with ice and stir until well-chilled. Strain into a chilled cocktail glass.');
-INSERT INTO cocktails VALUES (178311,'Broadside','Cocktail','Alcoholic','Highball glass','Half fill the glass with ice cubes. Crush the wormwood and add to ice. Pour rum, scotch and butters, then serve!');
-INSERT INTO cocktails VALUES (178314,'Gin Basil Smash','Cocktail','Alcoholic','Highball glass','Muddle Basil leaves (~ 10) with Suggar Syrup in a shaker. Add Gin an Lemon Juice. Filter and serve in a tumbler with ice');
-INSERT INTO cocktails VALUES (178316,'Honey Bee','Cocktail','Alcoholic','Margarita glass','Shake ingredients with crushed ice');
-INSERT INTO cocktails VALUES (178317,'Bee''s Knees','Cocktail','Alcoholic','Martini Glass','Shake ingredients with crushed ice. Garnish with orange peel');
-INSERT INTO cocktails VALUES (178319,'Aquamarine','Cocktail','Alcoholic','Martini Glass','Shake well in a shaker with ice. Strain in a martini glass.');
-INSERT INTO cocktails VALUES (178320,'Banana Cream Pi','Cocktail','Alcoholic','Wine Glass','Serve over ice.');
-INSERT INTO cocktails VALUES (178321,'Amaretto fizz','Cocktail','Alcoholic','Collins glass','Mix Amaretto, orange juice and sparkling wine in a jug. Add a strip orange zest to each glass, if you like.');
-INSERT INTO cocktails VALUES (178322,'Spice 75','Cocktail','Alcoholic','Wine Glass','Gently warm 60g golden caster sugar in a pan with 30ml water and 1 tbsp allspice. Cook gently until the sugar has dissolved, then leave the mixture to cool. Strain through a sieve lined with a coffee filter (or a double layer of kitchen paper). Pour 60ml of the spiced syrup into a cocktail shaker along with 200ml rum and 90ml lime juice. Shake with ice and strain between six flute glasses. Top up with 600ml champagne and garnish each with an orange twist.');
-INSERT INTO cocktails VALUES (178323,'Passion Fruit Martini','Cocktail','Alcoholic','Cocktail glass','Pour all ingredients into a glass and stir. Garnish with half a passion fruit piece.');
-INSERT INTO cocktails VALUES (178325,'Aperol Spritz','Cocktail','Alcoholic','Wine Glass','Put a couple of cubes of ice into 2 glasses and add a 50 ml measure of Aperol to each. Divide the prosecco between the glasses and then top up with soda, if you like.');
-INSERT INTO cocktails VALUES (178326,'White Wine Sangria','Punch / Party Drink','Alcoholic','Pitcher','Chop the Lemon, Lime and other fruits into large chunks. Fill the Pitcher with the white wine and mix in the Apple Brandy. Top to taste with soda water.');
-INSERT INTO cocktails VALUES (178328,'Funk and Soul','Cocktail','Alcoholic','Collins glass','Mix all ingredients together and strain into a Collins glass. Use Jamaican rum where possible for a more authentic taste.');
-INSERT INTO cocktails VALUES (178329,'Captain Kidd''s Punch','Cocktail','Alcoholic','Collins glass','Mix all ingredients together in a shaker and strain into a collins glass. Use Caribbean dark Rum for a sweeter taste.');
-INSERT INTO cocktails VALUES (178330,'The Philosopher','Cocktail','Alcoholic','Margarita glass','Add all the spirits in a shaker (best to use Hendricks gin) as well as the orange bitters and lemon juice. Strain into a Margarita glass, top with Prosecco.');
-INSERT INTO cocktails VALUES (178331,'Bounty Hunter','Cocktail','Alcoholic','Margarita glass','Add the spirits into a shaker as well as the pineapple juice, strain into a Margarita glass. Top with Prosecco and garnish with Blueberries.');
-INSERT INTO cocktails VALUES (178332,'Smashed Watermelon Margarita','Cocktail','Alcoholic','Collins glass','In a mason jar muddle the watermelon and 5 mint leaves together into a puree and strain. Next add the grapefruit juice, juice of half a lime and the tequila as well as some ice. Put a lid on the jar and shake. Pour into a glass and add more ice. Garnish with fresh mint and a small slice of watermelon.');
-INSERT INTO cocktails VALUES (178333,'Raspberry Julep','Cocktail','Alcoholic','Cordial glass','Softly muddle the mint leaves and raspberry syrup in the bottom of the cup. Add crushed ice and Bourbon to the cup and then stir. Top with more ice, garnish with a mint sprig.');
-INSERT INTO cocktails VALUES (178334,'Death in the Afternoon','Cocktail','Alcoholic','Margarita glass','Easy as you like, pour the absinthe into a chilled glass, top with champagne. Must be drunk mid afternoon for the optimum effect.');
-INSERT INTO cocktails VALUES (178335,'Lazy Coconut Paloma','Cocktail','Alcoholic','Highball glass','Mix the coconut liqueur (preferably tequila) with the grapefruit juice and top with soda water. Garnish with a large grapefruit slice against the inside of the glass.');
-INSERT INTO cocktails VALUES (178336,'Blueberry Mojito','Cocktail','Alcoholic','Highball glass','Muddle the blueberries with the other ingredients and serve in a highball glass. Garnish with mint and a half slice of lime.');
-INSERT INTO cocktails VALUES (178337,'Autumn Garibaldi','Cocktail','Alcoholic','Cordial glass','Pour all ingredients into a glass over ice and stir with a bar spoon. Garnish with some orange slices.');
-INSERT INTO cocktails VALUES (178338,'Pure Passion','Cocktail','Alcoholic','Whiskey sour glass','Mix up all ingredients with a cocktail stirrer and serve with crushed ice with mint and edible flour if available.');
-INSERT INTO cocktails VALUES (178339,'The Strange Weaver','Cocktail','Alcoholic','Collins glass','Mix ingredients slowly in a glass with ice, garnish with orange slice');
-INSERT INTO cocktails VALUES (178340,'Garibaldi Negroni','Cocktail','Alcoholic','Highball glass','Mix together in a shaker and garnish with a simple orange slice. Fill your vitamin C and cocktail fix at the same time!');
-INSERT INTO cocktails VALUES (178341,'Orange Rosemary Collins','Cocktail','Alcoholic','Highball glass','Add the spirits to the bottom of the glass and top equally with the mixer drinks. Garnish with orange slices inside the glass as well as some rosemary on top.');
-INSERT INTO cocktails VALUES (178342,'Gin and Soda','Cocktail','Alcoholic','Highball glass','Pour the Gin and Soda water into a highball glass almost filled with ice cubes. Stir well. Garnish with the lime wedge.');
-INSERT INTO cocktails VALUES (178343,'Michelada','Cocktail','Alcoholic','Pint glass','Mix the beer with tomato juice, freshly squeezed lime juice, and Worcestershire sauce, teriyaki sauce, soy sauce, or hot sauce. Served In a chilled, salt-rimmed glass');
-INSERT INTO cocktails VALUES (178344,'Figgy Thyme','Cocktail','Alcoholic','Highball glass','In a lewis bag, crush up some ice like a baller/maniac (@glacioice). Pour your precious ice into a collins glass. In a cocktail shaker, muddle the figs and thyme together. Add honey vodka, lemon juice, and a large ice cube (@glacioice). Shake until well chilled, and strain into glass. Add tonic water and finally 2 dashes of angostura bitters. Garnish with sliced figs and thyme.');
-INSERT INTO cocktails VALUES (178346,'Elderflower Caipirinha','Cocktail','Alcoholic','Collins glass','Take the glass and muddle the lime in it. Fill the glass with crushed ice and add the Cachaca. Stir well and top with some more crushed ice. Garnish with lime and enjoy!');
-INSERT INTO cocktails VALUES (178347,'Winter Rita','Beer','Alcoholic','Highball Glass','Salt rim. Combine all ingredients, shake with ice, and strain over fresh ice.⠀');
-INSERT INTO cocktails VALUES (178348,'Winter Paloma','Cocktail','Alcoholic','Highball glass','Everyone’s favourite Paloma gets a delicious Indian makeover. Tequila reposado infused with “Timur Pepper” which has citrusy & grapefruit notes and is grown at the foothills of Himalaya. It also produces a slightly numbing and tingling sensation on your lip when consumed. We have also spiced up the fresh grapefruit juice with the warming spice blend from Himalaya. The combination of all these interesting elements has allowed us to elevate your Paloma sipping experience.');
-INSERT INTO cocktails VALUES (178349,'Snowday','Cocktail','Alcoholic','Collins glass','Stir all ingredients with ice. Strain into a chilled rocks glass over fresh ice. Express orange peel over drink and garnish.');
-INSERT INTO cocktails VALUES (178350,'The Galah','Cocktail','Alcoholic','Collins glass','Mix together the alcoholic portions and top with Pineapple and Lime juice.');
-INSERT INTO cocktails VALUES (178353,'Apple Highball','Cocktail','Alcoholic','Highball glass','Add ice in a highball glass. Rub a wedge of fresh lime around rim and place it in the glass. Add a shot of Apple schnapps, a shot of Courvoisier and top up with ginger ale.');
-INSERT INTO cocktails VALUES (178354,'Pink Moon','Cocktail','Alcoholic','Whiskey Glass','Slowly shake in a shaker with ice, strain into a square whiskey glass. Top with fresh ice. Add the blackberries to garnish. Add flowers and a green leaf for a special look!');
-INSERT INTO cocktails VALUES (178355,'Mountain Bramble','Cocktail','Alcoholic','Old-fashioned glass','Muddle the blackberries in a tumbler glass. Mix the Gin, lemon juice and sugar syrup in a shaker and strain over chopped ice. Top with Soda water and garnish with more blackberries and some mint');
-INSERT INTO cocktails VALUES (178357,'Pornstar Martini','Cocktail','Alcoholic','Cocktail glass','Straight: Pour all ingredients into mixing glass with ice cubes. Shake well. Strain in chilled martini cocktail glass. Cut passion fruit in half and use as garnish. Pour prosecco into a chilled shot glass and serve alongside the martini.');
-INSERT INTO cocktails VALUES (178358,'Mango Mojito','Cocktail','Alcoholic','Jar','Squeeze the juice from 1½ limes and blend with the mango to give a smooth purée. Cut the rest of the limes into quarters, and then cut each wedge in half again. Put 2 pieces of lime in a highball glass for each person and add 1 teaspoon of caster sugar and 5-6 mint leaves to each glass. Squish everything together with a muddler or the end of a rolling pin to release all the flavours from the lime and mint. Divide the mango purée between the glasses and add 30ml white rum and a handful of crushed ice to each one, stirring well to mix everything together. Top up with soda water to serve and garnish with extra mint, if you like.');
-INSERT INTO cocktails VALUES (178359,'Kiwi Martini','Cocktail','Alcoholic','Cocktail glass','The kiwi martini is a very fun vodka cocktail and it is one of the best drinks that makes use of fresh fruit. Though there are a few recipes floating around, this is one of the easiest and it is an absolutely delightful green martini to drink. For this recipe, you''ll simply muddle slices of kiwi with simple syrup, then shake it with vodka. It''s a drink that anyone can mix up in minutes and a perfect cocktail to show off your favorite vodka.');
-INSERT INTO cocktails VALUES (178360,'Lemon Elderflower Spritzer','Cocktail','Alcoholic','Highball glass','Pour all ingredients over ice, stir and enjoy!');
-INSERT INTO cocktails VALUES (178362,'Vodka Slime','Cocktail','Alcoholic','Highball glass','Fill glass with ice. Add vodka, 7-up then finish with the lime juice.');
-INSERT INTO cocktails VALUES (178363,'Vodka Lemon','Cocktail','Alcoholic','Highball glass','The vodka lemon is prepared directly in a highball glass or in a large tumbler: put 6-7 ice cubes in the glass, pour the vodka, lemonade and mix with a bar spoon. Finally decorate with a slice of lemon and, if you prefer, add a few mint leaves. Your vodka lemon is ready to be served.');
-INSERT INTO cocktails VALUES (178365,'Gin Tonic','Cocktail','Alcoholic','Highball glass','Fill a highball glass with ice, pour the gin, top with tonic water and squeeze a lemon wedge and garnish with a lemon wedge.');
-INSERT INTO cocktails VALUES (178366,'Gin Lemon','Cocktail','Alcoholic','Highball glass','For the preparation of the gin lemon you will not need the shaker. Fill the tumbler with ice, pour the gin and lemonade over it. Gently mix and decorate with a slice of lemon. Those who prefer can also add a few mint leaves. Your gin lemon is ready to be served.');
-INSERT INTO cocktails VALUES (178368,'Planter’s Punch','Cocktail','Alcoholic','Highball glass','Squeeze an orange and strain the juice. Put all the ingredients in a shaker filled with ice and shake for at least 12 seconds. Strain into a highball glass and decorate with a pineapple wedge or fruit of your choice.');
-INSERT INTO cocktails VALUES (178369,'Cocktail Horse’s Neck','Cocktail','Alcoholic','Highball glass','Wash and brush an organic, untreated lemon, then cut a spiral of lemon peel, using a citrus peel. If it is too large, cut it with a sharp knife. Put some ice in a tall tumbler glass, place the lemon peel inside and pour the cognac, add the ginger beer and let 2-3 drops of Angostura fall into it. Easy to do, but once you try it you''ll love it.');
+--
+-- Table structure for table `cocteles`
+--
 
--- INGREDIENTES
-INSERT INTO ingredients VALUES (1,'Coffee');
-INSERT INTO ingredients VALUES (2,'Coriander');
-INSERT INTO ingredients VALUES (3,'Cardamom');
-INSERT INTO ingredients VALUES (4,'Sugar');
-INSERT INTO ingredients VALUES (5,'Whipping cream');
-INSERT INTO ingredients VALUES (6,'Ice');
-INSERT INTO ingredients VALUES (7,'Jägermeister');
-INSERT INTO ingredients VALUES (8,'Root beer');
-INSERT INTO ingredients VALUES (9,'Gin');
-INSERT INTO ingredients VALUES (10,'Grenadine');
-INSERT INTO ingredients VALUES (11,'Light cream');
-INSERT INTO ingredients VALUES (12,'Egg white');
-INSERT INTO ingredients VALUES (13,'Hot Chocolate');
-INSERT INTO ingredients VALUES (14,'Green Chartreuse');
-INSERT INTO ingredients VALUES (15,'Cherry Heering');
-INSERT INTO ingredients VALUES (16,'Baileys irish cream');
-INSERT INTO ingredients VALUES (17,'Vanilla ice-cream');
-INSERT INTO ingredients VALUES (18,'Cream');
-INSERT INTO ingredients VALUES (19,'Allspice');
-INSERT INTO ingredients VALUES (20,'Rum');
-INSERT INTO ingredients VALUES (21,'Lime Juice');
-INSERT INTO ingredients VALUES (22,'Champagne');
-INSERT INTO ingredients VALUES (23,'Orange spiral');
-INSERT INTO ingredients VALUES (24,'Vodka');
-INSERT INTO ingredients VALUES (25,'Ouzo');
-INSERT INTO ingredients VALUES (26,'Jack Daniels');
-INSERT INTO ingredients VALUES (27,'Amaretto');
-INSERT INTO ingredients VALUES (28,'Whipped cream');
-INSERT INTO ingredients VALUES (29,'Light rum');
-INSERT INTO ingredients VALUES (30,'Triple sec');
-INSERT INTO ingredients VALUES (31,'Lime juice');
-INSERT INTO ingredients VALUES (32,'Cherry');
-INSERT INTO ingredients VALUES (33,'Chocolate');
-INSERT INTO ingredients VALUES (34,'Butter');
-INSERT INTO ingredients VALUES (35,'Vanilla extract');
-INSERT INTO ingredients VALUES (36,'Half-and-half');
-INSERT INTO ingredients VALUES (37,'Marshmallows');
-INSERT INTO ingredients VALUES (38,'Water');
-INSERT INTO ingredients VALUES (39,'Milk');
-INSERT INTO ingredients VALUES (40,'Coffee liqueur');
-INSERT INTO ingredients VALUES (41,'Wild Turkey');
-INSERT INTO ingredients VALUES (42,'Pineapple juice');
-INSERT INTO ingredients VALUES (43,'Mezcal');
-INSERT INTO ingredients VALUES (44,'Chocolate liqueur');
-INSERT INTO ingredients VALUES (45,'Lime');
-INSERT INTO ingredients VALUES (46,'Powdered sugar');
-INSERT INTO ingredients VALUES (47,'Absolut Kurant');
-INSERT INTO ingredients VALUES (48,'Midori melon liqueur');
-INSERT INTO ingredients VALUES (49,'Cranberry juice');
-INSERT INTO ingredients VALUES (50,'Sprite');
-INSERT INTO ingredients VALUES (51,'Galliano');
-INSERT INTO ingredients VALUES (52,'Triple Sec');
-INSERT INTO ingredients VALUES (53,'orange juice');
-INSERT INTO ingredients VALUES (54,'Orange bitters');
-INSERT INTO ingredients VALUES (55,'Orange');
-INSERT INTO ingredients VALUES (56,'Ricard');
-INSERT INTO ingredients VALUES (57,'Peychaud bitters');
-INSERT INTO ingredients VALUES (58,'Bourbon');
-INSERT INTO ingredients VALUES (59,'Lemon peel');
-INSERT INTO ingredients VALUES (60,'Tonic water');
-INSERT INTO ingredients VALUES (61,'Creme de Cacao');
-INSERT INTO ingredients VALUES (62,'Blue Curacao');
-INSERT INTO ingredients VALUES (63,'Lemonade');
-INSERT INTO ingredients VALUES (64,'Ginger ale');
-INSERT INTO ingredients VALUES (65,'Red wine');
-INSERT INTO ingredients VALUES (66,'Cinnamon');
-INSERT INTO ingredients VALUES (67,'Cloves');
-INSERT INTO ingredients VALUES (68,'Orange juice');
-INSERT INTO ingredients VALUES (69,'Chocolate syrup');
-INSERT INTO ingredients VALUES (70,'Cherry brandy');
-INSERT INTO ingredients VALUES (71,'Brandy');
-INSERT INTO ingredients VALUES (72,'Sweet Vermouth');
-INSERT INTO ingredients VALUES (73,'Carbonated water');
-INSERT INTO ingredients VALUES (74,'Cherry Juice');
-INSERT INTO ingredients VALUES (75,'Orange Peel');
-INSERT INTO ingredients VALUES (76,'Red Chili Flakes');
-INSERT INTO ingredients VALUES (77,'Ginger');
-INSERT INTO ingredients VALUES (78,'Strawberries');
-INSERT INTO ingredients VALUES (79,'Lemon-lime soda');
-INSERT INTO ingredients VALUES (80,'Raisins');
-INSERT INTO ingredients VALUES (81,'Blueberries');
-INSERT INTO ingredients VALUES (82,'Fruit punch');
-INSERT INTO ingredients VALUES (83,'Tequila');
-INSERT INTO ingredients VALUES (84,'151 proof rum');
-INSERT INTO ingredients VALUES (85,'Vermouth');
-INSERT INTO ingredients VALUES (86,'Maraschino Cherry');
-INSERT INTO ingredients VALUES (87,'Sugar Syrup');
-INSERT INTO ingredients VALUES (88,'Blackberries');
-INSERT INTO ingredients VALUES (89,'Guinness stout');
-INSERT INTO ingredients VALUES (90,'Tea');
-INSERT INTO ingredients VALUES (91,'Rye whiskey');
-INSERT INTO ingredients VALUES (92,'Benedictine');
-INSERT INTO ingredients VALUES (93,'Lemon juice');
-INSERT INTO ingredients VALUES (94,'Orange Bitters');
-INSERT INTO ingredients VALUES (95,'Egg');
-INSERT INTO ingredients VALUES (96,'Nutmeg');
-INSERT INTO ingredients VALUES (97,'Dark rum');
-INSERT INTO ingredients VALUES (98,'Sherry');
-INSERT INTO ingredients VALUES (99,'Kahlua');
-INSERT INTO ingredients VALUES (100,'Sugar syrup');
-INSERT INTO ingredients VALUES (101,'Mint');
-INSERT INTO ingredients VALUES (102,'Soda water');
-INSERT INTO ingredients VALUES (103,'Angostura bitters');
-INSERT INTO ingredients VALUES (104,'Lemon');
-INSERT INTO ingredients VALUES (105,'Coca-Cola');
-INSERT INTO ingredients VALUES (106,'Campari');
-INSERT INTO ingredients VALUES (107,'Blended whiskey');
-INSERT INTO ingredients VALUES (108,'Dry Vermouth');
-INSERT INTO ingredients VALUES (109,'Olive');
-INSERT INTO ingredients VALUES (110,'Salt');
-INSERT INTO ingredients VALUES (111,'Maraschino cherry');
-INSERT INTO ingredients VALUES (112,'Orange peel');
-INSERT INTO ingredients VALUES (113,'Apricot brandy');
-INSERT INTO ingredients VALUES (114,'Southern Comfort');
-INSERT INTO ingredients VALUES (115,'Sloe gin');
-INSERT INTO ingredients VALUES (116,'Yellow Chartreuse');
-INSERT INTO ingredients VALUES (117,'Lemon vodka');
-INSERT INTO ingredients VALUES (118,'Blackberry brandy');
-INSERT INTO ingredients VALUES (119,'Kummel');
-INSERT INTO ingredients VALUES (120,'Club soda');
-INSERT INTO ingredients VALUES (121,'White Creme de Menthe');
-INSERT INTO ingredients VALUES (122,'Apple brandy');
-INSERT INTO ingredients VALUES (123,'Applejack');
-INSERT INTO ingredients VALUES (124,'Wine');
-INSERT INTO ingredients VALUES (125,'Green Creme de Menthe');
-INSERT INTO ingredients VALUES (126,'Grand Marnier');
-INSERT INTO ingredients VALUES (127,'Bitters');
-INSERT INTO ingredients VALUES (128,'Scotch');
-INSERT INTO ingredients VALUES (129,'Banana');
-INSERT INTO ingredients VALUES (130,'Tomato juice');
-INSERT INTO ingredients VALUES (131,'Tabasco sauce');
-INSERT INTO ingredients VALUES (132,'Celery salt');
-INSERT INTO ingredients VALUES (133,'Worcestershire sauce');
-INSERT INTO ingredients VALUES (134,'Añejo rum');
-INSERT INTO ingredients VALUES (135,'Tia maria');
-INSERT INTO ingredients VALUES (136,'Maraschino liqueur');
-INSERT INTO ingredients VALUES (137,'Cachaca');
-INSERT INTO ingredients VALUES (138,'Egg yolk');
-INSERT INTO ingredients VALUES (139,'Cognac');
-INSERT INTO ingredients VALUES (140,'Port');
-INSERT INTO ingredients VALUES (141,'Chocolate ice-cream');
-INSERT INTO ingredients VALUES (142,'Dubonnet Rouge');
-INSERT INTO ingredients VALUES (143,'Pineapple');
-INSERT INTO ingredients VALUES (144,'Heavy cream');
-INSERT INTO ingredients VALUES (145,'Irish whiskey');
-INSERT INTO ingredients VALUES (146,'Peach brandy');
-INSERT INTO ingredients VALUES (147,'Sweet and sour');
-INSERT INTO ingredients VALUES (148,'Drambuie');
-INSERT INTO ingredients VALUES (149,'Orgeat syrup');
-INSERT INTO ingredients VALUES (150,'Grapefruit juice');
-INSERT INTO ingredients VALUES (151,'Raspberry syrup');
-INSERT INTO ingredients VALUES (152,'Coffee brandy');
-INSERT INTO ingredients VALUES (153,'Lime vodka');
-INSERT INTO ingredients VALUES (154,'Lime peel');
-INSERT INTO ingredients VALUES (155,'Curacao');
-INSERT INTO ingredients VALUES (156,'Anisette');
-INSERT INTO ingredients VALUES (157,'Cointreau');
-INSERT INTO ingredients VALUES (158,'Strawberry schnapps');
-INSERT INTO ingredients VALUES (159,'Anis');
-INSERT INTO ingredients VALUES (160,'Maple syrup');
-INSERT INTO ingredients VALUES (161,'Creme de Cassis');
-INSERT INTO ingredients VALUES (162,'Grape juice');
-INSERT INTO ingredients VALUES (163,'Apple juice');
-INSERT INTO ingredients VALUES (164,'Carrot');
-INSERT INTO ingredients VALUES (165,'Passion fruit juice');
-INSERT INTO ingredients VALUES (166,'Yoghurt');
-INSERT INTO ingredients VALUES (167,'Honey');
-INSERT INTO ingredients VALUES (168,'Apple');
-INSERT INTO ingredients VALUES (169,'Fruit juice');
-INSERT INTO ingredients VALUES (170,'Fruit');
-INSERT INTO ingredients VALUES (171,'Mint syrup');
-INSERT INTO ingredients VALUES (172,'Cumin seed');
-INSERT INTO ingredients VALUES (173,'Asafoetida');
-INSERT INTO ingredients VALUES (174,'Mango');
-INSERT INTO ingredients VALUES (175,'Cayenne pepper');
-INSERT INTO ingredients VALUES (176,'Aperol');
-INSERT INTO ingredients VALUES (177,'Cantaloupe');
-INSERT INTO ingredients VALUES (178,'Berries');
-INSERT INTO ingredients VALUES (179,'Grapes');
-INSERT INTO ingredients VALUES (180,'Kiwi');
-INSERT INTO ingredients VALUES (181,'Papaya');
-INSERT INTO ingredients VALUES (182,'Cocoa powder');
-INSERT INTO ingredients VALUES (183,'Cornstarch');
-INSERT INTO ingredients VALUES (184,'Vanilla');
-INSERT INTO ingredients VALUES (185,'Espresso');
-INSERT INTO ingredients VALUES (186,'Absolut Citron');
-INSERT INTO ingredients VALUES (187,'Peach schnapps');
-INSERT INTO ingredients VALUES (188,'Peach Vodka');
-INSERT INTO ingredients VALUES (189,'Sirup of roses');
-INSERT INTO ingredients VALUES (190,'Grain alcohol');
-INSERT INTO ingredients VALUES (191,'Spiced rum');
-INSERT INTO ingredients VALUES (192,'Black pepper');
-INSERT INTO ingredients VALUES (193,'Condensed milk');
-INSERT INTO ingredients VALUES (194,'Anise');
-INSERT INTO ingredients VALUES (195,'Licorice root');
-INSERT INTO ingredients VALUES (196,'Wormwood');
-INSERT INTO ingredients VALUES (197,'Apricot');
-INSERT INTO ingredients VALUES (198,'Almond flavoring');
-INSERT INTO ingredients VALUES (199,'Food coloring');
-INSERT INTO ingredients VALUES (200,'Glycerine');
-INSERT INTO ingredients VALUES (201,'Angelica root');
-INSERT INTO ingredients VALUES (202,'Almond');
-INSERT INTO ingredients VALUES (203,'Marjoram leaves');
-INSERT INTO ingredients VALUES (204,'Caramel coloring');
-INSERT INTO ingredients VALUES (205,'Cranberries');
-INSERT INTO ingredients VALUES (206,'Peppermint extract');
-INSERT INTO ingredients VALUES (207,'Coconut syrup');
-INSERT INTO ingredients VALUES (208,'Johnnie Walker');
-INSERT INTO ingredients VALUES (209,'Fennel seeds');
-INSERT INTO ingredients VALUES (210,'Brown sugar');
-INSERT INTO ingredients VALUES (211,'Guava juice');
-INSERT INTO ingredients VALUES (212,'Everclear');
-INSERT INTO ingredients VALUES (213,'Kool-Aid');
-INSERT INTO ingredients VALUES (214,'Carbonated soft drink');
-INSERT INTO ingredients VALUES (215,'Sherbet');
-INSERT INTO ingredients VALUES (216,'Fresca');
-INSERT INTO ingredients VALUES (217,'Peach nectar');
-INSERT INTO ingredients VALUES (218,'Firewater');
-INSERT INTO ingredients VALUES (219,'Absolut Peppar');
-INSERT INTO ingredients VALUES (220,'Cherry liqueur');
-INSERT INTO ingredients VALUES (221,'Lager');
-INSERT INTO ingredients VALUES (222,'Cider');
-INSERT INTO ingredients VALUES (223,'Blackcurrant cordial');
-INSERT INTO ingredients VALUES (224,'Frangelico');
-INSERT INTO ingredients VALUES (225,'Sour mix');
-INSERT INTO ingredients VALUES (226,'Whiskey');
-INSERT INTO ingredients VALUES (227,'Hot Damn');
-INSERT INTO ingredients VALUES (228,'Beer');
-INSERT INTO ingredients VALUES (229,'Dr. Pepper');
-INSERT INTO ingredients VALUES (230,'White rum');
-INSERT INTO ingredients VALUES (231,'Pisco');
-INSERT INTO ingredients VALUES (232,'Egg White');
-INSERT INTO ingredients VALUES (233,'Irish cream');
-INSERT INTO ingredients VALUES (234,'Goldschlager');
-INSERT INTO ingredients VALUES (235,'Ale');
-INSERT INTO ingredients VALUES (236,'Sambuca');
-INSERT INTO ingredients VALUES (237,'Erin Cream');
-INSERT INTO ingredients VALUES (238,'Advocaat');
-INSERT INTO ingredients VALUES (239,'Passion fruit syrup');
-INSERT INTO ingredients VALUES (240,'Oreo cookie');
-INSERT INTO ingredients VALUES (241,'Pink lemonade');
-INSERT INTO ingredients VALUES (242,'Iced tea');
-INSERT INTO ingredients VALUES (243,'Sarsaparilla');
-INSERT INTO ingredients VALUES (244,'7-Up');
-INSERT INTO ingredients VALUES (245,'Apple schnapps');
-INSERT INTO ingredients VALUES (246,'Peppermint schnapps');
-INSERT INTO ingredients VALUES (247,'Jim Beam');
-INSERT INTO ingredients VALUES (248,'Pina colada mix');
-INSERT INTO ingredients VALUES (249,'Daiquiri mix');
-INSERT INTO ingredients VALUES (250,'Absolut Vodka');
-INSERT INTO ingredients VALUES (251,'Butterscotch schnapps');
-INSERT INTO ingredients VALUES (252,'Coconut liqueur');
-INSERT INTO ingredients VALUES (253,'Crown Royal');
-INSERT INTO ingredients VALUES (254,'Chambord raspberry liqueur');
-INSERT INTO ingredients VALUES (255,'Godiva liqueur');
-INSERT INTO ingredients VALUES (256,'Pisang Ambon');
-INSERT INTO ingredients VALUES (257,'Bitter lemon');
-INSERT INTO ingredients VALUES (258,'Hot chocolate');
-INSERT INTO ingredients VALUES (259,'Creme de Banane');
-INSERT INTO ingredients VALUES (260,'Malibu rum');
-INSERT INTO ingredients VALUES (261,'Dark Creme de Cacao');
-INSERT INTO ingredients VALUES (262,'Vanilla vodka');
-INSERT INTO ingredients VALUES (263,'Grape soda');
-INSERT INTO ingredients VALUES (264,'Candy');
-INSERT INTO ingredients VALUES (265,'Banana liqueur');
-INSERT INTO ingredients VALUES (266,'Kiwi liqueur');
-INSERT INTO ingredients VALUES (267,'Peachtree schnapps');
-INSERT INTO ingredients VALUES (268,'Surge');
-INSERT INTO ingredients VALUES (269,'Jello');
-INSERT INTO ingredients VALUES (270,'Cranberry vodka');
-INSERT INTO ingredients VALUES (271,'Apfelkorn');
-INSERT INTO ingredients VALUES (272,'Schweppes Russchian');
-INSERT INTO ingredients VALUES (273,'Corona');
-INSERT INTO ingredients VALUES (274,'Bacardi Limon');
-INSERT INTO ingredients VALUES (275,'Yukon Jack');
-INSERT INTO ingredients VALUES (276,'Coconut rum');
-INSERT INTO ingredients VALUES (277,'Tropicana');
-INSERT INTO ingredients VALUES (278,'Cherries');
-INSERT INTO ingredients VALUES (279,'Aquavit');
-INSERT INTO ingredients VALUES (280,'Kirschwasser');
-INSERT INTO ingredients VALUES (281,'Strawberry liqueur');
-INSERT INTO ingredients VALUES (282,'Black Sambuca');
-INSERT INTO ingredients VALUES (283,'Blackcurrant squash');
-INSERT INTO ingredients VALUES (284,'Zima');
-INSERT INTO ingredients VALUES (285,'Pepsi Cola');
-INSERT INTO ingredients VALUES (286,'Orange Curacao');
-INSERT INTO ingredients VALUES (287,'Cream of coconut');
-INSERT INTO ingredients VALUES (288,'Absinthe');
-INSERT INTO ingredients VALUES (289,'Whisky');
-INSERT INTO ingredients VALUES (290,'Tennessee whiskey');
-INSERT INTO ingredients VALUES (291,'Apple cider');
-INSERT INTO ingredients VALUES (292,'Limeade');
-INSERT INTO ingredients VALUES (293,'Melon liqueur');
-INSERT INTO ingredients VALUES (294,'Mountain Dew');
-INSERT INTO ingredients VALUES (295,'Corn syrup');
-INSERT INTO ingredients VALUES (296,'Rumple Minze');
-INSERT INTO ingredients VALUES (297,'Lime juice cordial');
-INSERT INTO ingredients VALUES (298,'Gold tequila');
-INSERT INTO ingredients VALUES (299,'Blueberry schnapps');
-INSERT INTO ingredients VALUES (300,'Maui');
-INSERT INTO ingredients VALUES (301,'Raspberry vodka');
-INSERT INTO ingredients VALUES (302,'Cherry Grenadine');
-INSERT INTO ingredients VALUES (303,'Lemon Juice');
-INSERT INTO ingredients VALUES (304,'Agave Syrup');
-INSERT INTO ingredients VALUES (305,'demerara Sugar');
-INSERT INTO ingredients VALUES (306,'lemon juice');
-INSERT INTO ingredients VALUES (307,'maraschino liqueur');
-INSERT INTO ingredients VALUES (308,'Olive Brine');
-INSERT INTO ingredients VALUES (309,'Pineapple Syrup');
-INSERT INTO ingredients VALUES (310,'St. Germain');
-INSERT INTO ingredients VALUES (311,'Angostura Bitters');
-INSERT INTO ingredients VALUES (312,'Pepper');
-INSERT INTO ingredients VALUES (313,'Lavender');
-INSERT INTO ingredients VALUES (314,'gin');
-INSERT INTO ingredients VALUES (315,'Peach Bitters');
-INSERT INTO ingredients VALUES (316,'Apricot Brandy');
-INSERT INTO ingredients VALUES (317,'Orange Juice');
-INSERT INTO ingredients VALUES (318,'Egg Yolk');
-INSERT INTO ingredients VALUES (319,'Grapefruit Juice');
-INSERT INTO ingredients VALUES (320,'Maraschino Liqueur');
-INSERT INTO ingredients VALUES (321,'Coconut milk');
-INSERT INTO ingredients VALUES (322,'Pineapple Juice');
-INSERT INTO ingredients VALUES (323,'Prosecco');
-INSERT INTO ingredients VALUES (324,'Creme de Mure');
-INSERT INTO ingredients VALUES (325,'Dark Rum');
-INSERT INTO ingredients VALUES (326,'Ginger Beer');
-INSERT INTO ingredients VALUES (327,'Raspberry Liqueur');
-INSERT INTO ingredients VALUES (328,'pineapple juice');
-INSERT INTO ingredients VALUES (329,'Soda Water');
-INSERT INTO ingredients VALUES (330,'Agave syrup');
-INSERT INTO ingredients VALUES (331,'Tomato Juice');
-INSERT INTO ingredients VALUES (332,'Lillet Blanc');
-INSERT INTO ingredients VALUES (333,'White Rum');
-INSERT INTO ingredients VALUES (334,'Vanilla Ice-Cream');
-INSERT INTO ingredients VALUES (335,'Whipped Cream');
-INSERT INTO ingredients VALUES (336,'caramel sauce');
-INSERT INTO ingredients VALUES (337,'chocolate sauce');
-INSERT INTO ingredients VALUES (338,'Mini-snickers bars');
-INSERT INTO ingredients VALUES (339,'Cranberry Juice');
-INSERT INTO ingredients VALUES (340,'Fresh Lemon Juice');
-INSERT INTO ingredients VALUES (341,'Fresh Lime Juice');
-INSERT INTO ingredients VALUES (342,'lemon');
-INSERT INTO ingredients VALUES (343,'Chocolate Sauce');
-INSERT INTO ingredients VALUES (344,'Salted Chocolate');
-INSERT INTO ingredients VALUES (345,'Gold rum');
-INSERT INTO ingredients VALUES (346,'Pernod');
-INSERT INTO ingredients VALUES (347,'Ginger beer');
-INSERT INTO ingredients VALUES (348,'Tonic Water');
-INSERT INTO ingredients VALUES (349,'Rosemary');
-INSERT INTO ingredients VALUES (350,'Lillet');
-INSERT INTO ingredients VALUES (351,'Grape Soda');
-INSERT INTO ingredients VALUES (352,'Jagermeister');
-INSERT INTO ingredients VALUES (353,'Sweet and Sour');
-INSERT INTO ingredients VALUES (354,'Passoa');
-INSERT INTO ingredients VALUES (355,'Elderflower cordial');
-INSERT INTO ingredients VALUES (356,'Rosso Vermouth');
-INSERT INTO ingredients VALUES (357,'Irish Whiskey');
-INSERT INTO ingredients VALUES (358,'Blended Scotch');
-INSERT INTO ingredients VALUES (359,'Honey syrup');
-INSERT INTO ingredients VALUES (360,'Ginger Syrup');
-INSERT INTO ingredients VALUES (361,'Islay single malt Scotch');
-INSERT INTO ingredients VALUES (362,'Falernum');
-INSERT INTO ingredients VALUES (363,'blackstrap rum');
-INSERT INTO ingredients VALUES (364,'7-up');
-INSERT INTO ingredients VALUES (365,'Vanilla syrup');
-INSERT INTO ingredients VALUES (366,'Rye Whiskey');
-INSERT INTO ingredients VALUES (367,'Basil');
-INSERT INTO ingredients VALUES (368,'Cucumber');
-INSERT INTO ingredients VALUES (369,'Roses sweetened lime juice');
-INSERT INTO ingredients VALUES (370,'Hpnotiq');
-INSERT INTO ingredients VALUES (371,'Banana Liqueur');
-INSERT INTO ingredients VALUES (372,'Malibu Rum');
-INSERT INTO ingredients VALUES (373,'White Wine');
-INSERT INTO ingredients VALUES (374,'Apple Brandy');
-INSERT INTO ingredients VALUES (375,'Apricot Nectar');
-INSERT INTO ingredients VALUES (376,'Pomegranate juice');
-INSERT INTO ingredients VALUES (377,'Melon Liqueur');
-INSERT INTO ingredients VALUES (378,'Coconut Liqueur');
-INSERT INTO ingredients VALUES (379,'Watermelon');
-INSERT INTO ingredients VALUES (380,'Light Rum');
-INSERT INTO ingredients VALUES (381,'Orgeat Syrup');
-INSERT INTO ingredients VALUES (382,'Rosemary Syrup');
-INSERT INTO ingredients VALUES (383,'Hot Sauce');
-INSERT INTO ingredients VALUES (384,'Worcestershire Sauce');
-INSERT INTO ingredients VALUES (385,'Soy Sauce');
-INSERT INTO ingredients VALUES (386,'Figs');
-INSERT INTO ingredients VALUES (387,'Thyme');
-INSERT INTO ingredients VALUES (388,'Amaro Montenegro');
-INSERT INTO ingredients VALUES (389,'Ruby Port');
-INSERT INTO ingredients VALUES (390,'Blood Orange');
-INSERT INTO ingredients VALUES (391,'Creme De Banane');
-INSERT INTO ingredients VALUES (392,'Rose');
-INSERT INTO ingredients VALUES (393,'Apple Schnapps');
-INSERT INTO ingredients VALUES (394,'Raspberry Vodka');
-INSERT INTO ingredients VALUES (395,'Lemon Peel');
-INSERT INTO ingredients VALUES (396,'');
+CREATE TABLE `cocteles` (
+	`id` int(11) NOT NULL,
+	`nombre` varchar(255) NOT NULL,
+	`miniatura` varchar(2048) NOT NULL,
+	`categoria` varchar(100) NOT NULL,
+	`tipo` varchar(16) NOT NULL,
+	`vaso` varchar(100) NOT NULL,
+	`instrucciones` varchar(1024) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- MEDIDAS
-INSERT INTO is_made_of VALUES (12782,1,'6 tblsp ground');
-INSERT INTO is_made_of VALUES (12782,2,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (12782,3,'4-5 whole green ');
-INSERT INTO is_made_of VALUES (12782,4,NULL);
-INSERT INTO is_made_of VALUES (12782,5,NULL);
-INSERT INTO is_made_of VALUES (12782,6,NULL);
-INSERT INTO is_made_of VALUES (15254,7,'1/2 oz ');
-INSERT INTO is_made_of VALUES (15254,8,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11938,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11938,10,'1 tsp ');
-INSERT INTO is_made_of VALUES (11938,11,'1 tsp ');
-INSERT INTO is_made_of VALUES (11938,12,'1 ');
-INSERT INTO is_made_of VALUES (17825,13,'4 oz');
-INSERT INTO is_made_of VALUES (17825,14,'1 oz');
-INSERT INTO is_made_of VALUES (17825,15,'1 oz');
-INSERT INTO is_made_of VALUES (14510,16,'2 oz ');
-INSERT INTO is_made_of VALUES (14510,17,'2 scoops ');
-INSERT INTO is_made_of VALUES (14510,18,NULL);
-INSERT INTO is_made_of VALUES (178322,4,'60 ml');
-INSERT INTO is_made_of VALUES (178322,19,'1 tblsp');
-INSERT INTO is_made_of VALUES (178322,20,'20 cl');
-INSERT INTO is_made_of VALUES (178322,21,'90 ml');
-INSERT INTO is_made_of VALUES (178322,22,'6 cl');
-INSERT INTO is_made_of VALUES (178322,23,'Garnish with');
-INSERT INTO is_made_of VALUES (16963,24,'1 1/4 oz Stoli ');
-INSERT INTO is_made_of VALUES (16963,25,'1/4 oz ');
-INSERT INTO is_made_of VALUES (15515,1,'8 oz ');
-INSERT INTO is_made_of VALUES (15515,26,'4 oz ');
-INSERT INTO is_made_of VALUES (15515,27,'4 oz ');
-INSERT INTO is_made_of VALUES (15515,28,NULL);
-INSERT INTO is_made_of VALUES (11387,29,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11387,30,'1 tblsp ');
-INSERT INTO is_made_of VALUES (11387,31,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11387,4,'1 tsp ');
-INSERT INTO is_made_of VALUES (11387,32,'1 ');
-INSERT INTO is_made_of VALUES (11387,6,'1 cup crushed ');
-INSERT INTO is_made_of VALUES (12738,33,'12 oz fine ');
-INSERT INTO is_made_of VALUES (12738,34,'1 tsp ');
-INSERT INTO is_made_of VALUES (12738,35,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (12738,36,'1 cup ');
-INSERT INTO is_made_of VALUES (12738,37,'mini ');
-INSERT INTO is_made_of VALUES (12770,1,'1/4 cup instant ');
-INSERT INTO is_made_of VALUES (12770,4,'1/4 cup ');
-INSERT INTO is_made_of VALUES (12770,38,'1/4 cup hot ');
-INSERT INTO is_made_of VALUES (12770,39,'4 cups cold ');
-INSERT INTO is_made_of VALUES (11102,40,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11102,24,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (15006,41,'1 oz ');
-INSERT INTO is_made_of VALUES (15006,27,'3/4 oz ');
-INSERT INTO is_made_of VALUES (15006,42,'1 splash ');
-INSERT INTO is_made_of VALUES (11006,29,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11006,45,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11006,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (14360,47,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14360,48,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14360,49,'1 oz ');
-INSERT INTO is_made_of VALUES (14360,50,'1 splash ');
-INSERT INTO is_made_of VALUES (17199,51,'2 parts');
-INSERT INTO is_made_of VALUES (17199,52,'2 parts');
-INSERT INTO is_made_of VALUES (17199,53,'2 parts');
-INSERT INTO is_made_of VALUES (17199,18,'1 part');
-INSERT INTO is_made_of VALUES (17834,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17834,54,'1 dash ');
-INSERT INTO is_made_of VALUES (17834,55,'Juice of 1/4 ');
-INSERT INTO is_made_of VALUES (17834,32,'1 ');
-INSERT INTO is_made_of VALUES (11025,27,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11025,11,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12127,56,'1 tsp ');
-INSERT INTO is_made_of VALUES (12127,4,'1/2 tsp superfine ');
-INSERT INTO is_made_of VALUES (12127,57,'2 dashes ');
-INSERT INTO is_made_of VALUES (12127,38,'1 tsp ');
-INSERT INTO is_made_of VALUES (12127,58,'2 oz ');
-INSERT INTO is_made_of VALUES (12127,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11403,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11403,60,'5 oz ');
-INSERT INTO is_made_of VALUES (11403,45,'1 ');
-INSERT INTO is_made_of VALUES (16271,61,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (16271,62,'1 oz ');
-INSERT INTO is_made_of VALUES (16271,29,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14364,63,'1 can ');
-INSERT INTO is_made_of VALUES (14364,24,'5 oz ');
-INSERT INTO is_made_of VALUES (14364,20,'7 oz ');
-INSERT INTO is_made_of VALUES (14364,64,'About 1 bottle ');
-INSERT INTO is_made_of VALUES (12944,65,'1 L ');
-INSERT INTO is_made_of VALUES (12944,38,'125 ml ');
-INSERT INTO is_made_of VALUES (12944,4,'60 gr ');
-INSERT INTO is_made_of VALUES (12944,66,'1 ');
-INSERT INTO is_made_of VALUES (12944,67,'3 ');
-INSERT INTO is_made_of VALUES (12944,59,'1 tblsp ');
-INSERT INTO is_made_of VALUES (12162,24,'2 oz ');
-INSERT INTO is_made_of VALUES (12162,68,NULL);
-INSERT INTO is_made_of VALUES (15951,6,'cubes');
-INSERT INTO is_made_of VALUES (15951,69,NULL);
-INSERT INTO is_made_of VALUES (15951,70,NULL);
-INSERT INTO is_made_of VALUES (15951,24,NULL);
-INSERT INTO is_made_of VALUES (15951,39,NULL);
-INSERT INTO is_made_of VALUES (11338,71,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11338,9,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11338,72,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11338,73,NULL);
-INSERT INTO is_made_of VALUES (11338,59,NULL);
-INSERT INTO is_made_of VALUES (16991,82,'2 part ');
-INSERT INTO is_made_of VALUES (16991,50,'1 part ');
-INSERT INTO is_made_of VALUES (16991,83,'2 shots ');
-INSERT INTO is_made_of VALUES (16991,84,'Float Bacardi ');
-INSERT INTO is_made_of VALUES (17239,85,'25 ml');
-INSERT INTO is_made_of VALUES (17239,86,'15 ml');
-INSERT INTO is_made_of VALUES (17239,87,'10 ml');
-INSERT INTO is_made_of VALUES (17239,63,'100 ml');
-INSERT INTO is_made_of VALUES (17239,88,'2');
-INSERT INTO is_made_of VALUES (16403,89,'1/2 ');
-INSERT INTO is_made_of VALUES (16403,8,'1/2 ');
-INSERT INTO is_made_of VALUES (12870,90,'1 quart black ');
-INSERT INTO is_made_of VALUES (12870,91,'1 quart ');
-INSERT INTO is_made_of VALUES (12870,65,'1 fifth ');
-INSERT INTO is_made_of VALUES (12870,20,'1 pint Jamaican ');
-INSERT INTO is_made_of VALUES (12870,71,'1/2 pint ');
-INSERT INTO is_made_of VALUES (12870,92,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12870,68,'1 pint ');
-INSERT INTO is_made_of VALUES (12870,93,'1/2 pint ');
-INSERT INTO is_made_of VALUES (17254,94,'1 dash');
-INSERT INTO is_made_of VALUES (17254,14,'1 oz');
-INSERT INTO is_made_of VALUES (17254,9,'1 oz');
-INSERT INTO is_made_of VALUES (17254,72,'1 oz');
-INSERT INTO is_made_of VALUES (11164,71,'2 oz ');
-INSERT INTO is_made_of VALUES (11164,95,'1 whole ');
-INSERT INTO is_made_of VALUES (11164,4,'1 tsp superfine ');
-INSERT INTO is_made_of VALUES (11164,11,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11164,96,'1/8 tsp grated ');
-INSERT INTO is_made_of VALUES (15346,97,'1 shot ');
-INSERT INTO is_made_of VALUES (15346,29,'2 shots ');
-INSERT INTO is_made_of VALUES (15346,24,'1 shot ');
-INSERT INTO is_made_of VALUES (15346,68,'1 shot ');
-INSERT INTO is_made_of VALUES (12190,98,'1 1/2 oz cream ');
-INSERT INTO is_made_of VALUES (12190,11,'2 tsp ');
-INSERT INTO is_made_of VALUES (12190,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (12190,95,'1 whole ');
-INSERT INTO is_made_of VALUES (12190,96,NULL);
-INSERT INTO is_made_of VALUES (17212,24,'5 cl');
-INSERT INTO is_made_of VALUES (17212,99,'1 cl');
-INSERT INTO is_made_of VALUES (17212,100,'1 dash');
-INSERT INTO is_made_of VALUES (11000,29,'2-3 oz ');
-INSERT INTO is_made_of VALUES (11000,45,'Juice of 1 ');
-INSERT INTO is_made_of VALUES (11000,4,'2 tsp ');
-INSERT INTO is_made_of VALUES (11000,101,'2-4 ');
-INSERT INTO is_made_of VALUES (11000,102,NULL);
-INSERT INTO is_made_of VALUES (11001,58,'4.5 cL');
-INSERT INTO is_made_of VALUES (11001,103,'2 dashes');
-INSERT INTO is_made_of VALUES (11001,4,'1 cube');
-INSERT INTO is_made_of VALUES (11001,38,'dash');
-INSERT INTO is_made_of VALUES (11002,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11002,29,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11002,9,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11002,83,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11002,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11002,105,'1 splash ');
-INSERT INTO is_made_of VALUES (11003,9,'1 oz ');
-INSERT INTO is_made_of VALUES (11003,106,'1 oz ');
-INSERT INTO is_made_of VALUES (11003,72,'1 oz ');
-INSERT INTO is_made_of VALUES (11004,107,'2 oz ');
-INSERT INTO is_made_of VALUES (11004,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11004,46,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11004,32,'1 ');
-INSERT INTO is_made_of VALUES (11005,9,'1 2/3 oz ');
-INSERT INTO is_made_of VALUES (11005,108,'1/3 oz ');
-INSERT INTO is_made_of VALUES (11005,109,'1 ');
-INSERT INTO is_made_of VALUES (11007,83,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11007,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11007,31,'1 oz ');
-INSERT INTO is_made_of VALUES (11007,110,NULL);
-INSERT INTO is_made_of VALUES (11008,72,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11008,58,'2 1/2 oz Blended ');
-INSERT INTO is_made_of VALUES (11008,103,'dash ');
-INSERT INTO is_made_of VALUES (11008,6,'2 or 3 ');
-INSERT INTO is_made_of VALUES (11008,111,'1 ');
-INSERT INTO is_made_of VALUES (11008,112,'1 twist of ');
-INSERT INTO is_made_of VALUES (11009,24,'2 oz ');
-INSERT INTO is_made_of VALUES (11009,31,'2 oz ');
-INSERT INTO is_made_of VALUES (11009,64,'8 oz ');
-INSERT INTO is_made_of VALUES (11010,113,'1 oz ');
-INSERT INTO is_made_of VALUES (11010,30,'1 oz ');
-INSERT INTO is_made_of VALUES (11010,45,'Juice of 1 ');
-INSERT INTO is_made_of VALUES (11011,30,'1 oz ');
-INSERT INTO is_made_of VALUES (11011,113,'1 oz ');
-INSERT INTO is_made_of VALUES (11011,93,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11012,114,'1 oz ');
-INSERT INTO is_made_of VALUES (11012,27,'1 oz ');
-INSERT INTO is_made_of VALUES (11012,115,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11012,93,'1 dash ');
-INSERT INTO is_made_of VALUES (11013,54,'2 dashes ');
-INSERT INTO is_made_of VALUES (11013,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11013,116,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11013,59,'Twist of ');
-INSERT INTO is_made_of VALUES (11014,9,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11014,61,'1/2 oz white ');
-INSERT INTO is_made_of VALUES (11014,11,'2 oz ');
-INSERT INTO is_made_of VALUES (11014,96,NULL);
-INSERT INTO is_made_of VALUES (11016,71,'1 oz ');
-INSERT INTO is_made_of VALUES (11016,61,'1 oz white ');
-INSERT INTO is_made_of VALUES (11016,11,'1 oz ');
-INSERT INTO is_made_of VALUES (11016,96,NULL);
-INSERT INTO is_made_of VALUES (11019,117,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11019,30,'1 dash ');
-INSERT INTO is_made_of VALUES (11019,42,'1 tblsp ');
-INSERT INTO is_made_of VALUES (11020,107,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11020,108,'1 oz ');
-INSERT INTO is_made_of VALUES (11020,42,'1 oz ');
-INSERT INTO is_made_of VALUES (11021,108,'1 oz ');
-INSERT INTO is_made_of VALUES (11021,58,'1 oz ');
-INSERT INTO is_made_of VALUES (11021,118,'1 1/2 tsp ');
-INSERT INTO is_made_of VALUES (11021,93,'1 1/2 tsp ');
-INSERT INTO is_made_of VALUES (11021,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11022,108,'1 oz ');
-INSERT INTO is_made_of VALUES (11022,9,'1 oz ');
-INSERT INTO is_made_of VALUES (11022,119,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11023,97,'2 oz ');
-INSERT INTO is_made_of VALUES (11023,99,'1 oz ');
-INSERT INTO is_made_of VALUES (11023,12,'1 ');
-INSERT INTO is_made_of VALUES (11024,27,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11024,61,'1/2 oz white ');
-INSERT INTO is_made_of VALUES (11024,11,'2 oz ');
-INSERT INTO is_made_of VALUES (11026,27,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11026,45,'1 ');
-INSERT INTO is_made_of VALUES (11027,27,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11027,31,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11027,120,NULL);
-INSERT INTO is_made_of VALUES (11028,27,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11028,121,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11029,90,'6 oz hot ');
-INSERT INTO is_made_of VALUES (11029,27,'2 oz ');
-INSERT INTO is_made_of VALUES (11029,28,'Chilled ');
-INSERT INTO is_made_of VALUES (11034,113,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11034,122,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11034,9,'1 oz ');
-INSERT INTO is_made_of VALUES (11046,123,'1 oz ');
-INSERT INTO is_made_of VALUES (11046,30,'1 oz ');
-INSERT INTO is_made_of VALUES (11046,93,'1 oz ');
-INSERT INTO is_made_of VALUES (11050,29,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11050,113,'1 oz ');
-INSERT INTO is_made_of VALUES (11050,30,'1 tsp ');
-INSERT INTO is_made_of VALUES (11050,93,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11050,12,'1 ');
-INSERT INTO is_made_of VALUES (11050,55,'1 ');
-INSERT INTO is_made_of VALUES (11052,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11052,124,'1 oz Green Ginger ');
-INSERT INTO is_made_of VALUES (11052,92,'1 tsp ');
-INSERT INTO is_made_of VALUES (11052,45,'1 ');
-INSERT INTO is_made_of VALUES (11053,22,'Chilled ');
-INSERT INTO is_made_of VALUES (11053,125,'1 tsp ');
-INSERT INTO is_made_of VALUES (11054,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11054,126,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11054,93,'2 tsp ');
-INSERT INTO is_made_of VALUES (11054,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11055,72,'1 1/2 tsp ');
-INSERT INTO is_made_of VALUES (11055,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11055,127,'2 dashes ');
-INSERT INTO is_made_of VALUES (11060,128,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11060,72,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11060,108,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11060,127,'2 dashes ');
-INSERT INTO is_made_of VALUES (11064,29,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11064,30,'1 tblsp ');
-INSERT INTO is_made_of VALUES (11064,129,'1 ');
-INSERT INTO is_made_of VALUES (11064,31,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11064,4,'1 tsp ');
-INSERT INTO is_made_of VALUES (11064,32,'1 ');
-INSERT INTO is_made_of VALUES (11084,71,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11084,9,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11084,108,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11084,73,NULL);
-INSERT INTO is_made_of VALUES (11084,59,NULL);
-INSERT INTO is_made_of VALUES (11106,72,'1 oz ');
-INSERT INTO is_made_of VALUES (11106,115,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11106,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11112,83,'1 oz ');
-INSERT INTO is_made_of VALUES (11112,130,'2 oz ');
-INSERT INTO is_made_of VALUES (11112,93,'1 dash ');
-INSERT INTO is_made_of VALUES (11112,131,'1 dash ');
-INSERT INTO is_made_of VALUES (11112,132,'1 dash ');
-INSERT INTO is_made_of VALUES (11112,104,'1 slice ');
-INSERT INTO is_made_of VALUES (11113,24,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11113,130,'3 oz ');
-INSERT INTO is_made_of VALUES (11113,93,'1 dash ');
-INSERT INTO is_made_of VALUES (11113,133,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11113,131,'2-3 drops ');
-INSERT INTO is_made_of VALUES (11113,45,'1 wedge ');
-INSERT INTO is_made_of VALUES (11117,24,'1 oz ');
-INSERT INTO is_made_of VALUES (11117,62,'1 oz ');
-INSERT INTO is_made_of VALUES (11117,63,NULL);
-INSERT INTO is_made_of VALUES (11117,32,NULL);
-INSERT INTO is_made_of VALUES (11118,83,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11118,62,'1 oz ');
-INSERT INTO is_made_of VALUES (11118,31,'1 oz ');
-INSERT INTO is_made_of VALUES (11118,110,'Coarse ');
-INSERT INTO is_made_of VALUES (11119,134,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11119,135,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11119,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11119,68,'1 oz ');
-INSERT INTO is_made_of VALUES (11119,93,'1 tsp ');
-INSERT INTO is_made_of VALUES (11120,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11120,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11120,62,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11120,127,'2 dashes ');
-INSERT INTO is_made_of VALUES (11120,111,'1 ');
-INSERT INTO is_made_of VALUES (11120,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11121,72,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11121,128,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11121,92,'1 1/4 tsp ');
-INSERT INTO is_made_of VALUES (11121,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11124,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11124,108,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11124,127,'2 dashes ');
-INSERT INTO is_made_of VALUES (11124,136,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11124,111,'1 ');
-INSERT INTO is_made_of VALUES (11128,29,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11128,71,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11128,30,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11128,45,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11129,107,'2 oz ');
-INSERT INTO is_made_of VALUES (11129,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11129,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (11129,12,'1 ');
-INSERT INTO is_made_of VALUES (11129,32,'1 ');
-INSERT INTO is_made_of VALUES (11145,127,'3 dashes ');
-INSERT INTO is_made_of VALUES (11145,38,'1 tsp ');
-INSERT INTO is_made_of VALUES (11145,4,'1 ');
-INSERT INTO is_made_of VALUES (11145,58,'3 oz ');
-INSERT INTO is_made_of VALUES (11145,55,'1 ');
-INSERT INTO is_made_of VALUES (11145,111,'1 ');
-INSERT INTO is_made_of VALUES (11146,4,'1 tsp superfine ');
-INSERT INTO is_made_of VALUES (11146,38,'2 tsp ');
-INSERT INTO is_made_of VALUES (11146,93,'1 oz ');
-INSERT INTO is_made_of VALUES (11146,58,'2 oz ');
-INSERT INTO is_made_of VALUES (11146,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11147,58,'2 oz ');
-INSERT INTO is_made_of VALUES (11147,93,'1 oz ');
-INSERT INTO is_made_of VALUES (11147,4,'1/2 tsp superfine ');
-INSERT INTO is_made_of VALUES (11147,55,'1 ');
-INSERT INTO is_made_of VALUES (11147,111,'1 ');
-INSERT INTO is_made_of VALUES (11149,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11149,30,'1 oz ');
-INSERT INTO is_made_of VALUES (11149,93,'1 tsp ');
-INSERT INTO is_made_of VALUES (11149,10,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11149,12,'1 ');
-INSERT INTO is_made_of VALUES (11157,4,'1 tsp superfine ');
-INSERT INTO is_made_of VALUES (11157,120,'3 oz ');
-INSERT INTO is_made_of VALUES (11157,104,'1 ');
-INSERT INTO is_made_of VALUES (11157,71,'2 oz ');
-INSERT INTO is_made_of VALUES (11157,111,'1 ');
-INSERT INTO is_made_of VALUES (11157,55,'1 ');
-INSERT INTO is_made_of VALUES (11170,71,'2 oz ');
-INSERT INTO is_made_of VALUES (11170,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11170,46,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11170,32,'1 ');
-INSERT INTO is_made_of VALUES (11202,4,'2 tsp');
-INSERT INTO is_made_of VALUES (11202,45,'1 ');
-INSERT INTO is_made_of VALUES (11202,137,'2 1/2 oz ');
-INSERT INTO is_made_of VALUES (11205,107,'2 oz ');
-INSERT INTO is_made_of VALUES (11205,104,'Juice of 1 ');
-INSERT INTO is_made_of VALUES (11205,45,'Juice of 1 ');
-INSERT INTO is_made_of VALUES (11205,46,'1 tblsp');
-INSERT INTO is_made_of VALUES (11205,10,'1/4 tsp');
-INSERT INTO is_made_of VALUES (11205,73,NULL);
-INSERT INTO is_made_of VALUES (11222,29,'2 oz ');
-INSERT INTO is_made_of VALUES (11222,30,'1 1/2 tsp ');
-INSERT INTO is_made_of VALUES (11222,31,'1 1/2 tsp ');
-INSERT INTO is_made_of VALUES (11222,136,'1 1/2 tsp ');
-INSERT INTO is_made_of VALUES (11224,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11224,93,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11224,136,'1 tsp ');
-INSERT INTO is_made_of VALUES (11224,54,'1 dash ');
-INSERT INTO is_made_of VALUES (11224,138,'1 ');
-INSERT INTO is_made_of VALUES (11227,22,'Chilled ');
-INSERT INTO is_made_of VALUES (11227,4,'1 piece ');
-INSERT INTO is_made_of VALUES (11227,127,'2 dashes ');
-INSERT INTO is_made_of VALUES (11227,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11227,139,'1 dash');
-INSERT INTO is_made_of VALUES (11239,29,'1 1/4 oz ');
-INSERT INTO is_made_of VALUES (11239,70,'1 1/2 tsp ');
-INSERT INTO is_made_of VALUES (11239,11,'1 tblsp ');
-INSERT INTO is_made_of VALUES (11242,29,'1 oz ');
-INSERT INTO is_made_of VALUES (11242,140,'1 oz ');
-INSERT INTO is_made_of VALUES (11242,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11242,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (11242,12,'1 ');
-INSERT INTO is_made_of VALUES (11242,73,NULL);
-INSERT INTO is_made_of VALUES (11243,99,'1 oz ');
-INSERT INTO is_made_of VALUES (11243,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11243,141,'5 oz ');
-INSERT INTO is_made_of VALUES (11251,71,'2 oz ');
-INSERT INTO is_made_of VALUES (11251,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11251,93,'1 tblsp ');
-INSERT INTO is_made_of VALUES (11255,72,'1 oz ');
-INSERT INTO is_made_of VALUES (11255,115,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11255,124,'1/2 oz Muscatel ');
-INSERT INTO is_made_of VALUES (11288,29,'2 oz ');
-INSERT INTO is_made_of VALUES (11288,45,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11288,105,NULL);
-INSERT INTO is_made_of VALUES (11320,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11320,64,'4 oz ');
-INSERT INTO is_made_of VALUES (11320,45,'1 ');
-INSERT INTO is_made_of VALUES (11324,128,'2 1/2 oz ');
-INSERT INTO is_made_of VALUES (11324,108,'1 1/2 tsp ');
-INSERT INTO is_made_of VALUES (11324,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11326,142,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11326,9,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11326,127,'1 dash ');
-INSERT INTO is_made_of VALUES (11326,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11339,113,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11339,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11339,108,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11339,10,'1 tsp ');
-INSERT INTO is_made_of VALUES (11339,93,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (11339,32,'1 ');
-INSERT INTO is_made_of VALUES (11368,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11368,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11369,128,'1 oz ');
-INSERT INTO is_made_of VALUES (11369,72,'1 oz ');
-INSERT INTO is_made_of VALUES (11369,127,'1 dash ');
-INSERT INTO is_made_of VALUES (11369,100,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (11375,27,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11375,61,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11375,11,'2 oz ');
-INSERT INTO is_made_of VALUES (11382,107,'2 oz ');
-INSERT INTO is_made_of VALUES (11382,92,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11382,104,'Juice of 1/4 ');
-INSERT INTO is_made_of VALUES (11382,45,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11390,29,'2 oz ');
-INSERT INTO is_made_of VALUES (11390,31,'1 tblsp ');
-INSERT INTO is_made_of VALUES (11390,101,'6 ');
-INSERT INTO is_made_of VALUES (11390,4,'1 tsp ');
-INSERT INTO is_made_of VALUES (11391,29,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11391,143,'4 chunks ');
-INSERT INTO is_made_of VALUES (11391,31,'1 tblsp ');
-INSERT INTO is_made_of VALUES (11391,4,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11396,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11396,71,'1 oz ');
-INSERT INTO is_made_of VALUES (11396,72,'1 oz ');
-INSERT INTO is_made_of VALUES (11396,120,'1 oz ');
-INSERT INTO is_made_of VALUES (11407,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11407,73,NULL);
-INSERT INTO is_made_of VALUES (11407,46,NULL);
-INSERT INTO is_made_of VALUES (11407,23,NULL);
-INSERT INTO is_made_of VALUES (11407,59,NULL);
-INSERT INTO is_made_of VALUES (11408,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11408,93,'1 oz ');
-INSERT INTO is_made_of VALUES (11408,4,'1/2 tsp superfine ');
-INSERT INTO is_made_of VALUES (11408,10,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11408,111,'1 ');
-INSERT INTO is_made_of VALUES (11408,55,'1 ');
-INSERT INTO is_made_of VALUES (11410,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11410,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11410,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (11410,73,NULL);
-INSERT INTO is_made_of VALUES (11415,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11415,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11415,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (11415,38,'1 tsp ');
-INSERT INTO is_made_of VALUES (11415,112,'Twist of ');
-INSERT INTO is_made_of VALUES (11416,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11416,73,'1 oz ');
-INSERT INTO is_made_of VALUES (11416,4,'1 cube ');
-INSERT INTO is_made_of VALUES (11416,101,'4 ');
-INSERT INTO is_made_of VALUES (11416,55,'1 slice ');
-INSERT INTO is_made_of VALUES (11416,32,'1 ');
-INSERT INTO is_made_of VALUES (11417,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11417,93,'1 oz ');
-INSERT INTO is_made_of VALUES (11417,4,'1/2 tsp superfine ');
-INSERT INTO is_made_of VALUES (11417,55,'1 ');
-INSERT INTO is_made_of VALUES (11417,111,'1 ');
-INSERT INTO is_made_of VALUES (11418,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11418,10,'1 tsp ');
-INSERT INTO is_made_of VALUES (11418,46,'1 tblsp ');
-INSERT INTO is_made_of VALUES (11418,143,'3 chunks');
-INSERT INTO is_made_of VALUES (11418,78,'2 ');
-INSERT INTO is_made_of VALUES (11418,73,NULL);
-INSERT INTO is_made_of VALUES (11419,31,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11419,4,'1 tsp superfine ');
-INSERT INTO is_made_of VALUES (11419,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11419,127,'1 dash ');
-INSERT INTO is_made_of VALUES (11419,120,'3 oz ');
-INSERT INTO is_made_of VALUES (11420,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11420,38,'2 tsp ');
-INSERT INTO is_made_of VALUES (11420,46,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11420,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11422,24,'1 oz ');
-INSERT INTO is_made_of VALUES (11422,27,'1 oz ');
-INSERT INTO is_made_of VALUES (11422,144,'1 oz ');
-INSERT INTO is_made_of VALUES (11423,128,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11423,27,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11424,24,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11424,27,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11433,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11433,30,'1 oz ');
-INSERT INTO is_made_of VALUES (11433,42,'1 oz ');
-INSERT INTO is_made_of VALUES (11433,10,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11433,143,'1 ');
-INSERT INTO is_made_of VALUES (11462,24,'1 oz ');
-INSERT INTO is_made_of VALUES (11462,51,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11462,68,'4 oz ');
-INSERT INTO is_made_of VALUES (11470,29,'1 oz ');
-INSERT INTO is_made_of VALUES (11470,42,'1 oz ');
-INSERT INTO is_made_of VALUES (11470,93,'1 tsp ');
-INSERT INTO is_made_of VALUES (11472,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11472,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11472,42,'1 tblsp ');
-INSERT INTO is_made_of VALUES (11476,128,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11476,72,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11476,54,'2 dashes ');
-INSERT INTO is_made_of VALUES (11476,109,'1 ');
-INSERT INTO is_made_of VALUES (11524,29,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11524,107,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11524,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11524,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (11524,73,NULL);
-INSERT INTO is_made_of VALUES (11528,145,'1 oz ');
-INSERT INTO is_made_of VALUES (11528,146,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11528,68,'1 oz ');
-INSERT INTO is_made_of VALUES (11528,147,'1 oz ');
-INSERT INTO is_made_of VALUES (11528,55,'1 slice ');
-INSERT INTO is_made_of VALUES (11528,32,'1 ');
-INSERT INTO is_made_of VALUES (11542,122,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11542,10,'1 tsp ');
-INSERT INTO is_made_of VALUES (11542,45,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11558,107,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11558,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11558,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (11558,140,'1 tblsp');
-INSERT INTO is_made_of VALUES (11558,12,'1 ');
-INSERT INTO is_made_of VALUES (11558,73,NULL);
-INSERT INTO is_made_of VALUES (11566,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11566,14,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11566,116,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11580,58,'2 oz ');
-INSERT INTO is_made_of VALUES (11580,93,'1 oz ');
-INSERT INTO is_made_of VALUES (11580,4,'1 tsp superfine ');
-INSERT INTO is_made_of VALUES (11580,120,'3 oz ');
-INSERT INTO is_made_of VALUES (11580,111,'1 ');
-INSERT INTO is_made_of VALUES (11580,55,'1 ');
-INSERT INTO is_made_of VALUES (11600,24,'1 oz ');
-INSERT INTO is_made_of VALUES (11600,30,'1 oz ');
-INSERT INTO is_made_of VALUES (11600,31,'1 oz ');
-INSERT INTO is_made_of VALUES (11602,58,'2 oz ');
-INSERT INTO is_made_of VALUES (11602,92,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11604,58,'3 oz ');
-INSERT INTO is_made_of VALUES (11604,92,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11604,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11634,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11634,11,'2 tsp ');
-INSERT INTO is_made_of VALUES (11634,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (11634,104,'Juice of 1/2');
-INSERT INTO is_made_of VALUES (11634,12,'1 ');
-INSERT INTO is_made_of VALUES (11634,73,NULL);
-INSERT INTO is_made_of VALUES (11658,128,'2 oz ');
-INSERT INTO is_made_of VALUES (11658,148,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11658,108,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11658,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (11662,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11662,136,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11662,54,'2 dashes ');
-INSERT INTO is_made_of VALUES (11664,72,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11664,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11666,73,NULL);
-INSERT INTO is_made_of VALUES (11666,9,NULL);
-INSERT INTO is_made_of VALUES (11666,108,NULL);
-INSERT INTO is_made_of VALUES (11666,46,NULL);
-INSERT INTO is_made_of VALUES (11666,23,NULL);
-INSERT INTO is_made_of VALUES (11666,59,NULL);
-INSERT INTO is_made_of VALUES (11670,97,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11670,135,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11690,29,'1 oz ');
-INSERT INTO is_made_of VALUES (11690,149,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11690,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11690,147,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11690,32,'1 ');
-INSERT INTO is_made_of VALUES (11720,9,'1 oz ');
-INSERT INTO is_made_of VALUES (11720,108,'1 oz ');
-INSERT INTO is_made_of VALUES (11720,30,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (11720,54,'1 dash ');
-INSERT INTO is_made_of VALUES (11720,32,'1 ');
-INSERT INTO is_made_of VALUES (11728,9,'1 2/3 oz ');
-INSERT INTO is_made_of VALUES (11728,108,'1/3 oz ');
-INSERT INTO is_made_of VALUES (11728,109,'1 ');
-INSERT INTO is_made_of VALUES (11766,58,'2 oz ');
-INSERT INTO is_made_of VALUES (11766,97,'1 oz ');
-INSERT INTO is_made_of VALUES (11766,144,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11786,71,'1 oz ');
-INSERT INTO is_made_of VALUES (11786,29,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11786,58,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11786,104,'Juice of 1/2');
-INSERT INTO is_made_of VALUES (11786,46,'1 tblsp');
-INSERT INTO is_made_of VALUES (11786,73,NULL);
-INSERT INTO is_made_of VALUES (11798,29,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11798,150,'3 oz ');
-INSERT INTO is_made_of VALUES (11798,127,'1 dash ');
-INSERT INTO is_made_of VALUES (11844,107,'2 oz ');
-INSERT INTO is_made_of VALUES (11844,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11844,4,'1 tsp ');
-INSERT INTO is_made_of VALUES (11844,65,' (Claret) ');
-INSERT INTO is_made_of VALUES (11844,32,NULL);
-INSERT INTO is_made_of VALUES (11870,70,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11870,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11870,68,'4 oz ');
-INSERT INTO is_made_of VALUES (11870,64,NULL);
-INSERT INTO is_made_of VALUES (11872,61,'1/2 oz white ');
-INSERT INTO is_made_of VALUES (11872,27,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11872,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11872,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11872,11,'1 oz ');
-INSERT INTO is_made_of VALUES (11936,127,'3 dashes ');
-INSERT INTO is_made_of VALUES (11936,9,'2 oz ');
-INSERT INTO is_made_of VALUES (11959,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11959,61,'3/4 oz white ');
-INSERT INTO is_made_of VALUES (11961,10,'1 tblsp ');
-INSERT INTO is_made_of VALUES (11961,125,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11963,140,'2 1/2 oz ');
-INSERT INTO is_made_of VALUES (11963,71,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (11965,140,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11965,11,'2 tsp ');
-INSERT INTO is_made_of VALUES (11965,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (11965,95,'1 whole ');
-INSERT INTO is_made_of VALUES (11965,96,NULL);
-INSERT INTO is_made_of VALUES (11983,29,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11983,71,'3/4 oz ');
-INSERT INTO is_made_of VALUES (11983,104,'Juice of 1/4 ');
-INSERT INTO is_made_of VALUES (11983,151,'2 tsp ');
-INSERT INTO is_made_of VALUES (11985,29,'1 1/2 ');
-INSERT INTO is_made_of VALUES (11985,98,'1/3 oz cream ');
-INSERT INTO is_made_of VALUES (11985,45,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (11987,152,'1 oz ');
-INSERT INTO is_made_of VALUES (11987,153,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11987,98,'1/2 oz cream ');
-INSERT INTO is_made_of VALUES (11989,65,'2 oz ');
-INSERT INTO is_made_of VALUES (11989,10,'1 oz ');
-INSERT INTO is_made_of VALUES (11989,79,NULL);
-INSERT INTO is_made_of VALUES (11991,108,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11991,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11991,92,'1 1/2 tsp ');
-INSERT INTO is_made_of VALUES (11993,97,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (11993,99,'1/2 oz ');
-INSERT INTO is_made_of VALUES (11993,11,'1 oz ');
-INSERT INTO is_made_of VALUES (11993,96,'1/8 tsp grated ');
-INSERT INTO is_made_of VALUES (12055,9,'1 oz ');
-INSERT INTO is_made_of VALUES (12055,147,'2 oz ');
-INSERT INTO is_made_of VALUES (12055,95,'1 whole ');
-INSERT INTO is_made_of VALUES (12055,105,NULL);
-INSERT INTO is_made_of VALUES (12057,9,'2 oz ');
-INSERT INTO is_made_of VALUES (12057,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (12057,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (12057,95,'1 whole ');
-INSERT INTO is_made_of VALUES (12057,73,NULL);
-INSERT INTO is_made_of VALUES (12067,4,'1 tsp superfine ');
-INSERT INTO is_made_of VALUES (12067,120,'3 oz ');
-INSERT INTO is_made_of VALUES (12067,104,'1 ');
-INSERT INTO is_made_of VALUES (12067,97,'2 oz ');
-INSERT INTO is_made_of VALUES (12067,111,'1 ');
-INSERT INTO is_made_of VALUES (12067,55,'1 ');
-INSERT INTO is_made_of VALUES (12071,20,'2 oz light or dark ');
-INSERT INTO is_made_of VALUES (12071,79,'4 oz ');
-INSERT INTO is_made_of VALUES (12071,104,'1 ');
-INSERT INTO is_made_of VALUES (12087,29,'2 oz ');
-INSERT INTO is_made_of VALUES (12087,39,'1 cup ');
-INSERT INTO is_made_of VALUES (12087,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (12087,96,NULL);
-INSERT INTO is_made_of VALUES (12089,29,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12089,84,'1 tsp ');
-INSERT INTO is_made_of VALUES (12089,46,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (12089,127,'1 dash ');
-INSERT INTO is_made_of VALUES (12089,38,'1 tsp ');
-INSERT INTO is_made_of VALUES (12089,154,'Twist of ');
-INSERT INTO is_made_of VALUES (12091,29,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12091,68,'5 oz ');
-INSERT INTO is_made_of VALUES (12093,29,'2 oz ');
-INSERT INTO is_made_of VALUES (12093,93,'1 oz ');
-INSERT INTO is_made_of VALUES (12093,4,'1/2 tsp superfine ');
-INSERT INTO is_made_of VALUES (12093,55,'1 ');
-INSERT INTO is_made_of VALUES (12093,111,'1 ');
-INSERT INTO is_made_of VALUES (12097,20,'2 oz light or dark ');
-INSERT INTO is_made_of VALUES (12097,46,'2 tsp ');
-INSERT INTO is_made_of VALUES (12097,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (12097,38,'2 tsp ');
-INSERT INTO is_made_of VALUES (12101,128,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12101,148,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12101,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (12107,150,'5 oz ');
-INSERT INTO is_made_of VALUES (12107,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12107,110,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (12130,71,'1 oz ');
-INSERT INTO is_made_of VALUES (12130,27,'1 oz ');
-INSERT INTO is_made_of VALUES (12130,11,'1 oz ');
-INSERT INTO is_made_of VALUES (12138,128,'2 oz ');
-INSERT INTO is_made_of VALUES (12138,71,'4 dashes ');
-INSERT INTO is_made_of VALUES (12138,155,'4 dashes ');
-INSERT INTO is_made_of VALUES (12138,55,'1 slice ');
-INSERT INTO is_made_of VALUES (12138,101,'1 ');
-INSERT INTO is_made_of VALUES (12158,128,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12158,45,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (12158,46,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (12158,104,'1/2 slice ');
-INSERT INTO is_made_of VALUES (12158,32,'1 ');
-INSERT INTO is_made_of VALUES (12186,29,'1 oz Jamaican ');
-INSERT INTO is_made_of VALUES (12186,156,'1 tsp ');
-INSERT INTO is_made_of VALUES (12186,10,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (12186,104,'Juice of 1/4 ');
-INSERT INTO is_made_of VALUES (12188,98,'2 oz cream ');
-INSERT INTO is_made_of VALUES (12188,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (12188,95,'1 whole ');
-INSERT INTO is_made_of VALUES (12188,39,NULL);
-INSERT INTO is_made_of VALUES (12188,96,NULL);
-INSERT INTO is_made_of VALUES (12196,139,'2 oz ');
-INSERT INTO is_made_of VALUES (12196,157,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12196,93,'1 oz ');
-INSERT INTO is_made_of VALUES (12198,71,'1 oz ');
-INSERT INTO is_made_of VALUES (12198,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12198,104,'Juice of 1/4 ');
-INSERT INTO is_made_of VALUES (12214,70,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12214,10,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12214,9,'1 oz ');
-INSERT INTO is_made_of VALUES (12214,147,'2 oz ');
-INSERT INTO is_made_of VALUES (12214,73,NULL);
-INSERT INTO is_made_of VALUES (12214,32,NULL);
-INSERT INTO is_made_of VALUES (12224,115,'2 oz ');
-INSERT INTO is_made_of VALUES (12224,108,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (12224,54,'1 dash ');
-INSERT INTO is_made_of VALUES (12256,71,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12256,156,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12308,113,'1 oz ');
-INSERT INTO is_made_of VALUES (12308,68,'1 oz ');
-INSERT INTO is_made_of VALUES (12308,147,'1 oz ');
-INSERT INTO is_made_of VALUES (12316,158,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12316,29,'1 oz ');
-INSERT INTO is_made_of VALUES (12316,31,'1 oz ');
-INSERT INTO is_made_of VALUES (12316,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (12316,78,'1 oz ');
-INSERT INTO is_made_of VALUES (12322,158,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12322,83,'1 oz ');
-INSERT INTO is_made_of VALUES (12322,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12322,93,'1 oz ');
-INSERT INTO is_made_of VALUES (12322,78,'1 oz ');
-INSERT INTO is_made_of VALUES (12322,110,NULL);
-INSERT INTO is_made_of VALUES (12362,83,'2 oz ');
-INSERT INTO is_made_of VALUES (12362,93,'1 tblsp ');
-INSERT INTO is_made_of VALUES (12362,10,'3/4 oz ');
-INSERT INTO is_made_of VALUES (12362,12,'1 ');
-INSERT INTO is_made_of VALUES (12362,64,NULL);
-INSERT INTO is_made_of VALUES (12370,83,'2 oz ');
-INSERT INTO is_made_of VALUES (12370,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (12370,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (12370,32,'1 ');
-INSERT INTO is_made_of VALUES (12388,128,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12388,124,'1 oz Green Ginger ');
-INSERT INTO is_made_of VALUES (12388,68,'1 oz ');
-INSERT INTO is_made_of VALUES (12402,9,'2 oz ');
-INSERT INTO is_made_of VALUES (12402,93,'1 oz ');
-INSERT INTO is_made_of VALUES (12402,4,'1 tsp superfine ');
-INSERT INTO is_made_of VALUES (12402,120,'3 oz ');
-INSERT INTO is_made_of VALUES (12402,111,'1 ');
-INSERT INTO is_made_of VALUES (12402,55,'1 ');
-INSERT INTO is_made_of VALUES (12418,108,'1 oz ');
-INSERT INTO is_made_of VALUES (12418,9,'1 oz ');
-INSERT INTO is_made_of VALUES (12418,159,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (12418,127,'2 dashes ');
-INSERT INTO is_made_of VALUES (12418,112,'Twist of ');
-INSERT INTO is_made_of VALUES (12420,108,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12420,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12420,136,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (12420,159,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (12420,54,'2 dashes ');
-INSERT INTO is_made_of VALUES (12420,32,'1 ');
-INSERT INTO is_made_of VALUES (12434,113,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12434,68,'1 tblsp ');
-INSERT INTO is_made_of VALUES (12434,54,'2 dashes ');
-INSERT INTO is_made_of VALUES (12436,29,'3 oz ');
-INSERT INTO is_made_of VALUES (12436,160,'1 oz ');
-INSERT INTO is_made_of VALUES (12436,93,'1 oz ');
-INSERT INTO is_made_of VALUES (12442,108,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12442,161,'3/4 oz ');
-INSERT INTO is_made_of VALUES (12442,73,NULL);
-INSERT INTO is_made_of VALUES (12444,29,'1 oz ');
-INSERT INTO is_made_of VALUES (12444,72,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12444,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (12444,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (12444,12,'1 ');
-INSERT INTO is_made_of VALUES (12446,97,'2 oz ');
-INSERT INTO is_made_of VALUES (12446,70,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12450,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12450,72,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12450,71,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12452,24,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12452,93,'3 oz ');
-INSERT INTO is_made_of VALUES (12452,162,'3 oz unsweetened ');
-INSERT INTO is_made_of VALUES (12452,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (12452,55,'1 slice ');
-INSERT INTO is_made_of VALUES (12460,24,'2 oz ');
-INSERT INTO is_made_of VALUES (12460,60,NULL);
-INSERT INTO is_made_of VALUES (12474,30,'3/4 oz ');
-INSERT INTO is_made_of VALUES (12474,9,'3/4 oz ');
-INSERT INTO is_made_of VALUES (12474,42,'1 tblsp ');
-INSERT INTO is_made_of VALUES (12518,128,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (12518,124,'1 oz Green Ginger ');
-INSERT INTO is_made_of VALUES (12528,24,'2 oz ');
-INSERT INTO is_made_of VALUES (12528,40,'1 oz ');
-INSERT INTO is_made_of VALUES (12528,11,NULL);
-INSERT INTO is_made_of VALUES (12560,10,'1 part ');
-INSERT INTO is_made_of VALUES (12560,68,'4 parts ');
-INSERT INTO is_made_of VALUES (12560,42,'4 parts ');
-INSERT INTO is_made_of VALUES (12562,10,'1 cl ');
-INSERT INTO is_made_of VALUES (12562,68,'1 cl ');
-INSERT INTO is_made_of VALUES (12562,42,'2 cl ');
-INSERT INTO is_made_of VALUES (12562,18,'4 cl ');
-INSERT INTO is_made_of VALUES (12564,163,'2 cups ');
-INSERT INTO is_made_of VALUES (12564,164,'1 large ');
-INSERT INTO is_made_of VALUES (12572,42,'10 cl ');
-INSERT INTO is_made_of VALUES (12572,165,'6 cl ');
-INSERT INTO is_made_of VALUES (12572,93,'1 cl ');
-INSERT INTO is_made_of VALUES (12572,10,'1 cl ');
-INSERT INTO is_made_of VALUES (12618,93,'5 cl ');
-INSERT INTO is_made_of VALUES (12618,68,'15 cl ');
-INSERT INTO is_made_of VALUES (12618,100,'2-3 cl ');
-INSERT INTO is_made_of VALUES (12618,102,NULL);
-INSERT INTO is_made_of VALUES (12630,100,'2 tsp ');
-INSERT INTO is_made_of VALUES (12630,93,NULL);
-INSERT INTO is_made_of VALUES (12630,64,NULL);
-INSERT INTO is_made_of VALUES (12654,39,'10 cl cold ');
-INSERT INTO is_made_of VALUES (12654,68,'4 cl ');
-INSERT INTO is_made_of VALUES (12654,100,'2 tsp ');
-INSERT INTO is_made_of VALUES (12654,129,'1/2 ');
-INSERT INTO is_made_of VALUES (12656,78,'1/2 lb frozen ');
-INSERT INTO is_made_of VALUES (12656,129,'1 frozen ');
-INSERT INTO is_made_of VALUES (12656,166,'1 cup plain ');
-INSERT INTO is_made_of VALUES (12656,39,'1 cup ');
-INSERT INTO is_made_of VALUES (12656,167,' to taste ');
-INSERT INTO is_made_of VALUES (12658,78,'1/2 lb frozen ');
-INSERT INTO is_made_of VALUES (12658,129,'1 frozen ');
-INSERT INTO is_made_of VALUES (12658,163,'2 cups fresh ');
-INSERT INTO is_made_of VALUES (12668,69,'2 tblsp ');
-INSERT INTO is_made_of VALUES (12668,39,'6 oz whole ');
-INSERT INTO is_made_of VALUES (12668,102,'6 oz ');
-INSERT INTO is_made_of VALUES (12670,163,'1 can frozen ');
-INSERT INTO is_made_of VALUES (12670,78,'1 cup ');
-INSERT INTO is_made_of VALUES (12670,4,'2 tblsp ');
-INSERT INTO is_made_of VALUES (12670,104,'1 ');
-INSERT INTO is_made_of VALUES (12670,168,'1 ');
-INSERT INTO is_made_of VALUES (12670,102,'1 L ');
-INSERT INTO is_made_of VALUES (12670,6,NULL);
-INSERT INTO is_made_of VALUES (12672,166,'1 cup ');
-INSERT INTO is_made_of VALUES (12672,169,'1 cup ');
-INSERT INTO is_made_of VALUES (12674,166,'1 cup fruit ');
-INSERT INTO is_made_of VALUES (12674,129,'1 ');
-INSERT INTO is_made_of VALUES (12674,68,'4 oz frozen ');
-INSERT INTO is_made_of VALUES (12674,170,'1/2 piece textural ');
-INSERT INTO is_made_of VALUES (12674,6,'6 ');
-INSERT INTO is_made_of VALUES (12688,39,'2 cups ');
-INSERT INTO is_made_of VALUES (12688,69,NULL);
-INSERT INTO is_made_of VALUES (12688,171,NULL);
-INSERT INTO is_made_of VALUES (12690,166,'1/2 cup plain ');
-INSERT INTO is_made_of VALUES (12690,38,'1 1/4 cup cold ');
-INSERT INTO is_made_of VALUES (12690,172,'1/2 tsp ground roasted ');
-INSERT INTO is_made_of VALUES (12690,110,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (12690,101,'1/4 tsp dried ');
-INSERT INTO is_made_of VALUES (12692,166,'1 cup ');
-INSERT INTO is_made_of VALUES (12692,38,'2 cups cold ');
-INSERT INTO is_made_of VALUES (12692,110,'1 tsp ');
-INSERT INTO is_made_of VALUES (12692,173,'1 pinch ');
-INSERT INTO is_made_of VALUES (12694,166,'2 cups ');
-INSERT INTO is_made_of VALUES (12694,6,'4-6 ');
-INSERT INTO is_made_of VALUES (12694,4,NULL);
-INSERT INTO is_made_of VALUES (12694,45,NULL);
-INSERT INTO is_made_of VALUES (12694,110,NULL);
-INSERT INTO is_made_of VALUES (12696,166,'1 cup ');
-INSERT INTO is_made_of VALUES (12696,38,'2 cups cold ');
-INSERT INTO is_made_of VALUES (12696,4,'4 tblsp ');
-INSERT INTO is_made_of VALUES (12696,110,'pinch ');
-INSERT INTO is_made_of VALUES (12696,93,'2 tblsp ');
-INSERT INTO is_made_of VALUES (12698,174,'2 ');
-INSERT INTO is_made_of VALUES (12698,166,'2 cups ');
-INSERT INTO is_made_of VALUES (12698,4,'1/2 cup ');
-INSERT INTO is_made_of VALUES (12698,38,'1 cup iced ');
-INSERT INTO is_made_of VALUES (12702,77,'2 pieces ');
-INSERT INTO is_made_of VALUES (12702,38,'1 gal ');
-INSERT INTO is_made_of VALUES (12702,104,'1 lb ');
-INSERT INTO is_made_of VALUES (12702,4,'1 cup ');
-INSERT INTO is_made_of VALUES (12702,175,'ground ');
-INSERT INTO is_made_of VALUES (12704,45,'Juice of 1 ');
-INSERT INTO is_made_of VALUES (12704,4,'1 tblsp ');
-INSERT INTO is_made_of VALUES (12704,102,' (seltzer water) ');
-INSERT INTO is_made_of VALUES (12704,154,NULL);
-INSERT INTO is_made_of VALUES (12706,31,'4 cl ');
-INSERT INTO is_made_of VALUES (12706,9,'2 cl ');
-INSERT INTO is_made_of VALUES (12706,176,'4 cl ');
-INSERT INTO is_made_of VALUES (12708,177,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (12708,129,'1 ');
-INSERT INTO is_made_of VALUES (12710,178,'1 cup ');
-INSERT INTO is_made_of VALUES (12710,168,'2 ');
-INSERT INTO is_made_of VALUES (12712,179,'1 cup ');
-INSERT INTO is_made_of VALUES (12712,104,'1/4 ');
-INSERT INTO is_made_of VALUES (12712,143,'1/2 ');
-INSERT INTO is_made_of VALUES (12714,180,'3 ');
-INSERT INTO is_made_of VALUES (12714,181,'1/2 ');
-INSERT INTO is_made_of VALUES (12716,174,'1 ');
-INSERT INTO is_made_of VALUES (12716,55,'2 ');
-INSERT INTO is_made_of VALUES (12718,77,'1/4 inch ');
-INSERT INTO is_made_of VALUES (12718,143,'1/2 ');
-INSERT INTO is_made_of VALUES (12720,77,'1 inch ');
-INSERT INTO is_made_of VALUES (12720,104,'1/4 ');
-INSERT INTO is_made_of VALUES (12720,38,'1 cup hot ');
-INSERT INTO is_made_of VALUES (12722,78,'1 1/2 cup ');
-INSERT INTO is_made_of VALUES (12722,167,'4 tsp ');
-INSERT INTO is_made_of VALUES (12722,38,'1/2 cup ');
-INSERT INTO is_made_of VALUES (12724,39,'2 cups ');
-INSERT INTO is_made_of VALUES (12724,129,'1 ');
-INSERT INTO is_made_of VALUES (12724,167,'1 tblsp ');
-INSERT INTO is_made_of VALUES (12726,130,'2 cups ');
-INSERT INTO is_made_of VALUES (12726,93,'1-2 tblsp ');
-INSERT INTO is_made_of VALUES (12726,132,'1 dash ');
-INSERT INTO is_made_of VALUES (12728,166,'1 cup ');
-INSERT INTO is_made_of VALUES (12728,170,'1 cup ');
-INSERT INTO is_made_of VALUES (12728,6,NULL);
-INSERT INTO is_made_of VALUES (12730,182,'1/2 cup ');
-INSERT INTO is_made_of VALUES (12730,4,'1 cup ');
-INSERT INTO is_made_of VALUES (12730,183,'7 tsp ');
-INSERT INTO is_made_of VALUES (12730,38,'1/2 cup ');
-INSERT INTO is_made_of VALUES (12730,39,'1 qt ');
-INSERT INTO is_made_of VALUES (12732,39,'6 cups ');
-INSERT INTO is_made_of VALUES (12732,33,'3 oz Mexican ');
-INSERT INTO is_made_of VALUES (12732,66,'1 tsp powdered ');
-INSERT INTO is_made_of VALUES (12732,95,'3 ');
-INSERT INTO is_made_of VALUES (12734,33,'125 gr');
-INSERT INTO is_made_of VALUES (12734,39,'3/4 L ');
-INSERT INTO is_made_of VALUES (12734,38,NULL);
-INSERT INTO is_made_of VALUES (12736,144,'2 oz ');
-INSERT INTO is_made_of VALUES (12736,39,'6-8 oz ');
-INSERT INTO is_made_of VALUES (12736,66,'1 stick ');
-INSERT INTO is_made_of VALUES (12736,184,'1 ');
-INSERT INTO is_made_of VALUES (12736,33,'2 oz finely chopped dark ');
-INSERT INTO is_made_of VALUES (12736,28,'Fresh ');
-INSERT INTO is_made_of VALUES (12744,4,'5 tblsp ');
-INSERT INTO is_made_of VALUES (12744,182,'3 tblsp ');
-INSERT INTO is_made_of VALUES (12744,110,'1 dash ');
-INSERT INTO is_made_of VALUES (12744,38,'3 tblsp hot ');
-INSERT INTO is_made_of VALUES (12744,39,'2 cups ');
-INSERT INTO is_made_of VALUES (12744,35,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (12746,182,'2 tsp ');
-INSERT INTO is_made_of VALUES (12746,4,'1 tsp ');
-INSERT INTO is_made_of VALUES (12746,35,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (12746,39,'12 oz ');
-INSERT INTO is_made_of VALUES (12748,39,'2 cups ');
-INSERT INTO is_made_of VALUES (12748,33,'4 oz chopped bittersweet or semi-sweet ');
-INSERT INTO is_made_of VALUES (12748,112,'3 2-inch strips ');
-INSERT INTO is_made_of VALUES (12748,185,'1/2 tsp instant ');
-INSERT INTO is_made_of VALUES (12748,96,'1/8 tsp ground ');
-INSERT INTO is_made_of VALUES (12750,39,'2 cups ');
-INSERT INTO is_made_of VALUES (12750,33,'2 oz sweet ');
-INSERT INTO is_made_of VALUES (12750,66,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (12750,138,'2 beaten ');
-INSERT INTO is_made_of VALUES (12752,51,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12752,186,'1/2 oz ');
-INSERT INTO is_made_of VALUES (12752,104,' wedge ');
-INSERT INTO is_made_of VALUES (12752,4,'Bacardi ');
-INSERT INTO is_made_of VALUES (12752,84,NULL);
-INSERT INTO is_made_of VALUES (12754,24,'1 oz ');
-INSERT INTO is_made_of VALUES (12754,187,'3/4 oz ');
-INSERT INTO is_made_of VALUES (12754,49,NULL);
-INSERT INTO is_made_of VALUES (12754,68,NULL);
-INSERT INTO is_made_of VALUES (12756,24,'4 cl ');
-INSERT INTO is_made_of VALUES (12756,31,'1 dash ');
-INSERT INTO is_made_of VALUES (12756,102,NULL);
-INSERT INTO is_made_of VALUES (12758,188,'5 parts ');
-INSERT INTO is_made_of VALUES (12758,93,'3 parts ');
-INSERT INTO is_made_of VALUES (12758,51,'1 part ');
-INSERT INTO is_made_of VALUES (12758,189,'1 part ');
-INSERT INTO is_made_of VALUES (12760,25,'1 part ');
-INSERT INTO is_made_of VALUES (12760,16,'1 part ');
-INSERT INTO is_made_of VALUES (12760,9,'2 parts ');
-INSERT INTO is_made_of VALUES (12760,126,'1/2 part ');
-INSERT INTO is_made_of VALUES (12762,27,'1 part ');
-INSERT INTO is_made_of VALUES (12762,7,'1 part ');
-INSERT INTO is_made_of VALUES (12762,99,'1 part ');
-INSERT INTO is_made_of VALUES (12762,39,'2 1/2 parts ');
-INSERT INTO is_made_of VALUES (12764,1,'1 part ');
-INSERT INTO is_made_of VALUES (12764,190,'2 parts ');
-INSERT INTO is_made_of VALUES (12766,191,'1 1/2 cl ');
-INSERT INTO is_made_of VALUES (12766,64,NULL);
-INSERT INTO is_made_of VALUES (12766,45,NULL);
-INSERT INTO is_made_of VALUES (12766,6,NULL);
-INSERT INTO is_made_of VALUES (12768,1,'1/2 cup black ');
-INSERT INTO is_made_of VALUES (12768,39,'1/2 cup ');
-INSERT INTO is_made_of VALUES (12768,4,'1-2 tsp ');
-INSERT INTO is_made_of VALUES (12772,99,'2 tsp ');
-INSERT INTO is_made_of VALUES (12772,1,'Strong cold ');
-INSERT INTO is_made_of VALUES (12774,38,'2 cups ');
-INSERT INTO is_made_of VALUES (12774,90,'3-4 tsp ');
-INSERT INTO is_made_of VALUES (12774,77,'1 chunk dried ');
-INSERT INTO is_made_of VALUES (12774,3,'3-4 crushed ');
-INSERT INTO is_made_of VALUES (12774,67,'3 ');
-INSERT INTO is_made_of VALUES (12774,66,'1 piece ');
-INSERT INTO is_made_of VALUES (12774,192,'1-2 whole ');
-INSERT INTO is_made_of VALUES (12774,4,' to taste');
-INSERT INTO is_made_of VALUES (12774,39,'to taste');
-INSERT INTO is_made_of VALUES (12776,185,NULL);
-INSERT INTO is_made_of VALUES (12776,167,'Unsweetened ');
-INSERT INTO is_made_of VALUES (12776,182,NULL);
-INSERT INTO is_made_of VALUES (12780,1,NULL);
-INSERT INTO is_made_of VALUES (12780,66,NULL);
-INSERT INTO is_made_of VALUES (12784,1,'black');
-INSERT INTO is_made_of VALUES (12784,4,NULL);
-INSERT INTO is_made_of VALUES (12784,18,' pods');
-INSERT INTO is_made_of VALUES (12784,3,NULL);
-INSERT INTO is_made_of VALUES (12786,90,'1/4 cup Thai ');
-INSERT INTO is_made_of VALUES (12786,38,'1/2 cup boiling ');
-INSERT INTO is_made_of VALUES (12786,193,'2 tsp sweetened ');
-INSERT INTO is_made_of VALUES (12786,6,'cubes');
-INSERT INTO is_made_of VALUES (12786,101,'garnish');
-INSERT INTO is_made_of VALUES (12790,24,'1 bottle ');
-INSERT INTO is_made_of VALUES (12790,4,'50 gr ');
-INSERT INTO is_made_of VALUES (12790,194,'50 ml pure ');
-INSERT INTO is_made_of VALUES (12790,195,'1 tblsp ');
-INSERT INTO is_made_of VALUES (12790,196,'1 ');
-INSERT INTO is_made_of VALUES (12792,4,'1 cup');
-INSERT INTO is_made_of VALUES (12792,38,'3/4 cup ');
-INSERT INTO is_made_of VALUES (12792,197,'2 ');
-INSERT INTO is_made_of VALUES (12792,198,'1 tblsp ');
-INSERT INTO is_made_of VALUES (12792,190,'1/2 cup pure ');
-INSERT INTO is_made_of VALUES (12792,71,'1 cup ');
-INSERT INTO is_made_of VALUES (12792,199,'3 drops yellow ');
-INSERT INTO is_made_of VALUES (12792,200,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (12794,201,'3 tblsp chopped');
-INSERT INTO is_made_of VALUES (12794,202,'1 tblsp chopped ');
-INSERT INTO is_made_of VALUES (12794,19,'1 cracked ');
-INSERT INTO is_made_of VALUES (12794,66,'1 one-inch ');
-INSERT INTO is_made_of VALUES (12794,194,'3-6 crushed ');
-INSERT INTO is_made_of VALUES (12794,2,'1/8 tsp powdered ');
-INSERT INTO is_made_of VALUES (12794,203,'1 tblsp fresh chopped ');
-INSERT INTO is_made_of VALUES (12794,24,'1.5 cup ');
-INSERT INTO is_made_of VALUES (12794,4,'1/2 cup granulated ');
-INSERT INTO is_made_of VALUES (12794,38,'1/4 cup ');
-INSERT INTO is_made_of VALUES (12794,199,'1 drop yellow ');
-INSERT INTO is_made_of VALUES (12796,55,'3 large ');
-INSERT INTO is_made_of VALUES (12796,24,'3 cups ');
-INSERT INTO is_made_of VALUES (12796,4,'1 1/3 cup superfine ');
-INSERT INTO is_made_of VALUES (12798,1,'10 tblsp instant ');
-INSERT INTO is_made_of VALUES (12798,35,'4 tblsp ');
-INSERT INTO is_made_of VALUES (12798,4,'2 1/2 cups ');
-INSERT INTO is_made_of VALUES (12798,24,'1 qt ');
-INSERT INTO is_made_of VALUES (12798,38,'2 1/2 cups ');
-INSERT INTO is_made_of VALUES (12800,38,'2 cups ');
-INSERT INTO is_made_of VALUES (12800,4,'2 cups white ');
-INSERT INTO is_made_of VALUES (12800,1,'1/2 cup instant ');
-INSERT INTO is_made_of VALUES (12800,184,'1/2');
-INSERT INTO is_made_of VALUES (12800,24,'1 1/2 cup');
-INSERT INTO is_made_of VALUES (12800,204,NULL);
-INSERT INTO is_made_of VALUES (12802,205,'1/2 kg chopped ');
-INSERT INTO is_made_of VALUES (12802,4,'3/4 L ');
-INSERT INTO is_made_of VALUES (12802,29,'1/2 L ');
-INSERT INTO is_made_of VALUES (12808,4,'8 cups ');
-INSERT INTO is_made_of VALUES (12808,38,'6 cups ');
-INSERT INTO is_made_of VALUES (12808,190,'1 pint ');
-INSERT INTO is_made_of VALUES (12808,206,'1 oz pure ');
-INSERT INTO is_made_of VALUES (12808,199,'1 tblsp green ');
-INSERT INTO is_made_of VALUES (12820,128,'1 cup ');
-INSERT INTO is_made_of VALUES (12820,36,'1 1/4 cup ');
-INSERT INTO is_made_of VALUES (12820,193,'1 can sweetened ');
-INSERT INTO is_made_of VALUES (12820,207,'3 drops ');
-INSERT INTO is_made_of VALUES (12820,69,'1 tblsp ');
-INSERT INTO is_made_of VALUES (12854,208,'1 fifth ');
-INSERT INTO is_made_of VALUES (12854,167,'1 1/2 cup mild ');
-INSERT INTO is_made_of VALUES (12854,201,'2 tsp dried and chopped ');
-INSERT INTO is_made_of VALUES (12854,209,'1/4 tsp crushed ');
-INSERT INTO is_made_of VALUES (12854,59,'2 2 inch strips ');
-INSERT INTO is_made_of VALUES (12856,38,'1 cup ');
-INSERT INTO is_made_of VALUES (12856,210,'3/4-1 cup ');
-INSERT INTO is_made_of VALUES (12856,1,'4 tsp ');
-INSERT INTO is_made_of VALUES (12856,20,'1 cup ');
-INSERT INTO is_made_of VALUES (12856,35,'4 tsp ');
-INSERT INTO is_made_of VALUES (12862,38,'3/4 cup ');
-INSERT INTO is_made_of VALUES (12862,77,'2 tsp ');
-INSERT INTO is_made_of VALUES (12862,211,'2 cups ');
-INSERT INTO is_made_of VALUES (12862,93,'1 1/2 tblsp ');
-INSERT INTO is_made_of VALUES (12862,143,'1 1/2 cup ');
-INSERT INTO is_made_of VALUES (12862,4,'1 cup ');
-INSERT INTO is_made_of VALUES (12862,42,'3-4 cups ');
-INSERT INTO is_made_of VALUES (12876,212,'2 pint ');
-INSERT INTO is_made_of VALUES (12876,124,'1 bottle Boone Strawberry Hill ');
-INSERT INTO is_made_of VALUES (12876,68,'1/2 gal ');
-INSERT INTO is_made_of VALUES (12876,213,'1 gal Tropical Berry ');
-INSERT INTO is_made_of VALUES (12890,49,'4 cups ');
-INSERT INTO is_made_of VALUES (12890,4,'1 1/2 cup ');
-INSERT INTO is_made_of VALUES (12890,42,'4 cups ');
-INSERT INTO is_made_of VALUES (12890,198,'1 tblsp ');
-INSERT INTO is_made_of VALUES (12890,64,'2 qt ');
-INSERT INTO is_made_of VALUES (12954,162,NULL);
-INSERT INTO is_made_of VALUES (12954,214,', orange ');
-INSERT INTO is_made_of VALUES (12954,215,NULL);
-INSERT INTO is_made_of VALUES (12988,38,'3 cups ');
-INSERT INTO is_made_of VALUES (12988,4,'1 cup ');
-INSERT INTO is_made_of VALUES (12988,67,'12 ');
-INSERT INTO is_made_of VALUES (12988,66,'2 ');
-INSERT INTO is_made_of VALUES (12988,59,'1 ');
-INSERT INTO is_made_of VALUES (12988,65,'750 ml ');
-INSERT INTO is_made_of VALUES (12988,71,'1/4 cup ');
-INSERT INTO is_made_of VALUES (13020,65,'1 bottle ');
-INSERT INTO is_made_of VALUES (13020,4,'1/2 cup ');
-INSERT INTO is_made_of VALUES (13020,68,'1 cup ');
-INSERT INTO is_made_of VALUES (13020,93,'1 cup ');
-INSERT INTO is_made_of VALUES (13020,67,NULL);
-INSERT INTO is_made_of VALUES (13020,66,NULL);
-INSERT INTO is_made_of VALUES (13024,65,'2 bottles ');
-INSERT INTO is_made_of VALUES (13024,4,'1 cup ');
-INSERT INTO is_made_of VALUES (13024,38,'2 cups hot ');
-INSERT INTO is_made_of VALUES (13024,168,'1 cup');
-INSERT INTO is_made_of VALUES (13024,55,' wedges ');
-INSERT INTO is_made_of VALUES (13024,45,' wedges ');
-INSERT INTO is_made_of VALUES (13024,104,NULL);
-INSERT INTO is_made_of VALUES (13024,216,NULL);
-INSERT INTO is_made_of VALUES (13026,65,'1 1/2 L ');
-INSERT INTO is_made_of VALUES (13026,4,'1 cup ');
-INSERT INTO is_made_of VALUES (13026,104,'1 large ');
-INSERT INTO is_made_of VALUES (13026,55,'1 large ');
-INSERT INTO is_made_of VALUES (13026,168,'1 large ');
-INSERT INTO is_made_of VALUES (13026,71,'3-4 oz plain ');
-INSERT INTO is_made_of VALUES (13026,102,NULL);
-INSERT INTO is_made_of VALUES (13032,217,'46 oz ');
-INSERT INTO is_made_of VALUES (13032,68,'20 oz ');
-INSERT INTO is_made_of VALUES (13032,210,'1/2 cup ');
-INSERT INTO is_made_of VALUES (13032,66,'3 3-inch ');
-INSERT INTO is_made_of VALUES (13032,67,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (13032,31,'2 tblsp ');
-INSERT INTO is_made_of VALUES (13036,104,'Juice of 1 ');
-INSERT INTO is_made_of VALUES (13036,4,'1 tblsp ');
-INSERT INTO is_made_of VALUES (13036,78,'8-10 ripe ');
-INSERT INTO is_made_of VALUES (13036,38,'1 cup ');
-INSERT INTO is_made_of VALUES (13058,65,'1 bottle ');
-INSERT INTO is_made_of VALUES (13058,104,'2 ');
-INSERT INTO is_made_of VALUES (13058,68,'1 cup ');
-INSERT INTO is_made_of VALUES (13058,55,'3 ');
-INSERT INTO is_made_of VALUES (13058,42,'1 cup ');
-INSERT INTO is_made_of VALUES (13066,10,NULL);
-INSERT INTO is_made_of VALUES (13066,99,NULL);
-INSERT INTO is_made_of VALUES (13066,16,NULL);
-INSERT INTO is_made_of VALUES (13068,83,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13068,131,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13070,218,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13070,219,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13070,131,'1 dash ');
-INSERT INTO is_made_of VALUES (13072,24,'2 oz ');
-INSERT INTO is_made_of VALUES (13072,220,'2 oz ');
-INSERT INTO is_made_of VALUES (13072,49,'4 oz ');
-INSERT INTO is_made_of VALUES (13072,68,'4 oz ');
-INSERT INTO is_made_of VALUES (13086,63,'5 oz ');
-INSERT INTO is_made_of VALUES (13086,24,'1 oz ');
-INSERT INTO is_made_of VALUES (13086,62,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13086,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13086,4,NULL);
-INSERT INTO is_made_of VALUES (13086,6,NULL);
-INSERT INTO is_made_of VALUES (13128,221,'1/2 pint ');
-INSERT INTO is_made_of VALUES (13128,222,'1/2 pint ');
-INSERT INTO is_made_of VALUES (13128,223,'1 dash ');
-INSERT INTO is_made_of VALUES (13162,99,'1 cl ');
-INSERT INTO is_made_of VALUES (13162,16,'1 cl ');
-INSERT INTO is_made_of VALUES (13162,224,'1 1/2 ');
-INSERT INTO is_made_of VALUES (13162,1,'4 cl hot ');
-INSERT INTO is_made_of VALUES (13162,18,NULL);
-INSERT INTO is_made_of VALUES (13190,24,'1 shot ');
-INSERT INTO is_made_of VALUES (13190,27,'1 shot ');
-INSERT INTO is_made_of VALUES (13190,115,'1 shot ');
-INSERT INTO is_made_of VALUES (13190,30,'1 shot ');
-INSERT INTO is_made_of VALUES (13190,49,NULL);
-INSERT INTO is_made_of VALUES (13192,20,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13192,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13192,9,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13192,62,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13192,225,'2 oz ');
-INSERT INTO is_made_of VALUES (13192,79,'1 splash ');
-INSERT INTO is_made_of VALUES (13194,226,'0.75 oz ');
-INSERT INTO is_made_of VALUES (13194,227,'0.25 oz ');
-INSERT INTO is_made_of VALUES (13196,24,'5 cl ');
-INSERT INTO is_made_of VALUES (13196,45,'1/2 ');
-INSERT INTO is_made_of VALUES (13196,103,'4 dashes ');
-INSERT INTO is_made_of VALUES (13196,60,'1 dl Schweppes ');
-INSERT INTO is_made_of VALUES (13196,6,'4 ');
-INSERT INTO is_made_of VALUES (13198,99,'1 part ');
-INSERT INTO is_made_of VALUES (13198,48,'1 part ');
-INSERT INTO is_made_of VALUES (13198,16,'1 part ');
-INSERT INTO is_made_of VALUES (13200,226,'12 oz ');
-INSERT INTO is_made_of VALUES (13200,228,'12 oz ');
-INSERT INTO is_made_of VALUES (13200,63,'12 oz frozen ');
-INSERT INTO is_made_of VALUES (13200,6,'1 cup crushed ');
-INSERT INTO is_made_of VALUES (13202,27,'1 oz ');
-INSERT INTO is_made_of VALUES (13202,24,'1 oz ');
-INSERT INTO is_made_of VALUES (13202,84,'1 oz Bacardi ');
-INSERT INTO is_made_of VALUES (13202,229,'1 oz ');
-INSERT INTO is_made_of VALUES (13202,228,'1 oz ');
-INSERT INTO is_made_of VALUES (13204,186,'2 oz ');
-INSERT INTO is_made_of VALUES (13204,126,'1 oz ');
-INSERT INTO is_made_of VALUES (13204,93,'2 oz sweetened ');
-INSERT INTO is_made_of VALUES (13204,120,'1 oz ');
-INSERT INTO is_made_of VALUES (13206,45,'2 ');
-INSERT INTO is_made_of VALUES (13206,4,'2 tblsp ');
-INSERT INTO is_made_of VALUES (13206,230,'2-3 oz ');
-INSERT INTO is_made_of VALUES (13206,6,'crushed ');
-INSERT INTO is_made_of VALUES (13214,231,'2 oz ');
-INSERT INTO is_made_of VALUES (13214,93,'1 oz ');
-INSERT INTO is_made_of VALUES (13214,4,'1-2 tblsp ');
-INSERT INTO is_made_of VALUES (13214,6,'1');
-INSERT INTO is_made_of VALUES (13214,232,NULL);
-INSERT INTO is_made_of VALUES (13222,233,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13222,234,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13282,235,'1 part Bass pale ');
-INSERT INTO is_made_of VALUES (13282,89,'1 part ');
-INSERT INTO is_made_of VALUES (13328,44,'1/2 shot ');
-INSERT INTO is_made_of VALUES (13328,39,'1/2 shot ');
-INSERT INTO is_made_of VALUES (13328,27,'1 dash ');
-INSERT INTO is_made_of VALUES (13332,99,'1/3 shot ');
-INSERT INTO is_made_of VALUES (13332,236,'1/3 shot ');
-INSERT INTO is_made_of VALUES (13332,126,'1/3 shot ');
-INSERT INTO is_made_of VALUES (13377,24,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (13377,49,'4 oz ');
-INSERT INTO is_made_of VALUES (13377,150,'1 oz ');
-INSERT INTO is_made_of VALUES (13389,221,'1/2 pint ');
-INSERT INTO is_made_of VALUES (13389,222,'1/2 pint sweet or dry ');
-INSERT INTO is_made_of VALUES (13395,48,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13395,7,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13395,234,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13405,236,'30 ml white ');
-INSERT INTO is_made_of VALUES (13405,237,'30 ml ');
-INSERT INTO is_made_of VALUES (13405,238,'5 ml ');
-INSERT INTO is_made_of VALUES (13423,24,'2 cl Smirnoff ');
-INSERT INTO is_made_of VALUES (13423,114,'2 cl ');
-INSERT INTO is_made_of VALUES (13423,239,'2 cl ');
-INSERT INTO is_made_of VALUES (13423,147,'6 cl ');
-INSERT INTO is_made_of VALUES (13423,120,'1 dash ');
-INSERT INTO is_made_of VALUES (13497,222,'1/2 pint hard ');
-INSERT INTO is_made_of VALUES (13497,221,'1/2 pint ');
-INSERT INTO is_made_of VALUES (13497,62,'1 shot ');
-INSERT INTO is_made_of VALUES (13499,24,'1 oz ');
-INSERT INTO is_made_of VALUES (13499,99,'1 oz ');
-INSERT INTO is_made_of VALUES (13499,16,'1 oz ');
-INSERT INTO is_made_of VALUES (13499,17,'2 scoops ');
-INSERT INTO is_made_of VALUES (13499,240,'1 ');
-INSERT INTO is_made_of VALUES (13501,27,'1/3 ');
-INSERT INTO is_made_of VALUES (13501,16,'1/3 ');
-INSERT INTO is_made_of VALUES (13501,139,'1/3 ');
-INSERT INTO is_made_of VALUES (13535,50,'1 L ');
-INSERT INTO is_made_of VALUES (13535,241,'2 cups ');
-INSERT INTO is_made_of VALUES (13535,24,'2 cups ');
-INSERT INTO is_made_of VALUES (13539,24,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (13539,242,'6 oz ');
-INSERT INTO is_made_of VALUES (13539,93,' to taste');
-INSERT INTO is_made_of VALUES (13581,188,'2-3 oz');
-INSERT INTO is_made_of VALUES (13581,105,NULL);
-INSERT INTO is_made_of VALUES (13621,83,'2 measures ');
-INSERT INTO is_made_of VALUES (13621,68,NULL);
-INSERT INTO is_made_of VALUES (13621,10,NULL);
-INSERT INTO is_made_of VALUES (13625,24,'1 oz ');
-INSERT INTO is_made_of VALUES (13625,16,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (13625,99,'1/2 oz ');
-INSERT INTO is_made_of VALUES (13675,236,'1/4 glass ');
-INSERT INTO is_made_of VALUES (13675,243,'3/4 glass ');
-INSERT INTO is_made_of VALUES (13683,244,'1 part ');
-INSERT INTO is_made_of VALUES (13683,245,'1 part ');
-INSERT INTO is_made_of VALUES (13731,27,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (13731,225,'3 oz ');
-INSERT INTO is_made_of VALUES (13751,97,'1-2 shot ');
-INSERT INTO is_made_of VALUES (13751,45,'Squeeze ');
-INSERT INTO is_made_of VALUES (13751,105,'Fill with ');
-INSERT INTO is_made_of VALUES (13751,6,NULL);
-INSERT INTO is_made_of VALUES (13775,118,'1 oz ');
-INSERT INTO is_made_of VALUES (13775,159,'1 oz ');
-INSERT INTO is_made_of VALUES (13807,246,NULL);
-INSERT INTO is_made_of VALUES (13807,99,NULL);
-INSERT INTO is_made_of VALUES (13807,16,NULL);
-INSERT INTO is_made_of VALUES (13825,99,'1 oz ');
-INSERT INTO is_made_of VALUES (13825,16,'1 oz ');
-INSERT INTO is_made_of VALUES (13825,234,'dash ');
-INSERT INTO is_made_of VALUES (13825,144,'2 oz ');
-INSERT INTO is_made_of VALUES (13825,1,'2 oz Hazlenut ');
-INSERT INTO is_made_of VALUES (13837,161,'1 part ');
-INSERT INTO is_made_of VALUES (13837,22,'5 parts ');
-INSERT INTO is_made_of VALUES (13847,26,'1 oz ');
-INSERT INTO is_made_of VALUES (13847,27,'1 oz ');
-INSERT INTO is_made_of VALUES (13861,16,'1 part ');
-INSERT INTO is_made_of VALUES (13861,224,'1 part ');
-INSERT INTO is_made_of VALUES (13861,39,'1 part ');
-INSERT INTO is_made_of VALUES (13899,26,'1/3 oz ');
-INSERT INTO is_made_of VALUES (13899,208,'1/3 oz ');
-INSERT INTO is_made_of VALUES (13899,247,'1/3 oz ');
-INSERT INTO is_made_of VALUES (13936,84,'5 oz Bacardi ');
-INSERT INTO is_made_of VALUES (13936,248,'frozen ');
-INSERT INTO is_made_of VALUES (13936,249,'frozen ');
-INSERT INTO is_made_of VALUES (13938,250,'1 oz ');
-INSERT INTO is_made_of VALUES (13938,9,'1 oz ');
-INSERT INTO is_made_of VALUES (13938,60,'4 oz ');
-INSERT INTO is_made_of VALUES (13940,9,'2 oz dry ');
-INSERT INTO is_made_of VALUES (13940,244,'4 oz ');
-INSERT INTO is_made_of VALUES (13940,93,'0.75 oz ');
-INSERT INTO is_made_of VALUES (13971,145,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (13971,1,'8 oz ');
-INSERT INTO is_made_of VALUES (13971,4,'1 tsp ');
-INSERT INTO is_made_of VALUES (13971,28,'1 tblsp ');
-INSERT INTO is_made_of VALUES (14029,61,'1 oz white ');
-INSERT INTO is_made_of VALUES (14029,24,'1 oz ');
-INSERT INTO is_made_of VALUES (14053,234,'1 oz ');
-INSERT INTO is_made_of VALUES (14053,251,'1 oz ');
-INSERT INTO is_made_of VALUES (14053,39,'1 oz ');
-INSERT INTO is_made_of VALUES (14065,27,'2 oz ');
-INSERT INTO is_made_of VALUES (14065,20,'2 oz ');
-INSERT INTO is_made_of VALUES (14065,213,'4 oz Grape ');
-INSERT INTO is_made_of VALUES (14071,24,'2 cl ');
-INSERT INTO is_made_of VALUES (14071,252,'1 cl ');
-INSERT INTO is_made_of VALUES (14071,62,'1 cl ');
-INSERT INTO is_made_of VALUES (14071,50,'Fill with ');
-INSERT INTO is_made_of VALUES (14087,253,'1 shot ');
-INSERT INTO is_made_of VALUES (14087,27,'1 shot ');
-INSERT INTO is_made_of VALUES (14087,49,'1 shot ');
-INSERT INTO is_made_of VALUES (14095,40,'1 shot ');
-INSERT INTO is_made_of VALUES (14095,29,'1 shot Jamaican ');
-INSERT INTO is_made_of VALUES (14095,6,'cubes');
-INSERT INTO is_made_of VALUES (14095,39,NULL);
-INSERT INTO is_made_of VALUES (14107,186,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (14107,147,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14107,50,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14107,102,'3 oz ');
-INSERT INTO is_made_of VALUES (14107,104,'1 slice ');
-INSERT INTO is_made_of VALUES (14133,157,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14133,24,'1 oz ');
-INSERT INTO is_made_of VALUES (14133,45,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (14133,49,'1 splash ');
-INSERT INTO is_made_of VALUES (14157,85,'4 cl ');
-INSERT INTO is_made_of VALUES (14157,163,'16 cl ');
-INSERT INTO is_made_of VALUES (14167,24,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (14167,108,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14167,109,'1 ');
-INSERT INTO is_made_of VALUES (14181,1,NULL);
-INSERT INTO is_made_of VALUES (14181,39,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14181,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14181,71,NULL);
-INSERT INTO is_made_of VALUES (14195,238,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (14195,63,'8-10 oz cold ');
-INSERT INTO is_made_of VALUES (14195,104,'1 slice ');
-INSERT INTO is_made_of VALUES (14195,6,'cubes');
-INSERT INTO is_made_of VALUES (14209,1,'6 oz ');
-INSERT INTO is_made_of VALUES (14209,254,'2 oz ');
-INSERT INTO is_made_of VALUES (14209,182,'2 tblsp ');
-INSERT INTO is_made_of VALUES (14209,28,NULL);
-INSERT INTO is_made_of VALUES (14229,99,'1/3 part ');
-INSERT INTO is_made_of VALUES (14229,16,'1/3 part ');
-INSERT INTO is_made_of VALUES (14229,224,'1/3 part ');
-INSERT INTO is_made_of VALUES (14272,24,'1 shot ');
-INSERT INTO is_made_of VALUES (14272,10,'1 tblsp ');
-INSERT INTO is_made_of VALUES (14272,68,'Fill with ');
-INSERT INTO is_made_of VALUES (14282,99,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14282,51,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14282,102,'Fill with ');
-INSERT INTO is_made_of VALUES (14306,27,'1 part ');
-INSERT INTO is_made_of VALUES (14306,225,'1 part ');
-INSERT INTO is_made_of VALUES (14306,68,'1 part ');
-INSERT INTO is_made_of VALUES (14356,16,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14356,255,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14356,99,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14356,251,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14356,39,' to fill');
-INSERT INTO is_made_of VALUES (14366,24,'1 1/2 shot ');
-INSERT INTO is_made_of VALUES (14366,157,'1 1/2 shot ');
-INSERT INTO is_made_of VALUES (14366,104,'Juice of 1 wedge ');
-INSERT INTO is_made_of VALUES (14372,186,'2/3 ');
-INSERT INTO is_made_of VALUES (14372,31,'1/3 ');
-INSERT INTO is_made_of VALUES (14372,6,'Fill with ');
-INSERT INTO is_made_of VALUES (14372,60,'Top it up with ');
-INSERT INTO is_made_of VALUES (14374,186,'2/3 part ');
-INSERT INTO is_made_of VALUES (14374,256,'1/3 part ');
-INSERT INTO is_made_of VALUES (14374,6,'cubes');
-INSERT INTO is_made_of VALUES (14374,257,NULL);
-INSERT INTO is_made_of VALUES (14378,228,'3/4 bottle ');
-INSERT INTO is_made_of VALUES (14378,27,'1 shot ');
-INSERT INTO is_made_of VALUES (14378,68,'1 oz ');
-INSERT INTO is_made_of VALUES (14446,213,'1/2 oz Grape ');
-INSERT INTO is_made_of VALUES (14446,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14456,47,'4 cl ');
-INSERT INTO is_made_of VALUES (14456,90,'Turkish apple ');
-INSERT INTO is_made_of VALUES (14456,4,' (if needed)');
-INSERT INTO is_made_of VALUES (14466,99,NULL);
-INSERT INTO is_made_of VALUES (14466,236,NULL);
-INSERT INTO is_made_of VALUES (14466,16,NULL);
-INSERT INTO is_made_of VALUES (14482,15,'1 part ');
-INSERT INTO is_made_of VALUES (14482,102,'1 part ');
-INSERT INTO is_made_of VALUES (14482,68,'1 part ');
-INSERT INTO is_made_of VALUES (14482,6,'cubes');
-INSERT INTO is_made_of VALUES (14538,16,'1/3 oz ');
-INSERT INTO is_made_of VALUES (14538,99,'1/3 oz ');
-INSERT INTO is_made_of VALUES (14538,236,'1/3 oz ');
-INSERT INTO is_made_of VALUES (14560,121,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14560,114,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14560,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14560,258,'Fill with ');
-INSERT INTO is_made_of VALUES (14564,49,'2 oz ');
-INSERT INTO is_made_of VALUES (14564,102,'2 oz ');
-INSERT INTO is_made_of VALUES (14564,48,'0.5 oz ');
-INSERT INTO is_made_of VALUES (14564,259,'0.5 oz ');
-INSERT INTO is_made_of VALUES (14578,27,'1 cl ');
-INSERT INTO is_made_of VALUES (14578,68,'4 oz ');
-INSERT INTO is_made_of VALUES (14578,10,'1/4 cl ');
-INSERT INTO is_made_of VALUES (14584,250,'2 shots ');
-INSERT INTO is_made_of VALUES (14584,242,'12 oz lemon ');
-INSERT INTO is_made_of VALUES (14586,191,'1.5 oz ');
-INSERT INTO is_made_of VALUES (14586,10,'0.5 oz ');
-INSERT INTO is_made_of VALUES (14586,68,'4 oz ');
-INSERT INTO is_made_of VALUES (14586,225,'1 splash ');
-INSERT INTO is_made_of VALUES (14588,260,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14588,29,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14588,84,'1/2 oz Bacardi ');
-INSERT INTO is_made_of VALUES (14588,261,'1 oz ');
-INSERT INTO is_made_of VALUES (14588,157,'1 oz ');
-INSERT INTO is_made_of VALUES (14588,39,'3 oz ');
-INSERT INTO is_made_of VALUES (14588,252,'1 oz ');
-INSERT INTO is_made_of VALUES (14588,17,'1 cup ');
-INSERT INTO is_made_of VALUES (14594,157,'5 cl ');
-INSERT INTO is_made_of VALUES (14594,93,'2 cl ');
-INSERT INTO is_made_of VALUES (14594,6,'cubes');
-INSERT INTO is_made_of VALUES (14594,104,' or lime');
-INSERT INTO is_made_of VALUES (14598,262,'2 1/2 oz ');
-INSERT INTO is_made_of VALUES (14598,126,'1 splash ');
-INSERT INTO is_made_of VALUES (14598,68,'Fill with ');
-INSERT INTO is_made_of VALUES (14602,83,'full glass ');
-INSERT INTO is_made_of VALUES (14602,131,'About 8 drops ');
-INSERT INTO is_made_of VALUES (14608,191,'1 oz ');
-INSERT INTO is_made_of VALUES (14608,64,NULL);
-INSERT INTO is_made_of VALUES (14610,84,'1 oz Bacardi ');
-INSERT INTO is_made_of VALUES (14610,41,'1 oz ');
-INSERT INTO is_made_of VALUES (14622,24,'1/3 part ');
-INSERT INTO is_made_of VALUES (14622,263,'1/3 part ');
-INSERT INTO is_made_of VALUES (14622,68,'1/3 part ');
-INSERT INTO is_made_of VALUES (14622,6,'lots ');
-INSERT INTO is_made_of VALUES (14622,264,'1 dash ');
-INSERT INTO is_made_of VALUES (14642,99,'1 oz ');
-INSERT INTO is_made_of VALUES (14642,84,'1 oz Bacardi ');
-INSERT INTO is_made_of VALUES (14642,10,'1 dash ');
-INSERT INTO is_made_of VALUES (14688,7,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14688,236,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14688,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (14730,24,'1/4 ');
-INSERT INTO is_made_of VALUES (14730,265,'1/4 ');
-INSERT INTO is_made_of VALUES (14730,68,'1/4 ');
-INSERT INTO is_made_of VALUES (14730,187,'1/4 ');
-INSERT INTO is_made_of VALUES (14752,266,'1 part ');
-INSERT INTO is_made_of VALUES (14752,257,'2 parts ');
-INSERT INTO is_made_of VALUES (14752,6,'cubes');
-INSERT INTO is_made_of VALUES (14782,145,'1 shot ');
-INSERT INTO is_made_of VALUES (14782,16,'3/4 shot ');
-INSERT INTO is_made_of VALUES (14782,1,'6 oz hot ');
-INSERT INTO is_made_of VALUES (14842,16,'1 oz ');
-INSERT INTO is_made_of VALUES (14842,121,'3/4 oz ');
-INSERT INTO is_made_of VALUES (14842,18,'3/4 oz double ');
-INSERT INTO is_made_of VALUES (14860,126,'3 parts ');
-INSERT INTO is_made_of VALUES (14860,1,'1 part ');
-INSERT INTO is_made_of VALUES (14888,267,'4 shots ');
-INSERT INTO is_made_of VALUES (14888,268,'4 shots ');
-INSERT INTO is_made_of VALUES (14956,24,'2 cups ');
-INSERT INTO is_made_of VALUES (14956,269,'3 packages ');
-INSERT INTO is_made_of VALUES (14956,38,'3 cups ');
-INSERT INTO is_made_of VALUES (14978,20,'mikey bottle ');
-INSERT INTO is_made_of VALUES (14978,64,'large bottle ');
-INSERT INTO is_made_of VALUES (14978,82,'355 ml frozen ');
-INSERT INTO is_made_of VALUES (14978,68,'355 ml frozen ');
-INSERT INTO is_made_of VALUES (14978,6,'crushed ');
-INSERT INTO is_made_of VALUES (15024,250,'2 oz ');
-INSERT INTO is_made_of VALUES (15024,49,'4 oz ');
-INSERT INTO is_made_of VALUES (15024,64,'2 oz ');
-INSERT INTO is_made_of VALUES (15024,6,'Add ');
-INSERT INTO is_made_of VALUES (15026,270,'4 cl ');
-INSERT INTO is_made_of VALUES (15026,271,'2 cl ');
-INSERT INTO is_made_of VALUES (15026,272,'7 cl ');
-INSERT INTO is_made_of VALUES (15026,163,'8 cl ');
-INSERT INTO is_made_of VALUES (15026,6,'cubes');
-INSERT INTO is_made_of VALUES (15082,253,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (15082,187,'1 oz ');
-INSERT INTO is_made_of VALUES (15082,254,'1/2 oz ');
-INSERT INTO is_made_of VALUES (15082,49,'1 oz ');
-INSERT INTO is_made_of VALUES (15086,273,'1 bottle ');
-INSERT INTO is_made_of VALUES (15086,274,'1 oz ');
-INSERT INTO is_made_of VALUES (15092,68,'1 part ');
-INSERT INTO is_made_of VALUES (15092,163,'1 part ');
-INSERT INTO is_made_of VALUES (15092,42,'1 part ');
-INSERT INTO is_made_of VALUES (15092,6,NULL);
-INSERT INTO is_made_of VALUES (15106,68,'4 cl ');
-INSERT INTO is_made_of VALUES (15106,150,'3 cl ');
-INSERT INTO is_made_of VALUES (15106,163,'1 cl ');
-INSERT INTO is_made_of VALUES (15106,111,'1 ');
-INSERT INTO is_made_of VALUES (15178,275,'1 part ');
-INSERT INTO is_made_of VALUES (15178,70,'1/2 part ');
-INSERT INTO is_made_of VALUES (15178,114,'1 part ');
-INSERT INTO is_made_of VALUES (15178,147,'1 splash ');
-INSERT INTO is_made_of VALUES (15182,24,'2 cl ');
-INSERT INTO is_made_of VALUES (15182,259,'1 cl ');
-INSERT INTO is_made_of VALUES (15182,68,NULL);
-INSERT INTO is_made_of VALUES (15184,24,'2 cl ');
-INSERT INTO is_made_of VALUES (15184,259,'2 cl ');
-INSERT INTO is_made_of VALUES (15184,10,NULL);
-INSERT INTO is_made_of VALUES (15184,68,NULL);
-INSERT INTO is_made_of VALUES (15194,141,'2 scoops ');
-INSERT INTO is_made_of VALUES (15194,71,'2 oz ');
-INSERT INTO is_made_of VALUES (15194,27,'2 oz ');
-INSERT INTO is_made_of VALUES (15200,276,'1 oz ');
-INSERT INTO is_made_of VALUES (15200,27,'1/2 oz ');
-INSERT INTO is_made_of VALUES (15200,68,'4 oz ');
-INSERT INTO is_made_of VALUES (15200,10,'1/2 oz ');
-INSERT INTO is_made_of VALUES (15224,260,'2 parts ');
-INSERT INTO is_made_of VALUES (15224,277,'2 parts ');
-INSERT INTO is_made_of VALUES (15224,49,'1 part ');
-INSERT INTO is_made_of VALUES (15226,84,'1 shot Bacardi ');
-INSERT INTO is_made_of VALUES (15226,260,'1 shot ');
-INSERT INTO is_made_of VALUES (15226,42,'1 shot ');
-INSERT INTO is_made_of VALUES (15226,68,NULL);
-INSERT INTO is_made_of VALUES (15226,10,NULL);
-INSERT INTO is_made_of VALUES (15226,278,NULL);
-INSERT INTO is_made_of VALUES (15266,24,'3 parts');
-INSERT INTO is_made_of VALUES (15266,256,'1 part ');
-INSERT INTO is_made_of VALUES (15266,163,'6 parts ');
-INSERT INTO is_made_of VALUES (15266,93,'1 1/2 part ');
-INSERT INTO is_made_of VALUES (15266,63,NULL);
-INSERT INTO is_made_of VALUES (15288,84,'1/2 shot Bacardi ');
-INSERT INTO is_made_of VALUES (15288,41,'1/2 shot ');
-INSERT INTO is_made_of VALUES (15300,9,'1/2 oz');
-INSERT INTO is_made_of VALUES (15300,29,'1/2 oz');
-INSERT INTO is_made_of VALUES (15300,83,'1/2 oz');
-INSERT INTO is_made_of VALUES (15300,30,'1/2 oz');
-INSERT INTO is_made_of VALUES (15300,24,'1/2 oz');
-INSERT INTO is_made_of VALUES (15300,105,'1/2 oz');
-INSERT INTO is_made_of VALUES (15300,147,'1-2 dash ');
-INSERT INTO is_made_of VALUES (15300,127,'1 wedge ');
-INSERT INTO is_made_of VALUES (15300,104,'Garnish with');
-INSERT INTO is_made_of VALUES (15328,236,'2 cl ');
-INSERT INTO is_made_of VALUES (15328,16,'2 cl ');
-INSERT INTO is_made_of VALUES (15328,121,'2 cl ');
-INSERT INTO is_made_of VALUES (15330,24,'1 oz ');
-INSERT INTO is_made_of VALUES (15330,30,'1 oz ');
-INSERT INTO is_made_of VALUES (15330,68,'1 oz ');
-INSERT INTO is_made_of VALUES (15403,24,'2 oz ');
-INSERT INTO is_made_of VALUES (15403,272,NULL);
-INSERT INTO is_made_of VALUES (15409,1,'3 parts ');
-INSERT INTO is_made_of VALUES (15409,212,'1 part ');
-INSERT INTO is_made_of VALUES (15423,221,'16 oz ');
-INSERT INTO is_made_of VALUES (15423,83,'1.5 oz ');
-INSERT INTO is_made_of VALUES (15427,260,'1 1/2 cl ');
-INSERT INTO is_made_of VALUES (15427,187,'1 1/2 cl ');
-INSERT INTO is_made_of VALUES (15427,62,'1 1/2 cl ');
-INSERT INTO is_made_of VALUES (15427,147,'3 cl ');
-INSERT INTO is_made_of VALUES (15511,99,'2 oz ');
-INSERT INTO is_made_of VALUES (15511,39,'8 oz ');
-INSERT INTO is_made_of VALUES (15511,17,'2 scoops ');
-INSERT INTO is_made_of VALUES (15521,1,'1 cup');
-INSERT INTO is_made_of VALUES (15521,279,'4 cl ');
-INSERT INTO is_made_of VALUES (15521,4,'By taste ');
-INSERT INTO is_made_of VALUES (15567,24,'1/2 ');
-INSERT INTO is_made_of VALUES (15567,63,'1/2 can ');
-INSERT INTO is_made_of VALUES (15567,38,'1/2 ');
-INSERT INTO is_made_of VALUES (15567,4,'10 tsp ');
-INSERT INTO is_made_of VALUES (15597,250,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (15597,187,'1/2 oz ');
-INSERT INTO is_made_of VALUES (15597,252,'1/2 oz ');
-INSERT INTO is_made_of VALUES (15597,49,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (15597,42,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (15639,99,'1/2 oz ');
-INSERT INTO is_made_of VALUES (15639,233,'1/2 oz ');
-INSERT INTO is_made_of VALUES (15639,27,'1/2 oz ');
-INSERT INTO is_made_of VALUES (15639,84,'1/2 oz Bacardi ');
-INSERT INTO is_made_of VALUES (15639,18,'1 oz ');
-INSERT INTO is_made_of VALUES (15675,24,'2 oz ');
-INSERT INTO is_made_of VALUES (15675,280,'1 oz ');
-INSERT INTO is_made_of VALUES (15675,281,'1 tsp ');
-INSERT INTO is_made_of VALUES (15675,78,'5 ');
-INSERT INTO is_made_of VALUES (15675,272,NULL);
-INSERT INTO is_made_of VALUES (15691,228,NULL);
-INSERT INTO is_made_of VALUES (15691,8,NULL);
-INSERT INTO is_made_of VALUES (15691,63,NULL);
-INSERT INTO is_made_of VALUES (15691,105,' slice');
-INSERT INTO is_made_of VALUES (15691,244,NULL);
-INSERT INTO is_made_of VALUES (15691,161,NULL);
-INSERT INTO is_made_of VALUES (15691,104,NULL);
-INSERT INTO is_made_of VALUES (15743,1,'1/2 ');
-INSERT INTO is_made_of VALUES (15743,187,'1/2 ');
-INSERT INTO is_made_of VALUES (15761,282,'25 ml ');
-INSERT INTO is_made_of VALUES (15761,68,'Add 250 ml ');
-INSERT INTO is_made_of VALUES (15789,221,'1/2 pint ');
-INSERT INTO is_made_of VALUES (15789,222,'1/2 pint ');
-INSERT INTO is_made_of VALUES (15789,283,'A little bit of ');
-INSERT INTO is_made_of VALUES (15801,48,'1.5 oz ');
-INSERT INTO is_made_of VALUES (15801,284,'12 oz ');
-INSERT INTO is_made_of VALUES (15813,227,'5 shots ');
-INSERT INTO is_made_of VALUES (15813,90,'very sweet ');
-INSERT INTO is_made_of VALUES (15825,20,'1/6 glass ');
-INSERT INTO is_made_of VALUES (15825,1,'1/6 glass strong black ');
-INSERT INTO is_made_of VALUES (15825,38,'1/2 glass cold ');
-INSERT INTO is_made_of VALUES (15825,28,NULL);
-INSERT INTO is_made_of VALUES (15841,101,'1/2 handful ');
-INSERT INTO is_made_of VALUES (15841,93,'3 cl ');
-INSERT INTO is_made_of VALUES (15841,97,'1/8 L Jamaican ');
-INSERT INTO is_made_of VALUES (15841,120,'1/8 L ');
-INSERT INTO is_made_of VALUES (15841,103,'8 drops ');
-INSERT INTO is_made_of VALUES (15849,113,'1 qt ');
-INSERT INTO is_made_of VALUES (15849,22,'4 fifth ');
-INSERT INTO is_made_of VALUES (15849,24,'1 fifth ');
-INSERT INTO is_made_of VALUES (15849,244,'4 L ');
-INSERT INTO is_made_of VALUES (15849,68,'1/2 gal ');
-INSERT INTO is_made_of VALUES (15853,16,'1/3 ');
-INSERT INTO is_made_of VALUES (15853,126,'1/3 ');
-INSERT INTO is_made_of VALUES (15853,99,'1/4 ');
-INSERT INTO is_made_of VALUES (15933,236,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (15933,8,'Add 10 oz ');
-INSERT INTO is_made_of VALUES (15933,6,'cubes');
-INSERT INTO is_made_of VALUES (15941,106,'1 oz ');
-INSERT INTO is_made_of VALUES (15941,72,'1 oz red ');
-INSERT INTO is_made_of VALUES (15941,59,'Twist of ');
-INSERT INTO is_made_of VALUES (15941,112,'Twist of ');
-INSERT INTO is_made_of VALUES (16031,228,'12 oz ');
-INSERT INTO is_made_of VALUES (16031,244,'12 oz ');
-INSERT INTO is_made_of VALUES (16041,114,'750 ml ');
-INSERT INTO is_made_of VALUES (16041,68,'1 L ');
-INSERT INTO is_made_of VALUES (16041,285,'750 ml ');
-INSERT INTO is_made_of VALUES (16047,221,'1 bottle ');
-INSERT INTO is_made_of VALUES (16047,106,'1 1/2 cl ');
-INSERT INTO is_made_of VALUES (16082,27,'3/4 oz ');
-INSERT INTO is_made_of VALUES (16082,261,'1/2 oz ');
-INSERT INTO is_made_of VALUES (16082,1,'8 oz ');
-INSERT INTO is_made_of VALUES (16100,225,'2 oz ');
-INSERT INTO is_made_of VALUES (16100,27,'2 oz ');
-INSERT INTO is_made_of VALUES (16100,83,'2 oz ');
-INSERT INTO is_made_of VALUES (16100,68,'Add splash ');
-INSERT INTO is_made_of VALUES (16108,186,'2 oz ');
-INSERT INTO is_made_of VALUES (16108,286,'1/2 oz ');
-INSERT INTO is_made_of VALUES (16108,281,'1 splash ');
-INSERT INTO is_made_of VALUES (16108,68,'1 oz ');
-INSERT INTO is_made_of VALUES (16134,186,'1 shot ');
-INSERT INTO is_made_of VALUES (16134,68,'1 shot ');
-INSERT INTO is_made_of VALUES (16134,30,'1 shot ');
-INSERT INTO is_made_of VALUES (16134,64,'Fill to top ');
-INSERT INTO is_made_of VALUES (16158,6,'1 cup ');
-INSERT INTO is_made_of VALUES (16158,83,'2 oz ');
-INSERT INTO is_made_of VALUES (16158,287,'1/4 cup ');
-INSERT INTO is_made_of VALUES (16158,31,'3 tblsp fresh ');
-INSERT INTO is_made_of VALUES (16176,6,'8 cubes');
-INSERT INTO is_made_of VALUES (16176,24,'3 oz ');
-INSERT INTO is_made_of VALUES (16176,217,'1.5 oz ');
-INSERT INTO is_made_of VALUES (16176,187,'1.5 oz ');
-INSERT INTO is_made_of VALUES (16176,59,'1 ');
-INSERT INTO is_made_of VALUES (16178,9,'2 jiggers ');
-INSERT INTO is_made_of VALUES (16178,24,'1 jigger ');
-INSERT INTO is_made_of VALUES (16178,10,'3 dashes ');
-INSERT INTO is_made_of VALUES (16178,31,'1 shot ');
-INSERT INTO is_made_of VALUES (16178,4,'Around rim put 1 pinch ');
-INSERT INTO is_made_of VALUES (16178,100,'3 dashes ');
-INSERT INTO is_made_of VALUES (16178,102,'Fill to top with ');
-INSERT INTO is_made_of VALUES (16196,288,'2/5 ');
-INSERT INTO is_made_of VALUES (16196,83,'2/5 ');
-INSERT INTO is_made_of VALUES (16196,10,'1/5 ');
-INSERT INTO is_made_of VALUES (16202,27,NULL);
-INSERT INTO is_made_of VALUES (16202,147,NULL);
-INSERT INTO is_made_of VALUES (16202,48,NULL);
-INSERT INTO is_made_of VALUES (16202,42,NULL);
-INSERT INTO is_made_of VALUES (16250,260,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (16250,118,'1 oz ');
-INSERT INTO is_made_of VALUES (16250,68,'3-4 oz ');
-INSERT INTO is_made_of VALUES (16250,42,'3-4 oz ');
-INSERT INTO is_made_of VALUES (16250,49,'3-4 oz ');
-INSERT INTO is_made_of VALUES (16262,289,'4 cl ');
-INSERT INTO is_made_of VALUES (16262,16,'8 cl ');
-INSERT INTO is_made_of VALUES (16262,1,NULL);
-INSERT INTO is_made_of VALUES (16273,63,'1 can ');
-INSERT INTO is_made_of VALUES (16273,38,'3 cans ');
-INSERT INTO is_made_of VALUES (16273,24,'1 1/2 cup ');
-INSERT INTO is_made_of VALUES (16275,6,'4-5 ');
-INSERT INTO is_made_of VALUES (16275,290,'2 oz ');
-INSERT INTO is_made_of VALUES (16275,35,'1 tsp ');
-INSERT INTO is_made_of VALUES (16275,105,'10-12 oz ');
-INSERT INTO is_made_of VALUES (16289,83,'3 oz ');
-INSERT INTO is_made_of VALUES (16289,291,'12 oz ');
-INSERT INTO is_made_of VALUES (16295,97,'1 shot ');
-INSERT INTO is_made_of VALUES (16295,55,'1 slice ');
-INSERT INTO is_made_of VALUES (16295,268,'1/2 glass ');
-INSERT INTO is_made_of VALUES (16295,49,'1/2 glass ');
-INSERT INTO is_made_of VALUES (16311,26,'1 oz ');
-INSERT INTO is_made_of VALUES (16311,48,'1/2 oz ');
-INSERT INTO is_made_of VALUES (16311,225,'2 oz ');
-INSERT INTO is_made_of VALUES (16333,20,'1 part ');
-INSERT INTO is_made_of VALUES (16333,24,'1 part ');
-INSERT INTO is_made_of VALUES (16333,83,'1 part ');
-INSERT INTO is_made_of VALUES (16333,30,'1/2 part ');
-INSERT INTO is_made_of VALUES (16333,170,NULL);
-INSERT INTO is_made_of VALUES (16333,6,NULL);
-INSERT INTO is_made_of VALUES (16333,110,'1-3 pint ');
-INSERT INTO is_made_of VALUES (16333,169,NULL);
-INSERT INTO is_made_of VALUES (16354,24,'1/3 oz ');
-INSERT INTO is_made_of VALUES (16354,48,'1/3 oz ');
-INSERT INTO is_made_of VALUES (16354,147,'1/3 oz ');
-INSERT INTO is_made_of VALUES (16405,27,'1 shot ');
-INSERT INTO is_made_of VALUES (16405,114,'1 shot ');
-INSERT INTO is_made_of VALUES (16405,6,'cubes');
-INSERT INTO is_made_of VALUES (16405,225,NULL);
-INSERT INTO is_made_of VALUES (16419,253,'1 shot ');
-INSERT INTO is_made_of VALUES (16419,99,'1 shot ');
-INSERT INTO is_made_of VALUES (16419,18,'Fill with ');
-INSERT INTO is_made_of VALUES (16447,17,'2 scoops ');
-INSERT INTO is_made_of VALUES (16447,105,'1 can ');
-INSERT INTO is_made_of VALUES (16447,58,'2 oz ');
-INSERT INTO is_made_of VALUES (16485,99,'1 oz ');
-INSERT INTO is_made_of VALUES (16485,236,'1 oz ');
-INSERT INTO is_made_of VALUES (16485,62,'1 oz ');
-INSERT INTO is_made_of VALUES (16485,16,'1 oz ');
-INSERT INTO is_made_of VALUES (16942,254,'1 shot ');
-INSERT INTO is_made_of VALUES (16942,24,'1 shot ');
-INSERT INTO is_made_of VALUES (16942,102,'Fill with ');
-INSERT INTO is_made_of VALUES (16943,24,'1 oz ');
-INSERT INTO is_made_of VALUES (16943,187,'1 oz ');
-INSERT INTO is_made_of VALUES (16943,68,'3 oz ');
-INSERT INTO is_made_of VALUES (16943,49,'3 oz ');
-INSERT INTO is_made_of VALUES (16951,99,'1 oz ');
-INSERT INTO is_made_of VALUES (16951,71,'1/2 oz ');
-INSERT INTO is_made_of VALUES (16951,1,NULL);
-INSERT INTO is_made_of VALUES (16958,163,'3 parts ');
-INSERT INTO is_made_of VALUES (16958,260,'1 part ');
-INSERT INTO is_made_of VALUES (16958,66,'3 dashes ');
-INSERT INTO is_made_of VALUES (16967,24,'2 oz ');
-INSERT INTO is_made_of VALUES (16967,36,'2 oz ');
-INSERT INTO is_made_of VALUES (16967,292,'2 oz ');
-INSERT INTO is_made_of VALUES (16967,6,NULL);
-INSERT INTO is_made_of VALUES (16967,96,NULL);
-INSERT INTO is_made_of VALUES (16984,20,'1 oz ');
-INSERT INTO is_made_of VALUES (16984,24,'1 oz ');
-INSERT INTO is_made_of VALUES (16984,83,'1 oz ');
-INSERT INTO is_made_of VALUES (16984,9,'1 oz ');
-INSERT INTO is_made_of VALUES (16984,30,'1 oz ');
-INSERT INTO is_made_of VALUES (16984,254,'1 oz ');
-INSERT INTO is_made_of VALUES (16984,48,'1 oz ');
-INSERT INTO is_made_of VALUES (16984,260,'1 oz ');
-INSERT INTO is_made_of VALUES (16985,247,'1 part ');
-INSERT INTO is_made_of VALUES (16985,26,'1 part ');
-INSERT INTO is_made_of VALUES (16985,41,'1 oz ');
-INSERT INTO is_made_of VALUES (16986,114,'2 oz ');
-INSERT INTO is_made_of VALUES (16986,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (16986,45,'2 wedges ');
-INSERT INTO is_made_of VALUES (16986,225,'2 oz ');
-INSERT INTO is_made_of VALUES (16987,16,'3/4 oz ');
-INSERT INTO is_made_of VALUES (16987,58,'3/4 oz ');
-INSERT INTO is_made_of VALUES (16987,24,'3/4 oz ');
-INSERT INTO is_made_of VALUES (16987,68,'2-3 oz ');
-INSERT INTO is_made_of VALUES (16990,255,'2 shots ');
-INSERT INTO is_made_of VALUES (16990,39,NULL);
-INSERT INTO is_made_of VALUES (16992,212,'750 ml ');
-INSERT INTO is_made_of VALUES (16992,24,'1750 ml ');
-INSERT INTO is_made_of VALUES (16992,187,'1750 ml ');
-INSERT INTO is_made_of VALUES (16992,68,'1 gal ');
-INSERT INTO is_made_of VALUES (16992,49,'1 gal ');
-INSERT INTO is_made_of VALUES (16995,68,'4 oz ');
-INSERT INTO is_made_of VALUES (16995,20,'1 oz ');
-INSERT INTO is_made_of VALUES (16995,24,'1 oz ');
-INSERT INTO is_made_of VALUES (16995,18,'1 package ');
-INSERT INTO is_made_of VALUES (16995,6,'Over ');
-INSERT INTO is_made_of VALUES (16998,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (16998,254,'1/2 oz ');
-INSERT INTO is_made_of VALUES (16998,267,'1/2 oz ');
-INSERT INTO is_made_of VALUES (16998,49,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17002,97,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17002,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17002,30,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17002,83,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17002,293,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17002,294,'Fill with ');
-INSERT INTO is_made_of VALUES (17005,27,'1 jigger ');
-INSERT INTO is_made_of VALUES (17005,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (17005,6,NULL);
-INSERT INTO is_made_of VALUES (17005,111,NULL);
-INSERT INTO is_made_of VALUES (17006,84,'2 oz light ');
-INSERT INTO is_made_of VALUES (17006,213,'1/2 tsp Tropical ');
-INSERT INTO is_made_of VALUES (17015,24,'1 shot ');
-INSERT INTO is_made_of VALUES (17015,99,'1 shot ');
-INSERT INTO is_made_of VALUES (17015,105,'1 dash ');
-INSERT INTO is_made_of VALUES (17015,89,'Fill with ');
-INSERT INTO is_made_of VALUES (17020,7,'1 oz ');
-INSERT INTO is_made_of VALUES (17020,234,'1 oz ');
-INSERT INTO is_made_of VALUES (17027,284,'12 oz ');
-INSERT INTO is_made_of VALUES (17027,254,'3 oz ');
-INSERT INTO is_made_of VALUES (17035,273,'1 ');
-INSERT INTO is_made_of VALUES (17035,274,'1 shot ');
-INSERT INTO is_made_of VALUES (17044,4,'2 1/2 cups ');
-INSERT INTO is_made_of VALUES (17044,295,'1 cup ');
-INSERT INTO is_made_of VALUES (17044,1,'1 1/2 oz instant ');
-INSERT INTO is_made_of VALUES (17044,35,'2 oz ');
-INSERT INTO is_made_of VALUES (17044,38,'3 cups boiling ');
-INSERT INTO is_made_of VALUES (17044,24,'1 fifth ');
-INSERT INTO is_made_of VALUES (17060,234,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17060,7,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17060,296,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17060,84,'1/2 oz Bacardi ');
-INSERT INTO is_made_of VALUES (17065,273,'1 bottle ');
-INSERT INTO is_made_of VALUES (17065,29,'1 shot ');
-INSERT INTO is_made_of VALUES (17066,24,'30 ml ');
-INSERT INTO is_made_of VALUES (17066,9,'30 ml ');
-INSERT INTO is_made_of VALUES (17066,297,'45 ml ');
-INSERT INTO is_made_of VALUES (17066,6,'1/2 glass crushed ');
-INSERT INTO is_made_of VALUES (17074,24,'1 shot ');
-INSERT INTO is_made_of VALUES (17074,260,'1 shot ');
-INSERT INTO is_made_of VALUES (17074,298,'1 shot ');
-INSERT INTO is_made_of VALUES (17074,68,'1 splash ');
-INSERT INTO is_made_of VALUES (17074,42,'1 splash ');
-INSERT INTO is_made_of VALUES (17074,287,'1 splash ');
-INSERT INTO is_made_of VALUES (17074,10,'1 dash ');
-INSERT INTO is_made_of VALUES (17074,6,'crushed ');
-INSERT INTO is_made_of VALUES (17074,143,'1 wedge ');
-INSERT INTO is_made_of VALUES (17079,99,'2 1/2 oz ');
-INSERT INTO is_made_of VALUES (17079,16,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17094,27,'1 shot ');
-INSERT INTO is_made_of VALUES (17094,126,'1 shot ');
-INSERT INTO is_made_of VALUES (17094,114,'1 shot ');
-INSERT INTO is_made_of VALUES (17105,62,NULL);
-INSERT INTO is_made_of VALUES (17105,299,NULL);
-INSERT INTO is_made_of VALUES (17105,24,NULL);
-INSERT INTO is_made_of VALUES (17105,225,NULL);
-INSERT INTO is_made_of VALUES (17105,244,NULL);
-INSERT INTO is_made_of VALUES (17108,105,'1 dl ');
-INSERT INTO is_made_of VALUES (17108,93,'7 drops ');
-INSERT INTO is_made_of VALUES (17114,9,'2 oz ');
-INSERT INTO is_made_of VALUES (17114,49,'5 oz ');
-INSERT INTO is_made_of VALUES (17114,10,'2 splashes ');
-INSERT INTO is_made_of VALUES (17118,300,'5 oz blue ');
-INSERT INTO is_made_of VALUES (17118,294,'5 oz ');
-INSERT INTO is_made_of VALUES (17118,6,'cubes');
-INSERT INTO is_made_of VALUES (17120,212,'1 fifth ');
-INSERT INTO is_made_of VALUES (17120,24,'1 fifth Smirnoff red label ');
-INSERT INTO is_made_of VALUES (17120,294,'2 L ');
-INSERT INTO is_made_of VALUES (17120,268,'2 L ');
-INSERT INTO is_made_of VALUES (17120,93,'1 small bottle ');
-INSERT INTO is_made_of VALUES (17120,20,'1 pint ');
-INSERT INTO is_made_of VALUES (17122,224,'1 part ');
-INSERT INTO is_made_of VALUES (17122,253,'1 part ');
-INSERT INTO is_made_of VALUES (17135,274,'1 part ');
-INSERT INTO is_made_of VALUES (17135,105,'2 parts ');
-INSERT INTO is_made_of VALUES (17141,65,'1/3 part ');
-INSERT INTO is_made_of VALUES (17141,187,'1 shot ');
-INSERT INTO is_made_of VALUES (17141,285,'1/3 part ');
-INSERT INTO is_made_of VALUES (17141,68,'1/3 part ');
-INSERT INTO is_made_of VALUES (17167,301,'2 oz ');
-INSERT INTO is_made_of VALUES (17167,79,'4 oz ');
-INSERT INTO is_made_of VALUES (17167,6,NULL);
-INSERT INTO is_made_of VALUES (17168,30,'1/2 jigger ');
-INSERT INTO is_made_of VALUES (17168,27,'3 shots ');
-INSERT INTO is_made_of VALUES (17168,222,'1/2 cup ');
-INSERT INTO is_made_of VALUES (17168,6,'Add 1/2 cup ');
-INSERT INTO is_made_of VALUES (17174,9,'1 oz');
-INSERT INTO is_made_of VALUES (17174,83,'1 oz');
-INSERT INTO is_made_of VALUES (17174,24,'1 oz');
-INSERT INTO is_made_of VALUES (17174,230,'1 oz');
-INSERT INTO is_made_of VALUES (17174,52,'1 oz');
-INSERT INTO is_made_of VALUES (17174,302,'1 oz');
-INSERT INTO is_made_of VALUES (17174,147,'1 oz');
-INSERT INTO is_made_of VALUES (17174,120,'3 oz');
-INSERT INTO is_made_of VALUES (17175,137,'25 ml');
-INSERT INTO is_made_of VALUES (17175,303,'15 ml');
-INSERT INTO is_made_of VALUES (17175,304,'10 ml');
-INSERT INTO is_made_of VALUES (17175,22,'top up with');
-INSERT INTO is_made_of VALUES (17176,45,'½');
-INSERT INTO is_made_of VALUES (17176,210,'2 tsp');
-INSERT INTO is_made_of VALUES (17176,165,'4 cl');
-INSERT INTO is_made_of VALUES (17176,64,'top up with');
-INSERT INTO is_made_of VALUES (17176,6,'fill');
-INSERT INTO is_made_of VALUES (17177,305,'2 tsp ');
-INSERT INTO is_made_of VALUES (17177,45,'1');
-INSERT INTO is_made_of VALUES (17177,137,'2 1/2 oz');
-INSERT INTO is_made_of VALUES (17178,16,'2/3 oz');
-INSERT INTO is_made_of VALUES (17178,254,'1/3 oz');
-INSERT INTO is_made_of VALUES (17178,100,'1 tsp');
-INSERT INTO is_made_of VALUES (17178,4,'2 pinches');
-INSERT INTO is_made_of VALUES (17180,9,'4.5 cl');
-INSERT INTO is_made_of VALUES (17180,306,'1.5 cl');
-INSERT INTO is_made_of VALUES (17180,307,'1.5 cl');
-INSERT INTO is_made_of VALUES (17181,24,'70ml/2fl oz');
-INSERT INTO is_made_of VALUES (17181,108,'1 tbsp');
-INSERT INTO is_made_of VALUES (17181,308,'2 tbsp');
-INSERT INTO is_made_of VALUES (17181,104,'1 wedge');
-INSERT INTO is_made_of VALUES (17181,109,'1');
-INSERT INTO is_made_of VALUES (17182,231,'5 cl');
-INSERT INTO is_made_of VALUES (17182,21,'2.5 cl');
-INSERT INTO is_made_of VALUES (17182,309,'2.5 cl');
-INSERT INTO is_made_of VALUES (17182,310,'1.5 cl');
-INSERT INTO is_made_of VALUES (17182,311,'2 Dashes');
-INSERT INTO is_made_of VALUES (17182,312,'Pinch');
-INSERT INTO is_made_of VALUES (17182,313,'2 sprigs');
-INSERT INTO is_made_of VALUES (17183,29,'1 3/4 oz Bacardi ');
-INSERT INTO is_made_of VALUES (17183,31,'1 oz ');
-INSERT INTO is_made_of VALUES (17183,100,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (17183,10,'1 dash ');
-INSERT INTO is_made_of VALUES (17184,71,'1 oz ');
-INSERT INTO is_made_of VALUES (17184,29,'1 oz ');
-INSERT INTO is_made_of VALUES (17184,30,'1 oz ');
-INSERT INTO is_made_of VALUES (17184,93,'1 oz ');
-INSERT INTO is_made_of VALUES (17185,9,'2 oz ');
-INSERT INTO is_made_of VALUES (17185,136,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (17185,93,'1/4 tsp ');
-INSERT INTO is_made_of VALUES (17185,54,'2 dashes ');
-INSERT INTO is_made_of VALUES (17185,32,'1 ');
-INSERT INTO is_made_of VALUES (17186,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17186,10,'2 tsp ');
-INSERT INTO is_made_of VALUES (17186,104,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (17186,12,'1 ');
-INSERT INTO is_made_of VALUES (17187,314,'6 cl');
-INSERT INTO is_made_of VALUES (17187,315,'2 dashes');
-INSERT INTO is_made_of VALUES (17187,101,'2 Fresh leaves');
-INSERT INTO is_made_of VALUES (17188,29,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17188,42,'1 oz ');
-INSERT INTO is_made_of VALUES (17188,136,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (17188,10,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (17188,111,'1 ');
-INSERT INTO is_made_of VALUES (17189,9,'2 oz ');
-INSERT INTO is_made_of VALUES (17189,92,'1 tsp ');
-INSERT INTO is_made_of VALUES (17189,68,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17189,10,'1 tsp ');
-INSERT INTO is_made_of VALUES (17190,9,'7 parts');
-INSERT INTO is_made_of VALUES (17190,316,'4 parts');
-INSERT INTO is_made_of VALUES (17190,317,'3 parts ');
-INSERT INTO is_made_of VALUES (17191,97,'1 part ');
-INSERT INTO is_made_of VALUES (17191,149,'1/2 part ');
-INSERT INTO is_made_of VALUES (17191,68,'2 parts ');
-INSERT INTO is_made_of VALUES (17191,42,'1 part ');
-INSERT INTO is_made_of VALUES (17192,71,'3 parts');
-INSERT INTO is_made_of VALUES (17192,140,'9 parts');
-INSERT INTO is_made_of VALUES (17192,318,'2 parts');
-INSERT INTO is_made_of VALUES (17193,71,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17193,121,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17194,9,'4cl');
-INSERT INTO is_made_of VALUES (17194,52,'3cl');
-INSERT INTO is_made_of VALUES (17194,303,'2cl');
-INSERT INTO is_made_of VALUES (17195,22,'6 oz ');
-INSERT INTO is_made_of VALUES (17195,187,'1 oz ');
-INSERT INTO is_made_of VALUES (17196,24,'1 1/4 oz ');
-INSERT INTO is_made_of VALUES (17196,31,'1/4 oz ');
-INSERT INTO is_made_of VALUES (17196,157,'1/4 oz ');
-INSERT INTO is_made_of VALUES (17196,49,'1/4 cup ');
-INSERT INTO is_made_of VALUES (17197,9,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17197,4,'2 tsp superfine ');
-INSERT INTO is_made_of VALUES (17197,93,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17197,22,'4 oz Chilled ');
-INSERT INTO is_made_of VALUES (17197,55,'1 ');
-INSERT INTO is_made_of VALUES (17197,111,'1 ');
-INSERT INTO is_made_of VALUES (17198,139,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17198,27,'3/4 oz ');
-INSERT INTO is_made_of VALUES (17200,125,'3/4 oz ');
-INSERT INTO is_made_of VALUES (17200,61,'3/4 oz white ');
-INSERT INTO is_made_of VALUES (17200,11,'3/4 oz ');
-INSERT INTO is_made_of VALUES (17201,20,'12 parts');
-INSERT INTO is_made_of VALUES (17201,319,'8 parts');
-INSERT INTO is_made_of VALUES (17201,320,'3 parts');
-INSERT INTO is_made_of VALUES (17201,21,'3 parts');
-INSERT INTO is_made_of VALUES (17202,59,'1 long strip ');
-INSERT INTO is_made_of VALUES (17202,71,'2 oz ');
-INSERT INTO is_made_of VALUES (17202,64,'5 oz ');
-INSERT INTO is_made_of VALUES (17202,127,'2 dashes ');
-INSERT INTO is_made_of VALUES (17203,161,'1 part ');
-INSERT INTO is_made_of VALUES (17203,22,'5 parts ');
-INSERT INTO is_made_of VALUES (17204,24,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17204,83,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17204,29,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17204,9,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17204,105,'1 dash ');
-INSERT INTO is_made_of VALUES (17204,59,'Twist of ');
-INSERT INTO is_made_of VALUES (17205,22,'Chilled ');
-INSERT INTO is_made_of VALUES (17205,68,'2 oz ');
-INSERT INTO is_made_of VALUES (17206,101,'4 fresh ');
-INSERT INTO is_made_of VALUES (17206,58,'2 1/2 oz ');
-INSERT INTO is_made_of VALUES (17206,46,'1 tsp ');
-INSERT INTO is_made_of VALUES (17206,38,'2 tsp ');
-INSERT INTO is_made_of VALUES (17207,29,'3 oz ');
-INSERT INTO is_made_of VALUES (17207,321,'3 tblsp ');
-INSERT INTO is_made_of VALUES (17207,143,'3 tblsp ');
-INSERT INTO is_made_of VALUES (17208,108,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17208,9,'1 oz ');
-INSERT INTO is_made_of VALUES (17208,113,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17208,93,'1/2 tsp ');
-INSERT INTO is_made_of VALUES (17208,10,'1 tsp ');
-INSERT INTO is_made_of VALUES (17208,46,NULL);
-INSERT INTO is_made_of VALUES (17209,20,'4.5 cl');
-INSERT INTO is_made_of VALUES (17209,51,'1.5 cl');
-INSERT INTO is_made_of VALUES (17209,322,'6 cl');
-INSERT INTO is_made_of VALUES (17209,21,' 1 dash');
-INSERT INTO is_made_of VALUES (17209,323,'top up ');
-INSERT INTO is_made_of VALUES (17210,9,'4 cl');
-INSERT INTO is_made_of VALUES (17210,306,'1.5 cl');
-INSERT INTO is_made_of VALUES (17210,100,'1 cl');
-INSERT INTO is_made_of VALUES (17210,324,'1.5 cl');
-INSERT INTO is_made_of VALUES (17211,325,'5 cl');
-INSERT INTO is_made_of VALUES (17211,326,'10 cl');
-INSERT INTO is_made_of VALUES (17213,24,'4.5 cl');
-INSERT INTO is_made_of VALUES (17213,327,'1.5 cl');
-INSERT INTO is_made_of VALUES (17213,328,'1.5 cl');
-INSERT INTO is_made_of VALUES (17214,24,'2.5 cl');
-INSERT INTO is_made_of VALUES (17214,161,'1.5 cl');
-INSERT INTO is_made_of VALUES (17214,87,'1 cl');
-INSERT INTO is_made_of VALUES (17214,303,'2.5 cl');
-INSERT INTO is_made_of VALUES (17215,323,'6 cl');
-INSERT INTO is_made_of VALUES (17215,106,'4 cl');
-INSERT INTO is_made_of VALUES (17215,329,'splash');
-INSERT INTO is_made_of VALUES (17216,83,'4.5 cl');
-INSERT INTO is_made_of VALUES (17216,21,'1.5 cl');
-INSERT INTO is_made_of VALUES (17216,330,'2 spoons');
-INSERT INTO is_made_of VALUES (17217,83,'6 cl');
-INSERT INTO is_made_of VALUES (17217,331,'3 cl');
-INSERT INTO is_made_of VALUES (17217,317,'3 cl');
-INSERT INTO is_made_of VALUES (17217,21,'1.5 cl');
-INSERT INTO is_made_of VALUES (17217,87,'1 dash');
-INSERT INTO is_made_of VALUES (17217,110,'1 pinch');
-INSERT INTO is_made_of VALUES (17218,9,'6 cl');
-INSERT INTO is_made_of VALUES (17218,24,'1.5 cl');
-INSERT INTO is_made_of VALUES (17218,332,'0.75 cl');
-INSERT INTO is_made_of VALUES (17219,333,'3 cl');
-INSERT INTO is_made_of VALUES (17219,51,'1.5 cl');
-INSERT INTO is_made_of VALUES (17219,52,'1.5 cl');
-INSERT INTO is_made_of VALUES (17219,21,'1.5 cl');
-INSERT INTO is_made_of VALUES (17220,334,'2 scoops ');
-INSERT INTO is_made_of VALUES (17220,251,'1 part ');
-INSERT INTO is_made_of VALUES (17220,39,'full glass ');
-INSERT INTO is_made_of VALUES (17220,24,'2 parts ');
-INSERT INTO is_made_of VALUES (17221,334,'3 cups ');
-INSERT INTO is_made_of VALUES (17221,39,'1 cup ');
-INSERT INTO is_made_of VALUES (17221,255,'1/2 cup ');
-INSERT INTO is_made_of VALUES (17221,335,'for topping ');
-INSERT INTO is_made_of VALUES (17221,336,'4 tablespoons ');
-INSERT INTO is_made_of VALUES (17221,337,'4 tablespoons ');
-INSERT INTO is_made_of VALUES (17221,338,'15');
-INSERT INTO is_made_of VALUES (17222,9,'1 3/4 shot ');
-INSERT INTO is_made_of VALUES (17222,126,'1 Shot ');
-INSERT INTO is_made_of VALUES (17222,303,'1/4 Shot');
-INSERT INTO is_made_of VALUES (17222,10,'1/8 Shot');
-INSERT INTO is_made_of VALUES (17223,9,'2 shots ');
-INSERT INTO is_made_of VALUES (17223,72,'1 shot ');
-INSERT INTO is_made_of VALUES (17223,317,'1 shot ');
-INSERT INTO is_made_of VALUES (17223,311,'3 dashes ');
-INSERT INTO is_made_of VALUES (17224,24,'1 shot ');
-INSERT INTO is_made_of VALUES (17224,339,'2 shots ');
-INSERT INTO is_made_of VALUES (17224,22,'Top up with');
-INSERT INTO is_made_of VALUES (17225,9,'2 shots ');
-INSERT INTO is_made_of VALUES (17225,10,'1/2 shot ');
-INSERT INTO is_made_of VALUES (17225,144,'1/2 shot ');
-INSERT INTO is_made_of VALUES (17225,39,'1/2 shot');
-INSERT INTO is_made_of VALUES (17225,232,'1/2 Fresh');
-INSERT INTO is_made_of VALUES (17226,9,'1 shot ');
-INSERT INTO is_made_of VALUES (17226,139,'1 shot ');
-INSERT INTO is_made_of VALUES (17226,161,'1 shot ');
-INSERT INTO is_made_of VALUES (17226,340,'1/8 shot ');
-INSERT INTO is_made_of VALUES (17227,72,'2 shots ');
-INSERT INTO is_made_of VALUES (17227,108,'1 shot ');
-INSERT INTO is_made_of VALUES (17227,329,'Top up with ');
-INSERT INTO is_made_of VALUES (17228,9,'1 1/2 shot ');
-INSERT INTO is_made_of VALUES (17228,85,'1 1/2 shot ');
-INSERT INTO is_made_of VALUES (17229,20,'1 shot ');
-INSERT INTO is_made_of VALUES (17229,108,'1/2 shot ');
-INSERT INTO is_made_of VALUES (17229,139,'1/2 shot ');
-INSERT INTO is_made_of VALUES (17229,9,'1/2 shot ');
-INSERT INTO is_made_of VALUES (17229,341,'1/4 shot');
-INSERT INTO is_made_of VALUES (17229,87,'1/4 shot');
-INSERT INTO is_made_of VALUES (17229,38,'1/2 shot ');
-INSERT INTO is_made_of VALUES (17230,9,'2 oz ');
-INSERT INTO is_made_of VALUES (17230,10,'1 tsp ');
-INSERT INTO is_made_of VALUES (17230,342,'Juice of 1/2 ');
-INSERT INTO is_made_of VALUES (17230,329,'Top up with');
-INSERT INTO is_made_of VALUES (17230,45,'Garnish');
-INSERT INTO is_made_of VALUES (17247,14,'1 oz');
-INSERT INTO is_made_of VALUES (17247,320,'1 oz');
-INSERT INTO is_made_of VALUES (17247,21,'1 oz');
-INSERT INTO is_made_of VALUES (17247,9,'1 oz');
-INSERT INTO is_made_of VALUES (17248,9,'1 oz');
-INSERT INTO is_made_of VALUES (17248,350,'1 oz');
-INSERT INTO is_made_of VALUES (17248,72,'1 oz');
-INSERT INTO is_made_of VALUES (17248,75,'1');
-INSERT INTO is_made_of VALUES (17249,9,'1 1/2 oz');
-INSERT INTO is_made_of VALUES (17249,286,'3/4 oz');
-INSERT INTO is_made_of VALUES (17249,21,'3/4 oz');
-INSERT INTO is_made_of VALUES (17249,311,'1 dash');
-INSERT INTO is_made_of VALUES (17249,94,'1 dash');
-INSERT INTO is_made_of VALUES (17250,9,'3/4 oz');
-INSERT INTO is_made_of VALUES (17250,52,'3/4 oz');
-INSERT INTO is_made_of VALUES (17250,332,'3/4 oz');
-INSERT INTO is_made_of VALUES (17250,303,'3/4 oz');
-INSERT INTO is_made_of VALUES (17250,288,'1 dash');
-INSERT INTO is_made_of VALUES (17251,106,'1 oz');
-INSERT INTO is_made_of VALUES (17251,72,'1 oz');
-INSERT INTO is_made_of VALUES (17251,91,'1 1/4 oz');
-INSERT INTO is_made_of VALUES (17251,75,'1');
-INSERT INTO is_made_of VALUES (17252,24,'1 1/2 oz');
-INSERT INTO is_made_of VALUES (17252,319,'3 oz');
-INSERT INTO is_made_of VALUES (17253,351,'3 oz');
-INSERT INTO is_made_of VALUES (17253,83,'1 1/2 oz');
-INSERT INTO is_made_of VALUES (17826,357,'50 ml');
-INSERT INTO is_made_of VALUES (17826,27,'50 ml');
-INSERT INTO is_made_of VALUES (17826,339,'4 oz');
-INSERT INTO is_made_of VALUES (17827,91,'2 oz');
-INSERT INTO is_made_of VALUES (17827,106,'1 oz');
-INSERT INTO is_made_of VALUES (17827,108,'1 oz');
-INSERT INTO is_made_of VALUES (17828,357,'2 oz');
-INSERT INTO is_made_of VALUES (17828,72,'1 oz');
-INSERT INTO is_made_of VALUES (17828,14,'1/2 oz');
-INSERT INTO is_made_of VALUES (17829,358,'2 oz');
-INSERT INTO is_made_of VALUES (17829,303,'3/4 oz');
-INSERT INTO is_made_of VALUES (17829,359,'2 tsp');
-INSERT INTO is_made_of VALUES (17829,360,'2 tsp');
-INSERT INTO is_made_of VALUES (17829,361,'1/4 oz');
-INSERT INTO is_made_of VALUES (17830,45,'1/2');
-INSERT INTO is_made_of VALUES (17830,362,'1/3 oz');
-INSERT INTO is_made_of VALUES (17830,311,'2 dashes');
-INSERT INTO is_made_of VALUES (17830,134,'1 oz');
-INSERT INTO is_made_of VALUES (17830,363,'1 oz');
-INSERT INTO is_made_of VALUES (178306,236,'1 part');
-INSERT INTO is_made_of VALUES (178306,233,'1 part');
-INSERT INTO is_made_of VALUES (178307,83,'1 shot');
-INSERT INTO is_made_of VALUES (178307,364,'1 part');
-INSERT INTO is_made_of VALUES (178308,323,'6 cl');
-INSERT INTO is_made_of VALUES (178308,176,'4 cl');
-INSERT INTO is_made_of VALUES (178308,329,'Top');
-INSERT INTO is_made_of VALUES (178309,20,'1 shot');
-INSERT INTO is_made_of VALUES (178309,365,'1/2 shot');
-INSERT INTO is_made_of VALUES (178309,185,'1 shot');
-INSERT INTO is_made_of VALUES (178309,1,'1 shot');
-INSERT INTO is_made_of VALUES (17831,29,'2 oz ');
-INSERT INTO is_made_of VALUES (17831,347,'4 oz ');
-INSERT INTO is_made_of VALUES (17831,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (178310,366,'2 oz');
-INSERT INTO is_made_of VALUES (178310,108,'1 oz');
-INSERT INTO is_made_of VALUES (178310,320,'1/4 oz');
-INSERT INTO is_made_of VALUES (178310,311,'3 dashes');
-INSERT INTO is_made_of VALUES (178310,86,'1');
-INSERT INTO is_made_of VALUES (178311,84,'1 shot');
-INSERT INTO is_made_of VALUES (178311,128,'1/2 shot');
-INSERT INTO is_made_of VALUES (178311,127,'3 drops');
-INSERT INTO is_made_of VALUES (178311,196,'1 Fresh');
-INSERT INTO is_made_of VALUES (178311,6,'cubes');
-INSERT INTO is_made_of VALUES (178314,9,'6 cl');
-INSERT INTO is_made_of VALUES (178314,303,'2 cl');
-INSERT INTO is_made_of VALUES (178314,87,'2 cl');
-INSERT INTO is_made_of VALUES (178314,367,'Whole');
-INSERT INTO is_made_of VALUES (178316,333,'6 cl');
-INSERT INTO is_made_of VALUES (178316,167,'2 cl');
-INSERT INTO is_made_of VALUES (178316,303,'2 cl');
-INSERT INTO is_made_of VALUES (178317,345,'6 cl');
-INSERT INTO is_made_of VALUES (178317,317,'2 cl');
-INSERT INTO is_made_of VALUES (178317,21,'2 cl');
-INSERT INTO is_made_of VALUES (178317,52,'2 jiggers');
-INSERT INTO is_made_of VALUES (178319,370,'2 oz');
-INSERT INTO is_made_of VALUES (178319,322,'1 oz');
-INSERT INTO is_made_of VALUES (178319,371,'1 oz');
-INSERT INTO is_made_of VALUES (17832,29,'1 oz ');
-INSERT INTO is_made_of VALUES (17832,134,'1 oz ');
-INSERT INTO is_made_of VALUES (17832,68,'1 oz ');
-INSERT INTO is_made_of VALUES (17832,93,'1/2 oz ');
-INSERT INTO is_made_of VALUES (17832,64,'3 oz ');
-INSERT INTO is_made_of VALUES (17832,59,'1 twist of ');
-INSERT INTO is_made_of VALUES (178320,372,'1 oz');
-INSERT INTO is_made_of VALUES (178320,371,'1 oz');
-INSERT INTO is_made_of VALUES (178320,322,'Top');
-INSERT INTO is_made_of VALUES (178321,27,'4 cl');
-INSERT INTO is_made_of VALUES (178321,317,'6 cl');
-INSERT INTO is_made_of VALUES (178321,373,'15 cl');
-INSERT INTO is_made_of VALUES (178321,75,'Garnish with');
-INSERT INTO is_made_of VALUES (178323,24,'1 shot');
-INSERT INTO is_made_of VALUES (178323,87,'1/2 shot');
-INSERT INTO is_made_of VALUES (178323,165,'Full Glass');
-INSERT INTO is_made_of VALUES (178325,176,'100 ml');
-INSERT INTO is_made_of VALUES (178325,323,'150 ml');
-INSERT INTO is_made_of VALUES (178325,329,'Top');
-INSERT INTO is_made_of VALUES (178326,45,'1');
-INSERT INTO is_made_of VALUES (178326,342,'1');
-INSERT INTO is_made_of VALUES (178326,373,'750 ml');
-INSERT INTO is_made_of VALUES (178326,78,'1 cup');
-INSERT INTO is_made_of VALUES (178326,168,'1 cup');
-INSERT INTO is_made_of VALUES (178326,374,'3 shots');
-INSERT INTO is_made_of VALUES (178326,329,'Top');
-INSERT INTO is_made_of VALUES (178328,20,'2 shots');
-INSERT INTO is_made_of VALUES (178328,375,'1 shot');
-INSERT INTO is_made_of VALUES (178328,376,'1 shot');
-INSERT INTO is_made_of VALUES (178328,342,'Juice of 1/2');
-INSERT INTO is_made_of VALUES (178328,329,'Top');
-INSERT INTO is_made_of VALUES (178329,20,'2 shots');
-INSERT INTO is_made_of VALUES (178329,21,'1 shot');
-INSERT INTO is_made_of VALUES (178329,232,'1 shot');
-INSERT INTO is_made_of VALUES (178329,127,'1 dash');
-INSERT INTO is_made_of VALUES (178329,4,'Ground');
-INSERT INTO is_made_of VALUES (178329,96,'Top');
-INSERT INTO is_made_of VALUES (17833,123,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17833,150,'1 oz ');
-INSERT INTO is_made_of VALUES (178330,9,'1 shot');
-INSERT INTO is_made_of VALUES (178330,377,'1 shot');
-INSERT INTO is_made_of VALUES (178330,94,'1 dash');
-INSERT INTO is_made_of VALUES (178330,303,'1 dash');
-INSERT INTO is_made_of VALUES (178330,323,'Top');
-INSERT INTO is_made_of VALUES (178331,20,'1 shot');
-INSERT INTO is_made_of VALUES (178331,378,'1 shot');
-INSERT INTO is_made_of VALUES (178331,81,'Garnish with');
-INSERT INTO is_made_of VALUES (178331,322,'Dash');
-INSERT INTO is_made_of VALUES (178331,323,'Top');
-INSERT INTO is_made_of VALUES (178332,379,'1/2 cup');
-INSERT INTO is_made_of VALUES (178332,101,'5');
-INSERT INTO is_made_of VALUES (178332,319,'1/3 Cup');
-INSERT INTO is_made_of VALUES (178332,45,'Juice of 1/2');
-INSERT INTO is_made_of VALUES (178332,83,'1 shot');
-INSERT INTO is_made_of VALUES (178333,58,'2 oz');
-INSERT INTO is_made_of VALUES (178333,151,'1/2 oz');
-INSERT INTO is_made_of VALUES (178333,101,'8');
-INSERT INTO is_made_of VALUES (178334,288,'2 shots');
-INSERT INTO is_made_of VALUES (178334,22,'Top');
-INSERT INTO is_made_of VALUES (178335,378,'30 ml');
-INSERT INTO is_made_of VALUES (178335,319,'75 ml');
-INSERT INTO is_made_of VALUES (178335,329,'Top');
-INSERT INTO is_made_of VALUES (178336,325,'2 shots');
-INSERT INTO is_made_of VALUES (178336,21,'1 shot');
-INSERT INTO is_made_of VALUES (178336,4,'Dash');
-INSERT INTO is_made_of VALUES (178336,81,'Whole');
-INSERT INTO is_made_of VALUES (178336,79,'Top');
-INSERT INTO is_made_of VALUES (178337,106,'1 1/2 oz');
-INSERT INTO is_made_of VALUES (178337,317,'2 1/2 oz');
-INSERT INTO is_made_of VALUES (178337,326,'2 1/2 oz');
-INSERT INTO is_made_of VALUES (178337,75,'Garnish with');
-INSERT INTO is_made_of VALUES (178338,20,'40 ml');
-INSERT INTO is_made_of VALUES (178338,354,'20 ml');
-INSERT INTO is_made_of VALUES (178338,21,'30 ml');
-INSERT INTO is_made_of VALUES (178338,239,'15 ml');
-INSERT INTO is_made_of VALUES (178338,315,'Dash');
-INSERT INTO is_made_of VALUES (178338,101,'Garnish with');
-INSERT INTO is_made_of VALUES (178339,380,'1 oz');
-INSERT INTO is_made_of VALUES (178339,9,'1 oz');
-INSERT INTO is_made_of VALUES (178339,72,'0.75 oz');
-INSERT INTO is_made_of VALUES (178339,106,'0.75 oz');
-INSERT INTO is_made_of VALUES (178339,303,'Dash');
-INSERT INTO is_made_of VALUES (178339,381,'Dash');
-INSERT INTO is_made_of VALUES (178339,75,'Garnish with');
-INSERT INTO is_made_of VALUES (178340,9,'30 ml');
-INSERT INTO is_made_of VALUES (178340,106,'30 ml');
-INSERT INTO is_made_of VALUES (178340,317,'90 ml');
-INSERT INTO is_made_of VALUES (178340,75,'Garnish with');
-INSERT INTO is_made_of VALUES (178341,9,'1 shot');
-INSERT INTO is_made_of VALUES (178341,317,'Top');
-INSERT INTO is_made_of VALUES (178341,303,'Top');
-INSERT INTO is_made_of VALUES (178341,382,'25 ml');
-INSERT INTO is_made_of VALUES (178341,329,'Top');
-INSERT INTO is_made_of VALUES (178341,349,'Garnish with');
-INSERT INTO is_made_of VALUES (178341,75,'Garnish with');
-INSERT INTO is_made_of VALUES (178342,9,'2 oz');
-INSERT INTO is_made_of VALUES (178342,329,'5 oz');
-INSERT INTO is_made_of VALUES (178342,45,'1/4');
-INSERT INTO is_made_of VALUES (178343,228,'4 oz');
-INSERT INTO is_made_of VALUES (178343,331,'4 oz');
-INSERT INTO is_made_of VALUES (178343,21,'1 tblsp');
-INSERT INTO is_made_of VALUES (178343,383,'Dash');
-INSERT INTO is_made_of VALUES (178343,384,'Dash');
-INSERT INTO is_made_of VALUES (178343,385,'Dash');
-INSERT INTO is_made_of VALUES (178344,24,'2 oz');
-INSERT INTO is_made_of VALUES (178344,167,'1 tsp');
-INSERT INTO is_made_of VALUES (178344,386,'3');
-INSERT INTO is_made_of VALUES (178344,387,'1 Sprig');
-INSERT INTO is_made_of VALUES (178344,311,'2 dashes');
-INSERT INTO is_made_of VALUES (178344,348,'Top');
-INSERT INTO is_made_of VALUES (178346,137,'60 ml');
-INSERT INTO is_made_of VALUES (178346,45,'1');
-INSERT INTO is_made_of VALUES (178346,355,'3 cl');
-INSERT INTO is_made_of VALUES (178347,83,'1 2/3 oz');
-INSERT INTO is_made_of VALUES (178347,106,'1/4 oz');
-INSERT INTO is_made_of VALUES (178347,21,'3/4 oz');
-INSERT INTO is_made_of VALUES (178347,317,'1/2 oz');
-INSERT INTO is_made_of VALUES (178347,382,'1/2 oz');
-INSERT INTO is_made_of VALUES (178347,110,'Dash');
-INSERT INTO is_made_of VALUES (178348,83,'2 shots');
-INSERT INTO is_made_of VALUES (178348,319,'Top');
-INSERT INTO is_made_of VALUES (178348,21,'Juice of 1');
-INSERT INTO is_made_of VALUES (178348,304,'1 tsp');
-INSERT INTO is_made_of VALUES (178348,312,'Dash');
-INSERT INTO is_made_of VALUES (178349,24,'1 oz');
-INSERT INTO is_made_of VALUES (178349,388,'1 oz');
-INSERT INTO is_made_of VALUES (178349,389,'1 oz');
-INSERT INTO is_made_of VALUES (178349,390,'1 tsp');
-INSERT INTO is_made_of VALUES (178349,311,'Dash');
-INSERT INTO is_made_of VALUES (178349,75,'Garnish with');
-INSERT INTO is_made_of VALUES (17835,97,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17835,217,'2 oz ');
-INSERT INTO is_made_of VALUES (17835,68,'3 oz ');
-INSERT INTO is_made_of VALUES (178350,325,'1 shot');
-INSERT INTO is_made_of VALUES (178350,106,'1 shot');
-INSERT INTO is_made_of VALUES (178350,391,'1/2 shot');
-INSERT INTO is_made_of VALUES (178350,322,'Top');
-INSERT INTO is_made_of VALUES (178350,21,'Top');
-INSERT INTO is_made_of VALUES (178353,45,'Chopped');
-INSERT INTO is_made_of VALUES (178353,393,'1 shot');
-INSERT INTO is_made_of VALUES (178353,139,'1 shot');
-INSERT INTO is_made_of VALUES (178353,77,'Top');
-INSERT INTO is_made_of VALUES (178354,9,'1 shot');
-INSERT INTO is_made_of VALUES (178354,378,'1 shot');
-INSERT INTO is_made_of VALUES (178354,355,'25 ml');
-INSERT INTO is_made_of VALUES (178354,21,'30 ml');
-INSERT INTO is_made_of VALUES (178354,88,'Garnish with');
-INSERT INTO is_made_of VALUES (178355,9,'2 oz');
-INSERT INTO is_made_of VALUES (178355,303,'0.75 oz');
-INSERT INTO is_made_of VALUES (178355,87,'0.75 oz');
-INSERT INTO is_made_of VALUES (178355,88,'Ground');
-INSERT INTO is_made_of VALUES (178355,329,'Top');
-INSERT INTO is_made_of VALUES (178355,101,'Garnish with');
-INSERT INTO is_made_of VALUES (178357,24,'3 cl');
-INSERT INTO is_made_of VALUES (178357,354,'3 cl');
-INSERT INTO is_made_of VALUES (178357,165,'1 cl');
-INSERT INTO is_made_of VALUES (178357,45,'1 cl');
-INSERT INTO is_made_of VALUES (178357,323,'1 shot');
-INSERT INTO is_made_of VALUES (178358,45,'3');
-INSERT INTO is_made_of VALUES (178358,174,'1 Fresh');
-INSERT INTO is_made_of VALUES (178358,101,'Sprig');
-INSERT INTO is_made_of VALUES (178358,333,'200 ml');
-INSERT INTO is_made_of VALUES (178358,6,'cubes');
-INSERT INTO is_made_of VALUES (178358,329,'Top');
-INSERT INTO is_made_of VALUES (178359,180,'1/2');
-INSERT INTO is_made_of VALUES (178359,87,'1 tsp');
-INSERT INTO is_made_of VALUES (178359,24,'1 1/2 oz');
-INSERT INTO is_made_of VALUES (17836,29,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17836,30,'1 1/2 tsp ');
-INSERT INTO is_made_of VALUES (17836,31,'1 tblsp ');
-INSERT INTO is_made_of VALUES (17836,4,'1 tsp ');
-INSERT INTO is_made_of VALUES (17836,12,'1 ');
-INSERT INTO is_made_of VALUES (17836,101,'1 ');
-INSERT INTO is_made_of VALUES (178360,355,'2 tsp');
-INSERT INTO is_made_of VALUES (178360,24,'1 shot');
-INSERT INTO is_made_of VALUES (178360,329,'1/3 cup');
-INSERT INTO is_made_of VALUES (178360,340,'Top');
-INSERT INTO is_made_of VALUES (178362,50,'1 cup');
-INSERT INTO is_made_of VALUES (178362,21,'1/2 shot');
-INSERT INTO is_made_of VALUES (178362,24,'1 1/2 shot');
-INSERT INTO is_made_of VALUES (178363,24,'5 cl');
-INSERT INTO is_made_of VALUES (178363,303,'7 cl');
-INSERT INTO is_made_of VALUES (178363,395,'1 Slice');
-INSERT INTO is_made_of VALUES (178363,6,'cubes');
-INSERT INTO is_made_of VALUES (178365,9,'4 cl');
-INSERT INTO is_made_of VALUES (178365,348,'10 cl');
-INSERT INTO is_made_of VALUES (178365,395,'1 Slice');
-INSERT INTO is_made_of VALUES (178365,6,'cubes');
-INSERT INTO is_made_of VALUES (178366,9,'6 cl');
-INSERT INTO is_made_of VALUES (178366,303,'8 cl');
-INSERT INTO is_made_of VALUES (178366,395,'1 Slice');
-INSERT INTO is_made_of VALUES (178366,6,'cubes');
-INSERT INTO is_made_of VALUES (178368,325,'4.5 cL');
-INSERT INTO is_made_of VALUES (178368,317,'3 cl');
-INSERT INTO is_made_of VALUES (178368,322,'3.5 cl');
-INSERT INTO is_made_of VALUES (178368,10,'1 cl');
-INSERT INTO is_made_of VALUES (178368,87,'1 cl');
-INSERT INTO is_made_of VALUES (178368,311,'4 drops');
-INSERT INTO is_made_of VALUES (178369,139,'4 cl');
-INSERT INTO is_made_of VALUES (178369,326,'100 ml');
-INSERT INTO is_made_of VALUES (178369,311,'3 drops');
-INSERT INTO is_made_of VALUES (178369,395,'1');
-INSERT INTO is_made_of VALUES (17837,97,'2 oz ');
-INSERT INTO is_made_of VALUES (17837,93,'1 oz ');
-INSERT INTO is_made_of VALUES (17837,10,'1 tsp ');
-INSERT INTO is_made_of VALUES (17838,72,'3/4 oz ');
-INSERT INTO is_made_of VALUES (17838,98,'1 1/2 oz dry ');
-INSERT INTO is_made_of VALUES (17838,54,'1 dash ');
-INSERT INTO is_made_of VALUES (17839,158,'2 oz ');
-INSERT INTO is_made_of VALUES (17839,68,'2 oz ');
-INSERT INTO is_made_of VALUES (17839,49,'2 oz ');
-INSERT INTO is_made_of VALUES (17839,120,NULL);
-INSERT INTO is_made_of VALUES (17840,128,'1 1/2 oz ');
-INSERT INTO is_made_of VALUES (17840,72,'1 oz ');
-INSERT INTO is_made_of VALUES (17840,108,'1 oz ');
-INSERT INTO is_made_of VALUES (17840,54,'2 dashes ');
+--
+-- Dumping data for table `cocteles`
+--
+
+INSERT INTO `cocteles` (`id`, `nombre`, `miniatura`, `categoria`, `tipo`, `vaso`, `instrucciones`) VALUES
+(11000, 'Mojito', 'https://www.thecocktaildb.com/images/media/drink/metwgh1606770327.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mezcle las hojas de menta con el azúcar y el zumo de lima. Añada un chorrito de soda y llene el vaso con hielo picado. Verter el ron y completar con soda. Decorar y servir con pajita.'),
+(11001, 'Old Fashioned', 'https://www.thecocktaildb.com/images/media/drink/vrwquq1478252802.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Ponga el terrón de azúcar en un vaso old fashioned y úntelo con el amargo, añada un chorrito de agua. Mezcle hasta que se disuelva.\r\nLlene el vaso con cubitos de hielo y añada whisky.\r\n\r\nDecorar con un twist de naranja y una cereza de cóctel.'),
+(11002, 'Long Island Tea', 'https://www.thecocktaildb.com/images/media/drink/nkwr4c1606770558.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Mezcle todos los ingredientes (excepto el refresco de cola) y viértalos sobre hielo en un vaso highball. Añada el chorrito de cola para darle color. Decore con una rodaja de limón y sirva.'),
+(11003, 'Negroni', 'https://www.thecocktaildb.com/images/media/drink/qgdu971561574065.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Remover en un vaso con hielo, decorar y servir.'),
+(11004, 'Whiskey Sour', 'https://www.thecocktaildb.com/images/media/drink/hbkfsh1589574990.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Agitar con hielo. Colar en un vaso frío, decorar y servir. Si se sirve con hielo, colar los ingredientes en un vaso old-fashioned lleno de hielo.'),
+(11005, 'Dry Martini', 'https://www.thecocktaildb.com/images/media/drink/6ck9yi1589574317.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Derecho: Vierta todos los ingredientes en un vaso mezclador con cubitos de hielo. Remover bien. Colar en una copa de martini fría. Exprima el aceite de la cáscara de limón sobre la bebida, o decore con aceitunas.'),
+(11006, 'Daiquiri', 'https://www.thecocktaildb.com/images/media/drink/mrz9091589574515.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en una coctelera con cubitos de hielo. Agitar bien. Colar en una copa de cóctel fría.'),
+(11007, 'Margarita', 'https://www.thecocktaildb.com/images/media/drink/5noda61589575158.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Frota el borde del vaso con la rodaja de lima para que la sal se adhiera a él. Procure humedecer sólo el borde exterior y espolvorear la sal sobre él. La sal debe presentarse en los labios del imbibidor y nunca mezclarse en el cóctel. Agite los demás ingredientes con hielo y viértalos con cuidado en el vaso.'),
+(11008, 'Manhattan', 'https://www.thecocktaildb.com/images/media/drink/yk70e31606771240.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Se remueve con hielo, se cuela en un vaso frío, se adorna y se sirve.'),
+(11009, 'Moscow Mule', 'https://www.thecocktaildb.com/images/media/drink/3pylqc1504370988.jpg', 'Punch / Party Drink', 'Alcoholico', 'Copper Mug', 'Mezcle el vodka y la cerveza de jengibre en un vaso highball lleno de hielo. Añada el zumo de lima. Remover suavemente. Decorar.'),
+(11010, 'After Dinner Cocktail', 'https://www.thecocktaildb.com/images/media/drink/vtytxq1483387578.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes (excepto el gajo de lima) con hielo y colar en una copa de cóctel. Añadir el gajo de lima y servir.'),
+(11011, 'After Supper Cocktail', 'https://www.thecocktaildb.com/images/media/drink/quyxwu1483387610.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11012, 'Alabama Slammer', 'https://www.thecocktaildb.com/images/media/drink/jntghf1606771886.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Verter todos los ingredientes (excepto el zumo de limón) sobre hielo en un vaso highball. Remover, añadir un chorrito de zumo de limón y servir.'),
+(11013, 'Alaska Cocktail', 'https://www.thecocktaildb.com/images/media/drink/wsyryt1483387720.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes con hielo, colar el contenido en una copa de cóctel. Añadir una rodaja de limón y servir.'),
+(11014, 'Alexander', 'https://www.thecocktaildb.com/images/media/drink/0clus51606772388.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agite todos los ingredientes con hielo y cuele el contenido en una copa de cóctel. Espolvorear nuez moscada por encima y servir.'),
+(11016, 'Brandy Alexander', 'https://www.thecocktaildb.com/images/media/drink/mlyk1i1606772340.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey Glass', 'Agite todos los ingredientes (excepto la nuez moscada) con hielo y cuele el contenido en una copa de cóctel. Espolvorear nuez moscada por encima y servir.'),
+(11019, 'Alfie Cocktail', 'https://www.thecocktaildb.com/images/media/drink/ypxsqy1483387829.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Mezclar y agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11020, 'Algonquin', 'https://www.thecocktaildb.com/images/media/drink/uwryxx1483387873.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Mezclar y agitar todos los ingredientes con hielo, colar el contenido en una copa de cóctel y servir.'),
+(11021, 'Allegheny', 'https://www.thecocktaildb.com/images/media/drink/uwvyts1483387934.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes (excepto la piel de limón) con hielo y colar en una copa de cóctel. Añadir el twist de piel de limón y servir.'),
+(11022, 'Allies Cocktail', 'https://www.thecocktaildb.com/images/media/drink/qvprvp1483388104.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes con hielo, colar el contenido en una copa de cóctel y servir.'),
+(11023, 'Almeria', 'https://www.thecocktaildb.com/images/media/drink/rwsyyu1483388181.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en una copa de cóctel.'),
+(11024, 'Almond Joy', 'https://www.thecocktaildb.com/images/media/drink/xutuqs1483388296.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11025, 'Amaretto And Cream', 'https://www.thecocktaildb.com/images/media/drink/dj8n0r1504375018.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar bien con hielo picado, colar el contenido en una copa de cóctel y servir.'),
+(11026, 'Amaretto Mist', 'https://www.thecocktaildb.com/images/media/drink/utpxxq1483388370.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el amaretto en un vaso old-fashioned sobre hielo picado. Añada el gajo de lima y sirva. (Si lo prefiere, puede sustituir la lima por un gajo de limón).'),
+(11027, 'Amaretto Rose', 'https://www.thecocktaildb.com/images/media/drink/3jm41q1493069578.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Vierta el amaretto y el zumo de lima sobre hielo en un vaso Collins. Rellene con club soda y sirva.'),
+(11028, 'Amaretto Stinger', 'https://www.thecocktaildb.com/images/media/drink/vvop4w1493069934.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar bien los ingredientes con hielo picado, colar en una copa de cóctel y servir.'),
+(11029, 'Amaretto Tea', 'https://www.thecocktaildb.com/images/media/drink/b7qzo21493070167.jpg', 'Ordinary Drink', 'Alcoholico', 'Pousse cafe glass', 'Vierta el té caliente en un vaso de pousse-café, utilizando una cuchara en el vaso para evitar que se agriete. Añadir amaretto, pero sin remover. Cubrir con nata montada fría y servir.'),
+(11034, 'Angel Face', 'https://www.thecocktaildb.com/images/media/drink/vaukir1606772580.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo y colar el contenido en una copa de cóctel.'),
+(11046, 'Applecar', 'https://www.thecocktaildb.com/images/media/drink/sbffau1504389764.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11050, 'Apricot Lady', 'https://www.thecocktaildb.com/images/media/drink/7ityp11582579598.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el ron, el brandy de albaricoque, el triple sec, el zumo de limón y la clara de huevo. Agitar bien. Colar en un vaso old fashioned casi lleno de cubitos de hielo. Decorar con la rodaja de naranja.'),
+(11052, 'Archbishop', 'https://www.thecocktaildb.com/images/media/drink/4g6xds1582579703.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned casi lleno de cubitos de hielo, mezcle todos los ingredientes. Remover bien.'),
+(11053, 'Arise My Love', 'https://www.thecocktaildb.com/images/media/drink/wyrrwv1441207432.jpg', 'Ordinary Drink', 'Alcoholico', 'Champagne flute', 'Ponga la crema de menta en una copa de champán. Rellenar con champán frío y servir.'),
+(11054, 'Arthur Tompkins', 'https://www.thecocktaildb.com/images/media/drink/7onfhz1493067921.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle la ginebra, el Grand Marnier y el zumo de limón. Agitar bien. Colar en un vaso sour y decorar con el twist de limón.'),
+(11055, 'Artillery', 'https://www.thecocktaildb.com/images/media/drink/g1vnbe1493067747.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11060, 'Balmoral', 'https://www.thecocktaildb.com/images/media/drink/vysuyq1441206297.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Remover bien. Colar en una copa de cóctel.'),
+(11064, 'Banana Daiquiri', 'https://www.thecocktaildb.com/images/media/drink/k1xatq1504389300.jpg', 'Ordinary Drink', 'Alcoholico', 'Champagne flute', 'Vierta todos los ingredientes en una coctelera con cubitos de hielo. Agitar bien. Colar en una copa de cóctel fría.'),
+(11084, 'Bermuda Highball', 'https://www.thecocktaildb.com/images/media/drink/qrvtww1441206528.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el brandy, la ginebra y el vermut seco en un vaso highball sobre cubitos de hielo. Rellenar con agua carbonatada y remover. Añadir el toque de limón y servir. (Si lo prefiere, puede sustituir el agua con gas por ginger ale).'),
+(11102, 'Black Russian', 'https://www.thecocktaildb.com/images/media/drink/8oxlqf1606772765.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta los ingredientes en un vaso old fashioned lleno de cubitos de hielo. Remover suavemente.'),
+(11106, 'Blackthorn', 'https://www.thecocktaildb.com/images/media/drink/dgj92f1616098672.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover la ginebra de endrinas y el vermut con hielo y colar en una copa de cóctel. Añadir el twist de piel de limón y servir.'),
+(11112, 'Bloody Maria', 'https://www.thecocktaildb.com/images/media/drink/yz0j6z1504389461.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Agitar todos los ingredientes (excepto la rodaja de limón) con hielo picado y colar en un vaso old-fashioned sobre cubitos de hielo. Añadir la rodaja de limón y servir.'),
+(11113, 'Bloody Mary', 'https://www.thecocktaildb.com/images/media/drink/t6caa21582485702.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Remover suavemente y verter todos los ingredientes en un vaso highball. Decorar.'),
+(11117, 'Blue Lagoon', 'https://www.thecocktaildb.com/images/media/drink/5wm4zo1582579154.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el vodka y el curaçao sobre hielo en un vaso alto. Rellenar con limonada, cubrir con la cereza y servir.'),
+(11118, 'Blue Margarita', 'https://www.thecocktaildb.com/images/media/drink/bry4qh1582751040.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Frote el borde de la copa de cóctel con zumo de lima. Sumerja el borde en sal gruesa. Agite el tequila, el curaçao azul y el zumo de lima con hielo, cuele en el vaso con el borde salado y sirva.'),
+(11119, 'Blue Mountain', 'https://www.thecocktaildb.com/images/media/drink/bih7ln1582485506.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en un vaso old-fashioned casi lleno de cubitos de hielo.'),
+(11120, 'Bluebird', 'https://www.thecocktaildb.com/images/media/drink/5jhyd01582579843.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con hielo picado, mezcle la ginebra, el triple sec, el Curaçao y el amargo. Remover bien. Colar en una copa de cóctel y decorar con el twist de limón y la cereza.'),
+(11121, 'Bobby Burns Cocktail', 'https://www.thecocktaildb.com/images/media/drink/km6se51484411608.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes (excepto la piel de limón) con hielo y colar en una copa de cóctel. Añadir el twist de piel de limón y servir.'),
+(11124, 'Boomerang', 'https://www.thecocktaildb.com/images/media/drink/3m6yz81504389551.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle la ginebra, el vermut, el amargo y el licor de marrasquino. Remover bien. Colar en una copa de cóctel y decorar con la cereza.'),
+(11128, 'Boston Sidecar', 'https://www.thecocktaildb.com/images/media/drink/qzs5d11504365962.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11129, 'Boston Sour', 'https://www.thecocktaildb.com/images/media/drink/kxlgbi1504366100.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'Agitar el zumo de limón, el azúcar en polvo, el whisky mezclado y la clara de huevo con hielo picado y colar en un vaso de whisky sour. Añadir la rodaja de limón, coronar con la cereza y servir.'),
+(11145, 'Classic Old-Fashioned', 'https://www.thecocktaildb.com/images/media/drink/w8cxqv1582485254.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned, mezclar el amargo y el agua con el terrón de azúcar, utilizando el dorso de una cucharilla. Llene casi por completo el vaso con cubitos de hielo y añada el bourbon. Decorar con la rodaja de naranja y la cereza. Servir con un bastoncillo.'),
+(11146, 'Bourbon Sling', 'https://www.thecocktaildb.com/images/media/drink/3s36ql1504366260.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el azúcar, el agua, el zumo de limón y el bourbon. Agitar bien. Colar bien. Colar en un vaso highball. Decorar con el twist de limón.'),
+(11147, 'Bourbon Sour', 'https://www.thecocktaildb.com/images/media/drink/dms3io1504366318.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el bourbon, el zumo de limón y el azúcar. Agitar bien. Colar en un vaso de whisky sour, decorar con la rodaja de naranja y la cereza.'),
+(11149, 'Boxcar', 'https://www.thecocktaildb.com/images/media/drink/pwgtpa1504366376.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en un vaso sour.'),
+(11157, 'Brandy Cobbler', 'https://www.thecocktaildb.com/images/media/drink/5xgu591582580586.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned, disuelva el azúcar en la soda. Añada hielo picado hasta que el vaso esté casi lleno. Añada el brandy. Remover bien. Decorar con la cereza y las rodajas de naranja y limón.'),
+(11164, 'Brandy Flip', 'https://www.thecocktaildb.com/images/media/drink/6ty09d1504366461.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el brandy, el huevo, el azúcar y la nata. Agitar bien. Colar en un vaso sour y decorar con nuez moscada.'),
+(11170, 'Brandy Sour', 'https://www.thecocktaildb.com/images/media/drink/b1bxgq1582484872.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'Agitar el brandy, el zumo de limón y el azúcar glas con hielo y colar en un vaso de whisky sour. Decorar con la rodaja de limón, coronar con la cereza y servir.'),
+(11202, 'Caipirinha', 'https://www.thecocktaildb.com/images/media/drink/jgvn7p1582484435.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Poner la lima y el azúcar en un vaso old fashioned y mezclar (triturar los dos ingredientes con un machacador o una cuchara de madera). Llene el vaso con hielo y añada la cachaça.'),
+(11205, 'California Lemonade', 'https://www.thecocktaildb.com/images/media/drink/q5z4841582484168.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en un vaso collins sobre hielo picado. Rellenar con agua carbonatada y remover. Decorar con rodajas de naranja y limón. Añadir la cereza y servir con una pajita.'),
+(11222, 'Casa Blanca', 'https://www.thecocktaildb.com/images/media/drink/usspxq1441553762.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11224, 'Casino Royale', 'https://www.thecocktaildb.com/images/media/drink/3qpv121504366699.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en un vaso sour.'),
+(11227, 'Champagne Cocktail', 'https://www.thecocktaildb.com/images/media/drink/t5pv461606773026.jpg', 'Ordinary Drink', 'Alcoholico', 'Champagne flute', 'Añada una pizca de amargo de Angostura al terrón de azúcar y viértalo en una copa de champán. Añada el coñac y, a continuación, vierta suavemente el champán frío. Decorar con una rodaja de naranja y una cereza al marrasquino.'),
+(11239, 'Cherry Rum', 'https://www.thecocktaildb.com/images/media/drink/twsuvr1441554424.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11242, 'Chicago Fizz', 'https://www.thecocktaildb.com/images/media/drink/qwvwqr1441207763.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en un vaso highball sobre dos cubitos de hielo. Rellenar con agua carbonatada, remover y servir.'),
+(11243, 'Chocolate Black Russian', 'https://www.thecocktaildb.com/images/media/drink/yyvywx1472720879.jpg', 'Ordinary Drink', 'Alcoholico', 'Champagne flute', 'Mezcle todos los ingredientes en una batidora eléctrica y bátalos a baja velocidad durante poco tiempo. Viértalo en una copa de champán fría y sírvalo.'),
+(11251, 'City Slicker', 'https://www.thecocktaildb.com/images/media/drink/dazdlg1504366949.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en una copa de cóctel.'),
+(11255, 'Clove Cocktail', 'https://www.thecocktaildb.com/images/media/drink/qxvtst1461867579.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11288, 'Cuba Libre', 'https://www.thecocktaildb.com/images/media/drink/wmkbfj1606853905.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Poner todos los ingredientes en un vaso Collins lleno de hielo. Decorar con una rodaja de lima.'),
+(11320, 'Dragonfly', 'https://www.thecocktaildb.com/images/media/drink/uc63bh1582483589.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'En un vaso highball casi lleno de cubitos de hielo, mezcle la ginebra y el ginger ale. Remover bien. Decorar con la rodaja de lima.'),
+(11324, 'Dry Rob Roy', 'https://www.thecocktaildb.com/images/media/drink/typuyq1439456976.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle el whisky y el vermut. Remover bien. Colar en una copa de cóctel. Decorar con el twist de limón.'),
+(11326, 'Dubonnet Cocktail', 'https://www.thecocktaildb.com/images/media/drink/pfz3hz1582483111.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes (excepto la piel de limón) con hielo y colar en una copa de cóctel. Añadir el twist de piel de limón y servir.'),
+(11338, 'English Highball', 'https://www.thecocktaildb.com/images/media/drink/dhvr7d1504519752.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el brandy, la ginebra y el vermut dulce en un vaso highball sobre cubitos de hielo. Rellenar con agua carbonatada. Añadir el twist de piel de limón, remover y servir. (Si se prefiere, se puede sustituir el agua con gas por ginger ale).'),
+(11339, 'English Rose Cocktail', 'https://www.thecocktaildb.com/images/media/drink/yxwrpp1441208697.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Frotar el borde de la copa de cóctel con zumo de limón y mojar el borde de la copa en azúcar en polvo. Agitar todos los ingredientes (excepto la cereza) con hielo y colar en un vaso con borde de azúcar. Cubrir con la cereza y servir.'),
+(11368, 'Flying Dutchman', 'https://www.thecocktaildb.com/images/media/drink/mwko4q1582482903.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned casi lleno de cubitos de hielo, mezcle la ginebra y el triple sec. Remuévalo bien.'),
+(11369, 'Flying Scotchman', 'https://www.thecocktaildb.com/images/media/drink/q53l911582482518.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11375, 'Foxy Lady', 'https://www.thecocktaildb.com/images/media/drink/r9cz3q1504519844.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel fría y servir.'),
+(11390, 'Frozen Mint Daiquiri', 'https://www.thecocktaildb.com/images/media/drink/jrhn1q1504884469.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezcle todos los ingredientes con 1 taza de hielo picado en una batidora eléctrica. Bata a velocidad baja durante poco tiempo. Verter en un vaso old-fashioned y servir.'),
+(11391, 'Frozen Pineapple Daiquiri', 'https://www.thecocktaildb.com/images/media/drink/k3aecd1582481679.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail Glass', 'Mezcle todos los ingredientes con 1 taza de hielo picado en una batidora eléctrica. Bata a velocidad baja durante un breve espacio de tiempo. Verter en una copa de cóctel y servir.'),
+(11396, 'Gentleman\'s Club', 'https://www.thecocktaildb.com/images/media/drink/k2r7wv1582481454.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned casi lleno de cubitos de hielo, mezcle todos los ingredientes. Remover bien.'),
+(11403, 'Gin And Tonic', 'https://www.thecocktaildb.com/images/media/drink/k0508k1668422436.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta la ginebra y el agua tónica en un vaso highball casi lleno de cubitos de hielo. Remover bien. Decorar con la rodaja de lima.'),
+(11407, 'Gin Cooler', 'https://www.thecocktaildb.com/images/media/drink/678xt11582481163.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Mezcle el azúcar en polvo y 2 onzas de agua carbonatada en un vaso Collins. Llene el vaso con hielo y añada la ginebra. Rellene con agua carbonatada y remueva. Añada la piel de limón y la espiral de naranja de modo que el extremo de la espiral de naranja cuelgue sobre el borde del vaso.'),
+(11408, 'Gin Daisy', 'https://www.thecocktaildb.com/images/media/drink/z6e22f1582581155.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle la ginebra, el zumo de limón, el azúcar y la granadina. Agitar bien. Verter en un vaso old fashioned y decorar con la cereza y la rodaja de naranja.'),
+(11410, 'Gin Fizz', 'https://www.thecocktaildb.com/images/media/drink/drtihp1606768397.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agite todos los ingredientes con cubitos de hielo, excepto el agua de soda. Verter en un vaso. Añadir agua con gas.'),
+(11415, 'Gin Sling', 'https://www.thecocktaildb.com/images/media/drink/8cl9sm1582581761.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Disolver el azúcar en polvo en la mezcla de agua y zumo de limón. Añadir la ginebra. Verter en un vaso old-fashioned sobre cubitos de hielo y remover. Añadir el twist de piel de naranja y servir.'),
+(11416, 'Gin Smash', 'https://www.thecocktaildb.com/images/media/drink/iprva61606768774.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezcle el azúcar con el agua carbonatada y las ramitas de menta en un vaso old-fashioned. Añada la ginebra y 1 cubito de hielo. Remover, añadir la rodaja de naranja y la cereza, y servir.'),
+(11418, 'Gin Squirt', 'https://www.thecocktaildb.com/images/media/drink/xrbhz61504883702.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Remover la ginebra, la granadina y el azúcar glas con hielo y colar en un vaso highball sobre cubitos de hielo. Rellenar con agua carbonatada y remover. Decorar con los trozos de piña y las fresas y servir.'),
+(11419, 'Gin Swizzle', 'https://www.thecocktaildb.com/images/media/drink/sybce31504884026.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el zumo de lima, el azúcar, la ginebra y el amargo. Agitar bien. Llene casi por completo un vaso colling con cubitos de hielo. Agitar hasta que el vaso esté escarchado. Cuele la mezcla de la coctelera en el vaso y añada la soda.'),
+(11420, 'Gin Toddy', 'https://www.thecocktaildb.com/images/media/drink/jxstwf1582582101.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezcle azúcar en polvo y agua en un vaso old-fashioned. Añada la ginebra y un cubito de hielo. Remover, añadir el twist de piel de limón y servir.'),
+(11423, 'Godfather', 'https://www.thecocktaildb.com/images/media/drink/e5zgao1582582378.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta todos los ingredientes directamente en un vaso old fashioned lleno de cubitos de hielo. Remover suavemente.'),
+(11424, 'Godmother', 'https://www.thecocktaildb.com/images/media/drink/quksqg1582582597.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el vodka y el amaretto en un vaso old-fashioned con hielo y sírvalo.'),
+(11433, 'Grass Skirt', 'https://www.thecocktaildb.com/images/media/drink/qyvprp1473891585.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle la ginebra, el triple sec, el zumo de piña y la granadina. Agitar bien. Verter en un vaso old fashioned y decorar con la rodaja de piña.'),
+(11462, 'Harvey Wallbanger', 'https://www.thecocktaildb.com/images/media/drink/7os4gs1606854357.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Mezcle el vodka y el zumo de naranja con hielo en el vaso y, a continuación, deje flotar el Galliano por encima. Decorar y servir.'),
+(11470, 'Havana Cocktail', 'https://www.thecocktaildb.com/images/media/drink/59splc1504882899.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en una copa de cóctel.'),
+(11472, 'Hawaiian Cocktail', 'https://www.thecocktaildb.com/images/media/drink/ujoh9x1504882987.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11476, 'Highland Fling Cocktail', 'https://www.thecocktaildb.com/images/media/drink/0bkwca1492975553.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes (excepto la aceituna) con hielo y colar en una copa de cóctel. Añada la aceituna y sirva.'),
+(11524, 'Imperial Fizz', 'https://www.thecocktaildb.com/images/media/drink/zj1usl1504884548.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en un vaso highball sobre dos cubitos de hielo. Rellenar con agua carbonatada, remover y servir.'),
+(11528, 'Irish Spring', 'https://www.thecocktaildb.com/images/media/drink/sot8v41504884783.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Verter todos los ingredientes (excepto la rodaja de naranja y la cereza) en un vaso collins sobre cubitos de hielo. Decorar con la rodaja de naranja, añadir la cereza por encima y servir.'),
+(11542, 'Jack Rose Cocktail', 'https://www.thecocktaildb.com/images/media/drink/uuqqrv1439907068.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11558, 'Japanese Fizz', 'https://www.thecocktaildb.com/images/media/drink/37vzv11504884831.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en un vaso highball sobre dos cubitos de hielo. Rellenar con agua carbonatada, remover y servir.'),
+(11566, 'Jewel Of The Nile', 'https://www.thecocktaildb.com/images/media/drink/hx4nrb1504884947.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Remover bien. Colar en una copa de cóctel.'),
+(11580, 'John Collins', 'https://www.thecocktaildb.com/images/media/drink/0t4bv71606854479.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Vierta todos los ingredientes directamente en un vaso highball lleno de hielo. Remover suavemente. Decorar. Añada un chorrito de amargo de Angostura.'),
+(11600, 'Kamikaze', 'https://www.thecocktaildb.com/images/media/drink/d7ff7u1606855412.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo. Cuele en un vaso, decore y sirva.'),
+(11604, 'Kentucky Colonel', 'https://www.thecocktaildb.com/images/media/drink/utqwpu1478820348.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, combinar el courbon y el Benedictine. Agitar y colar en una copa de cóctel. Decorar con el twist de limón.'),
+(11634, 'Lady Love Fizz', 'https://www.thecocktaildb.com/images/media/drink/20d63k1504885263.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en una copa de cóctel sobre dos cubitos de hielo. Rellenar con agua carbonatada, remover y servir.'),
+(11658, 'Loch Lomond', 'https://www.thecocktaildb.com/images/media/drink/rpvtpr1468923881.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle el whisky, el Drambuie y el vermut. Remover bien. Colar en una copa de cóctel. Decorar con el twist de limón.'),
+(11662, 'London Town', 'https://www.thecocktaildb.com/images/media/drink/rpsrqv1468923507.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Remover bien. Colar en una copa de cóctel.'),
+(11664, 'Lone Tree Cocktail', 'https://www.thecocktaildb.com/images/media/drink/tsxpty1468923417.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11666, 'Lone Tree Cooler', 'https://www.thecocktaildb.com/images/media/drink/wsyqry1479298485.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Remover el azúcar en polvo y 2 onzas de agua carbonatada en un vaso collins. Llene el vaso con hielo, añada la ginebra y el vermut y remueva. Rellene con agua carbonatada y vuelva a remover. Añadir el twist de piel de limón y la espiral de naranja de modo que el extremo cuelgue sobre el borde del vaso.'),
+(11670, 'Lord And Lady', 'https://www.thecocktaildb.com/images/media/drink/quwrys1468923219.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el ron y la Tía María en un vaso old-fashioned casi lleno de cubitos de hielo. Remuévalo bien.'),
+(11690, 'Mai Tai', 'https://www.thecocktaildb.com/images/media/drink/twyrrp1439907470.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes con hielo. Colar en un vaso. Decorar y servir con pajita.'),
+(11720, 'Martinez Cocktail', 'https://www.thecocktaildb.com/images/media/drink/wwxwvr1439906452.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes (excepto la cereza) con hielo y colar en una copa de cóctel. Cubrir con la cereza y servir.'),
+(11728, 'Martini', 'https://www.thecocktaildb.com/images/media/drink/71t8581504353095.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Derecho: Vierta todos los ingredientes en un vaso mezclador con cubitos de hielo. Remover bien. Colar en una copa de martini fría. Exprima el aceite de la cáscara de limón sobre la bebida, o decore con aceitunas.'),
+(11766, 'Midnight Cowboy', 'https://www.thecocktaildb.com/images/media/drink/vsxxwy1441208133.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en una copa de cóctel.'),
+(11786, 'Mississippi Planters Punch', 'https://www.thecocktaildb.com/images/media/drink/urpyqs1439907531.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en un vaso collins sobre cubitos de hielo. Rellenar con agua carbonatada, remover y servir.'),
+(11798, 'Monkey Wrench', 'https://www.thecocktaildb.com/images/media/drink/bw2noj1582473243.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta todos los ingredientes en un vaso old-fashioned casi lleno de cubitos de hielo. Remuévalo bien.'),
+(11870, 'Orange Oasis', 'https://www.thecocktaildb.com/images/media/drink/su1olx1582473812.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agitar el brandy, la ginebra y el zumo de naranja con hielo y colar en un vaso highball sobre cubitos de hielo. Rellenar con ginger ale, remover y servir.'),
+(11872, 'Orgasm', 'https://www.thecocktaildb.com/images/media/drink/vr6kle1504886114.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agite todos los ingredientes con hielo, cuele en una copa de cóctel fría y sirva.'),
+(11989, 'Queen Charlotte', 'https://www.thecocktaildb.com/images/media/drink/vqruyt1478963249.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Verter el vino tinto y la granadina en un vaso collins sobre cubitos de hielo. Rellenar con refresco de lima-limón, remover y servir.'),
+(12055, 'Royal Fizz', 'https://www.thecocktaildb.com/images/media/drink/wrh44j1504390609.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto la cola) con hielo y colar en un vaso Collins frío. Rellenar con cola y servir.'),
+(12067, 'Rum Cobbler', 'https://www.thecocktaildb.com/images/media/drink/5vh9ld1504390683.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned, disuelva el azúcar en la soda. Añada hielo picado hasta que el vaso esté casi lleno. Añada el ron. Remover bien. Decorar con la cereza y las rodajas de naranja y limón.'),
+(12071, 'Rum Cooler', 'https://www.thecocktaildb.com/images/media/drink/2hgwsb1504888674.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Vierta el ron y la soda en un vaso collins casi lleno de cubitos de hielo. Remover bien y decorar con la rodaja de limón.'),
+(12087, 'Rum Milk Punch', 'https://www.thecocktaildb.com/images/media/drink/w64lqm1504888810.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto la nuez moscada) con hielo y colar en un vaso Collins. Espolvorear nuez moscada por encima y servir.'),
+(12089, 'Rum Old-fashioned', 'https://www.thecocktaildb.com/images/media/drink/otn2011504820649.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezcle el azúcar en polvo, el agua y el amargo en un vaso old-fashioned. Cuando el azúcar se haya disuelto, añada cubitos de hielo y ron ligero. Añadir el twist de piel de lima, dejar flotar el ron de 151 grados por encima y servir.'),
+(12097, 'Rum Toddy', 'https://www.thecocktaildb.com/images/media/drink/athdk71504886286.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Disuelva el azúcar en polvo en agua en un vaso old-fashioned. Añada el ron y un cubito de hielo y remueva. Añada el toque de piel de limón y sirva.'),
+(12101, 'Rusty Nail', 'https://www.thecocktaildb.com/images/media/drink/yqsvtw1478252982.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el whisky y el Drambuie en un vaso old-fashioned casi lleno de cubitos de hielo. Remover bien. Decorar con el twist de limón.'),
+(12127, 'Sazerac', 'https://www.thecocktaildb.com/images/media/drink/vvpxwy1439907208.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Enjuaga un vaso old-fashioned frío con la absenta, añade hielo picado y resérvalo. Remover el resto de ingredientes con hielo y reservar. Deseche el hielo y el exceso de absenta del vaso preparado y cuele la bebida en el vaso. Añada la piel de limón para adornar.'),
+(12130, 'Scooter', 'https://www.thecocktaildb.com/images/media/drink/twuptu1483388307.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar bien todos los ingredientes con hielo picado, colar en una copa de cóctel y servir.'),
+(12138, 'Scotch Cobbler', 'https://www.thecocktaildb.com/images/media/drink/1q7coh1504736227.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el whisky, el brandy y el curaçao sobre hielo en un vaso old-fashioned. Añada la rodaja de naranja, cubra con la ramita de menta y sirva.'),
+(12188, 'Sherry Eggnog', 'https://www.thecocktaildb.com/images/media/drink/xwrpsv1478820541.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar el jerez, el azúcar glas y el huevo con hielo y colar en un vaso Collins. Rellenar con leche y remover. Espolvorear nuez moscada por encima y servir.'),
+(12308, 'Stone Sour', 'https://www.thecocktaildb.com/images/media/drink/vruvtp1472719895.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'Vierte la sambuca en un vaso de chupito y luego vierte la crema irlandesa por encima para que los dos líquidos no se mezclen.'),
+(12362, 'Tequila Fizz', 'https://www.thecocktaildb.com/images/media/drink/2bcase1504889637.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto el ginger ale) con hielo y colar en un vaso collins sobre cubitos de hielo. Rellenar con ginger ale, remover y servir.'),
+(12402, 'Tom Collins', 'https://www.thecocktaildb.com/images/media/drink/7cll921606854636.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle la ginebra, el zumo de limón y el azúcar. Agitar bien. Colar en un vaso collins también lleno de cubitos de hielo. Añadir la soda. Remover y decorar con la cereza y la rodaja de naranja.'),
+(12436, 'Van Vleet', 'https://www.thecocktaildb.com/images/media/drink/fgq2bl1492975771.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Agitar todos los ingredientes con hielo, colar en un vaso old-fashioned sobre cubitos de hielo y servir.'),
+(12444, 'Vesuvio', 'https://www.thecocktaildb.com/images/media/drink/26cq601492976203.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Agitar todos los ingredientes con hielo, colar en un vaso old-fashioned sobre cubitos de hielo y servir.'),
+(12446, 'Veteran', 'https://www.thecocktaildb.com/images/media/drink/iwml9t1492976255.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el ron y el licor de cereza en un vaso old-fashioned casi lleno de cubitos de hielo. Remuévalo bien.'),
+(12452, 'Victory Collins', 'https://www.thecocktaildb.com/images/media/drink/lx0lvs1492976619.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto la rodaja de naranja) con hielo y colar en un vaso collins sobre cubitos de hielo. Añadir la rodaja de naranja y servir.'),
+(12518, 'Whisky Mac', 'https://www.thecocktaildb.com/images/media/drink/yvvwys1461867858.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Vierta ambos ingredientes en una copa de vino sin hielo.'),
+(12528, 'White Russian', 'https://www.thecocktaildb.com/images/media/drink/vsrupw1472405732.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el vodka y el licor de café sobre cubitos de hielo en un vaso old-fashioned. Rellenar con nata ligera y servir.'),
+(12560, 'Afterglow', 'https://www.thecocktaildb.com/images/media/drink/vuquyv1468876052.jpg', 'Cocktail', 'No Alcoholico', 'Highball Glass', 'Mezclar. Servir con hielo.'),
+(12562, 'Alice Cocktail', 'https://www.thecocktaildb.com/images/media/drink/qyqtpv1468876144.jpg', 'Cocktail', 'No Alcoholico', 'Cocktail glass', 'Agitar bien y colar en una copa de cóctel grande.'),
+(12572, 'Bora Bora', 'https://www.thecocktaildb.com/images/media/drink/xwuqvw1473201811.jpg', 'Cocktail', 'No Alcoholico', 'Highball glass', 'Preparar en una batidora o coctelera, servir en un vaso highball con hielo. Decorar con 1 rodaja de piña y una cereza.'),
+(12618, 'Orangeade', 'https://www.thecocktaildb.com/images/media/drink/ytsxxw1441167732.jpg', 'Cocktail', 'No Alcoholico', 'Highball glass', 'Ponga unos cubitos de hielo en un vaso grande, añada zumo de limón, zumo de naranja, jarabe de azúcar y remueva bien. Añada agua con gas fría y sírvalo con una pajita.'),
+(12630, 'Rail Splitter', 'https://www.thecocktaildb.com/images/media/drink/stsuqq1441207660.jpg', 'Cocktail', 'No Alcoholico', 'Highball glass', 'Mezcle el jarabe de azúcar con el zumo de limón en un vaso alto. Rellenar con ginger ale.'),
+(12656, 'Banana Strawberry Shake', 'https://www.thecocktaildb.com/images/media/drink/vqquwx1472720634.jpg', 'Shake', 'No Alcoholico', 'Highball Glass', 'Mézclelo todo en una batidora hasta obtener una mezcla homogénea.'),
+(12658, 'Banana Strawberry Shake Daiquiri', 'https://www.thecocktaildb.com/images/media/drink/uvypss1472720581.jpg', 'Shake', 'No Alcoholico', 'Cocktail Glass', 'Mézclelo todo en una batidora hasta obtener una mezcla homogénea.'),
+(12670, 'Fruit Cooler', 'https://www.thecocktaildb.com/images/media/drink/i3tfn31484430499.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Mezcle las fresas con el azúcar y déjelas reposar toda la noche en el frigorífico. Corte el limón y reserve dos rodajas. Exprima el resto. Mezcle el zumo de limón, las fresas, el zumo de manzana y el agua con gas. Añadir rodajas de limón (decorar, de verdad). En los vasos, poner cubitos de hielo y una rodaja de manzana. Verter la bebida y servir.'),
+(12672, 'Fruit Flip-Flop', 'https://www.thecocktaildb.com/images/media/drink/nfdx6p1484430633.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Ponga todos los ingredientes en la jarra de la batidora, tápela y bátala a velocidad media hasta que estén bien mezclados. Verter en un vaso alto, 2 medianos o 3 pequeños y beber.'),
+(12674, 'Fruit Shake', 'https://www.thecocktaildb.com/images/media/drink/q0fg2m1484430704.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Mezclar hasta que quede suave.'),
+(12688, 'Just a Moonmint', 'https://www.thecocktaildb.com/images/media/drink/znald61487604035.jpg', 'Shake', 'No Alcoholico', 'Highball Glass', 'Ponga todos los ingredientes en la jarra de la batidora, tápela y bátala a velocidad media hasta que estén bien mezclados. Verter en un vaso alto, 2 medianos o 3 pequeños y beber.'),
+(12690, 'Lassi - A South Indian Drink', 'https://www.thecocktaildb.com/images/media/drink/iq6scx1487603980.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Triturar en la batidora durante 3 segundos. El lassi es una de las cosas más fáciles de hacer, y hay muchas formas de prepararlo. Básicamente, es suero de leche (yogur batido con agua), y puedes elegir casi cualquier consistencia que te guste, desde la más fina a la más espesa. Sírvalo frío.'),
+(12692, 'Lassi Khara', 'https://www.thecocktaildb.com/images/media/drink/m1suzm1487603970.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Mezclar (frappe) en la batidora hasta que esté espumoso. Añada las hojas de curry arrancadas y sírvalo frío.'),
+(12694, 'Lassi Raita', 'https://www.thecocktaildb.com/images/media/drink/s4x0qj1487603933.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Mezclar el yogur y los cubitos de hielo, hasta que el yogur se vuelva más líquido. Añadir azúcar al gusto. El limón es opcional, pero le da un sabor ligeramente ácido. Una pizca de sal. La raita también es buena para el verano. En lugar de una ensalada tradicional, se puede preparar raita.'),
+(12696, 'Lassi - Sweet', 'https://www.thecocktaildb.com/images/media/drink/9jeifz1487603885.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'Poner todos los ingredientes en una batidora y batir hasta que esté bien espumoso. Sírvalo frío.'),
+(12698, 'Lassi - Mango', 'https://www.thecocktaildb.com/images/media/drink/1bw6sd1487603816.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'Póngalo todo en una batidora y viértalo sobre hielo picado. También puedes utilizar otras frutas como fresas y plátanos.'),
+(12702, 'Lemouroudji', 'https://www.thecocktaildb.com/images/media/drink/eirmo71487603745.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Exprimir los limones. Pelar y rallar el jengibre. Coloca el jengibre rallado y una pizca de pimienta de cayena en un trozo de estopilla y haz un nudo. Déjalo en remojo en el agua. Pasados unos 15 minutos, añada el azúcar y el zumo de limón. Enfríe y sirva.'),
+(12704, 'Limeade', 'https://www.thecocktaildb.com/images/media/drink/5jdp5r1487603680.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'En un vaso grande, ponga el zumo de lima y el azúcar, y remueva bien. Añada agua de Seltz fría hasta llenar. Ponga las cáscaras de lima en el vaso. Beber. Repite la operación hasta que se acaben las cáscaras de lima o el agua de seltz.'),
+(12706, 'Imperial Cocktail', 'https://www.thecocktaildb.com/images/media/drink/bcsj2e1487603625.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar con hielo y colar en copa de cóctel.'),
+(12708, 'Banana Cantaloupe Smoothie', 'https://www.thecocktaildb.com/images/media/drink/uqxqsy1468876703.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Exprimir el melón, verter el zumo en la licuadora, añadir el plátano y licuar.'),
+(12710, 'Apple Berry Smoothie', 'https://www.thecocktaildb.com/images/media/drink/xwqvur1468876473.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Echar todo en una batidora y licuar.'),
+(12712, 'Grape lemon pineapple Smoothie', 'https://www.thecocktaildb.com/images/media/drink/54z5h71487603583.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'Echar todo en una batidora y licuar.'),
+(12714, 'Kiwi Papaya Smoothie', 'https://www.thecocktaildb.com/images/media/drink/jogv4w1487603571.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Echar todo en una batidora y licuar.'),
+(12716, 'Mango Orange Smoothie', 'https://www.thecocktaildb.com/images/media/drink/vdp2do1487603520.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Echar todo en una batidora y licuar.'),
+(12718, 'Pineapple Gingerale Smoothie', 'https://www.thecocktaildb.com/images/media/drink/eg9i1d1487603469.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Echar todo en una batidora y licuar.'),
+(12720, 'Kill the cold Smoothie', 'https://www.thecocktaildb.com/images/media/drink/7j1z2e1487603414.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'Haz zumo de jengibre y limón y añádelo al agua caliente. Puede añadir cardomomo.'),
+(12726, 'Tomato Tang', 'https://www.thecocktaildb.com/images/media/drink/869qr81487603278.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'Coloque todos los ingredientes en la jarra de la licuadora, cubra y bata a velocidad media hasta que estén bien mezclados. Vierta un vaso alto, 2 medianos o 3 pequeños y bébalo.'),
+(12728, 'Yoghurt Cooler', 'https://www.thecocktaildb.com/images/media/drink/trttrv1441254466.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Coloque todos los ingredientes en la jarra de la licuadora, cubra y bata a velocidad media hasta que estén bien mezclados. Vierta un vaso alto, 2 medianos o 3 pequeños y bébalo. Nota: Utilice mucho hielo en este caso. ¡Excelente para los días calurosos! Para agregar hielo: Retire el centro de la tapa mientras la licuadora está encendida; deje caer 3 o 4 cubitos de hielo y licue hasta que estén completamente triturados.'),
+(12730, 'Castillian Hot Chocolate', 'https://www.thecocktaildb.com/images/media/drink/3nbu4a1487603196.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Transfiera el cacao y el azúcar a una cacerola mediana. Disuelva la maicena en el agua y agregue el cacao y el azúcar hasta obtener una pasta suave. Comience a calentar la mezcla, revolviéndola con un batidor y vierta poco a poco la leche. Continúe revolviendo con el batidor mientras lleva el líquido a fuego lento. Deje que el chocolate hierva a fuego lento durante unos 10 minutos, revolviendo con frecuencia, hasta que esté espeso, brillante y completamente suave. Sirva muy caliente en una taza de café. Sirve seis.');
+INSERT INTO `cocteles` (`id`, `nombre`, `miniatura`, `categoria`, `tipo`, `vaso`, `instrucciones`) VALUES
+(12732, 'Chocolate Beverage', 'https://www.thecocktaildb.com/images/media/drink/jbqrhv1487603186.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Hervir la leche a baño maría durante cinco minutos. Retirar del fuego y agregar el chocolate mezclado con la canela, poco a poco, batiendo con molinillo o batidora de huevos después de cada adición. Cuando el chocolate esté bien mezclado, calentar hasta el punto de ebullición. Colóquelo sobre el fondo del baño maría y agregue los huevos, batiendo constantemente, hasta que estén bien mezclados y la mezcla esté espumosa. Servir en taza de café. Sirve ocho.'),
+(12734, 'Chocolate Drink', 'https://www.thecocktaildb.com/images/media/drink/q7w4xu1487603180.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Derretir la barra en una pequeña cantidad de agua hirviendo. Agrega la leche. Cocine a fuego lento, batiendo suavemente (supongo que con un batidor) hasta que esté bien caliente. ¡No dejes que hierva! Servir en taza de café.'),
+(12736, 'Drinking Chocolate', 'https://www.thecocktaildb.com/images/media/drink/u6jrdf1487603173.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Calentar la nata y la leche con la canela y la vaina de vainilla muy lentamente durante 15-20 minutos. (Si no tiene frijoles, agregue 1-2 cucharaditas de vainilla después de calentar). Retire el frijol y la canela. Agrega el chocolate. Mezclar hasta que se derrita por completo. Sirva cubierto con un poco de crema batida fresca muy densa. Sirve 1 o 2 porciones dependiendo de qué tan glotón seas. Para un chocolate más rico, use 4 oz de leche, 4 oz de crema, 4 oz de chocolate. Servir en taza de café.'),
+(12738, 'Hot Chocolate to Die for', 'https://www.thecocktaildb.com/images/media/drink/0lrmjp1487603166.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Derretir el chocolate, la mantequilla y la vainilla al baño maría. Cuando todo esté suave, agrega la crema.'),
+(12744, 'Microwave Hot Cocoa', 'https://www.thecocktaildb.com/images/media/drink/8y4x5f1487603151.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Combine el azúcar, el cacao, la sal y el agua caliente en una taza medidora microresistente de 1 cuarto (o taza de café). Cocine en el microondas a potencia ALTA (100%) durante 1 a 1 1/2 minutos o hasta que hierva. Agregue la leche, revuelva y cocine en el microondas durante 1 1/2 a 2 minutos más o hasta que esté caliente. Agregue la vainilla y mezcle bien.'),
+(12746, 'Nuked Hot Chocolate', 'https://www.thecocktaildb.com/images/media/drink/xcu6nb1487603142.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Mezcle con un poco de leche (aproximadamente 1 oz) en una taza de café. Taza nuclear durante unos 30-50 segundos. Revuelve hasta que el cacao calentado se disuelva. Llene la taza con leche. Nuke durante 1-2 minutos, dependiendo de la potencia y las preferencias en cuanto a las piezas bucales quemadas.'),
+(12748, 'Orange Scented Hot Chocolate', 'https://www.thecocktaildb.com/images/media/drink/hdzwrh1487603131.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Combine todos los ingredientes en una cacerola mediana y pesada. Revuelve a fuego lento hasta que el chocolate se derrita. Aumente el fuego y deje que hierva, revolviendo con frecuencia. Retirar del fuego y batir hasta que esté espumoso. Regresar al fuego y dejar hervir nuevamente. Retirar del fuego, batir hasta que esté espumoso. Repita calentar y batir una vez más. Deseche la cáscara de naranja. (Se puede preparar con 2 horas de anticipación. Dejar reposar a temperatura ambiente. Antes de servir, dejar hervir, retirar del fuego y batir hasta que esté espumoso). Vierta el chocolate caliente en tazas de café. Rinde 2 porciones.'),
+(12750, 'Spanish chocolate', 'https://www.thecocktaildb.com/images/media/drink/pra8vt1487603054.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Revuelve la leche con el chocolate y la canela a fuego lento hasta que el chocolate se disuelva. Agrega los huevos y bate la mezcla hasta que espese, cuidando que no hierva. Servir en taza de café.'),
+(12752, 'Lemon Shot', 'https://www.thecocktaildb.com/images/media/drink/mx31hv1487602979.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Mezcle Galliano y Absolut Citron en un vaso de chupito, coloque una rodaja de limón espolvoreada con azúcar sobre el vaso y vierta ron sobre la rodaja y el vaso. Enciende el ron con un encendedor y deja quemar por un segundo. Dispara rápido y chupa limón. Si se hace correctamente, sabrá a un trago de limonada dulce.'),
+(12754, 'Sex on the Beach', 'https://www.thecocktaildb.com/images/media/drink/fi67641668420787.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Coloque todos los ingredientes en un vaso alto lleno de hielo. Adorne con una rodaja de naranja.'),
+(12756, 'Autodafé', 'https://www.thecocktaildb.com/images/media/drink/7dkf0i1487602928.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Mezclar y rellenar con agua con gas. Bebido por finlandeses en un día soleado en cualquier época del año y día.'),
+(12758, 'Gagliardo', 'https://www.thecocktaildb.com/images/media/drink/lyloe91487602877.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar bien y servir en copa de cóctel. Este es un cóctel casero de American/Internet Bar del Pozzo, Pavia, Italia.'),
+(12760, 'Surf City Lifesaver', 'https://www.thecocktaildb.com/images/media/drink/2rzfer1487602699.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Mucho hielo y refrescos en un vaso alto con una cereza y una sonrisa.'),
+(12762, 'Grizzly Bear', 'https://www.thecocktaildb.com/images/media/drink/k6v97f1487602550.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Servido con hielo. Suena desagradable, pero sabe muy bien.'),
+(12764, 'Karsk', 'https://www.thecocktaildb.com/images/media/drink/808mxk1487602471.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Se pone una moneda de cobre en una taza de café y se llena con café hasta que ya no se vea la moneda, después se añade alcohol hasta que se vea la moneda. Especialidad noruega.'),
+(12766, 'Happy Skipper', 'https://www.thecocktaildb.com/images/media/drink/42w2g41487602448.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el ron Captain Morgan\'s Spiced sobre hielo, llene el vaso hasta arriba con Ginger Ale. Adorne con lima. Sabe como un refresco de crema. Llamado así por la referencia a Gilligan\'s Island (\"The Captain\" *in* \"Ginger\" is a Happy Skipper!)'),
+(12768, 'Frappé', 'https://www.thecocktaildb.com/images/media/drink/vqwryq1441245927.jpg', 'Coffee / Tea', 'No Alcoholico', 'Highball Glass', 'Mezclar. Licuar a máxima velocidad durante 1 minuto. Verter en un vaso y beber con pajita. Notas: Esto funciona mejor si todo está frío (si haces café fresco, mézclalo con la leche y déjalo reposar en la nevera durante 1/2 hora. Si no está espumoso, añade más leche, o incluso un poco más de leche en polvo. La espuma se va convirtiendo poco a poco en líquido en el fondo del vaso, por lo que se puede beber durante media hora, sin que deje de aparecer café helado en el fondo. Muy refrescante.'),
+(12770, 'Iced Coffee', 'https://www.thecocktaildb.com/images/media/drink/ytprxy1454513855.jpg', 'Coffee / Tea', 'No Alcoholico', 'Coffee mug', 'Mezclar hasta que el café y el azúcar se disuelvan. Agrega la leche. Agite bien. Usar una licuadora o una batidora produce una bebida muy espumosa. Servir en taza de café.'),
+(12772, 'Iced Coffee Fillip', 'https://www.thecocktaildb.com/images/media/drink/sxtxrp1454514223.jpg', 'Coffee / Tea', 'Alcoholico', 'Coffee mug', 'Mezclar en una taza de café y enfriar antes de servir.'),
+(12774, 'Masala Chai', 'https://www.thecocktaildb.com/images/media/drink/uyrpww1441246384.jpg', 'Coffee / Tea', 'No Alcoholico', 'Coffee Mug', 'Pon a hervir 2 tazas de agua. Agrega todos los ingredientes y vuelve a hervir durante unos 15 segundos. Dejar reposar por un minuto. Calienta la leche en una olla. Filtra el té en tazas. Agrega la leche y el azúcar. Eso es todo.'),
+(12776, 'Melya', 'https://www.thecocktaildb.com/images/media/drink/xwtptq1441247579.jpg', 'Coffee / Tea', 'No Alcoholico', 'Coffee mug', 'Prepara café expreso. En una taza de café, coloca 1 cucharadita de cacao en polvo sin azúcar, luego cubre una cucharadita con miel y rocíala en la taza. Revuelve mientras se prepara el café, esta es la parte divertida. El cacao parece cubrir la miel sin mezclarse, por lo que se obtiene una masa polvorienta y pegajosa que parece que nunca se mezclará. Entonces, de repente, ¡listo! Parece salsa de chocolate amargo. Vierta el espresso caliente sobre la miel, revolviendo para que se disuelva. Servir con crema.'),
+(12780, 'Spiking coffee', 'https://www.thecocktaildb.com/images/media/drink/isql6y1487602375.jpg', 'Coffee / Tea', 'No Alcoholico', 'Coffee mug', 'Por cierto, una pizca de canela es una buena adición al café, pero el verdadero paraíso es una semilla de cardamomo. Eso sí, lo sirves en una taza de café.'),
+(12782, 'Thai Coffee', 'https://www.thecocktaildb.com/images/media/drink/wquwxs1441247025.jpg', 'Coffee / Tea', 'No Alcoholico', 'Highball glass', 'Coloca el café y las especias en el cono de filtro de tu cafetera. Prepare el café como de costumbre y déjelo enfriar. En un vaso alto, disuelve 1 o 2 cucharaditas de azúcar en una onza de café (es más fácil de disolver que si lo pones directamente sobre hielo). Agregue 5-6 cubitos de hielo y vierta el café hasta aproximadamente 1 pulgada de la parte superior del vaso. Coloca una cuchara sobre el café y vierte lentamente la crema para batir en la cuchara. Esto hará que la crema flote sobre el café en lugar de dispersarse inmediatamente.'),
+(12784, 'Thai Iced Coffee', 'https://www.thecocktaildb.com/images/media/drink/rqpypv1441245650.jpg', 'Coffee / Tea', 'No Alcoholico', 'Highball glass', 'Prepare una taza de café con una buena concentración europea. En el café molido añadir 2 o 3 vainas de cardamomo recién molidas. Endulce mientras esté caliente y luego enfríe rápidamente. Sirva en un vaso alto con hielo y crema. Para obtener el efecto de capas, coloque una cuchara encima del café y vierta la leche con cuidado en la cuchara para que flote sobre la superficie del café.'),
+(12786, 'Thai Iced Tea', 'https://www.thecocktaildb.com/images/media/drink/trvwpu1441245568.jpg', 'Coffee / Tea', 'No Alcoholico', 'Highball glass', 'Combine el té tailandés (es decir, el polvo), el agua hirviendo y la leche condensada azucarada, revuelva hasta que se mezclen. Vierta en 2 vasos altos llenos de cubitos de hielo. Adorne con hojas de menta. Rinde 2 porciones.'),
+(12790, 'Absinthe #2', 'https://www.thecocktaildb.com/images/media/drink/uxxtrt1472667197.jpg', 'Homemade Liqueur', 'Alcoholico', 'Jar', 'Mezclar y dejar reposar unos días. Colar la mezcla a través de un filtro de café. Para servir, mezcle 1 parte de absenta con 4 partes de agua, agregue hielo y disfrútelo.'),
+(12792, 'Amaretto Liqueur', 'https://www.thecocktaildb.com/images/media/drink/swqxuv1472719649.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Mezclar el azúcar y 3/4 de taza de agua en un cazo pequeño. Llevar a ebullición, removiendo constantemente. Reducir el fuego y cocer a fuego lento hasta que se disuelva todo el azúcar. Retirar del fuego y dejar enfriar. En un recipiente de envejecimiento, mezcle las mitades de albaricoque, el extracto de almendra, el alcohol de grano con 1/2 taza de agua y el brandy. Incorporar la mezcla de jarabe de azúcar enfriada. Tapar y dejar envejecer durante 2 días. Retirar las mitades de albaricoque. (Guardar las mitades de albaricoque, se pueden utilizar para cocinar). Añadir colorante alimentario y glicerina. Remover, volver a tapar y seguir envejeciendo de 1 a 2 meses. Volver a embotellar al gusto. El licor está listo para servir, pero seguirá mejorando con el envejecimiento.'),
+(12794, 'Angelica Liqueur', 'https://www.thecocktaildb.com/images/media/drink/yuurps1472667672.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Mezclar todas las hierbas, frutos secos y especias con el vodka en un recipiente de envejecimiento de 1 litro o más. Tapar herméticamente y agitar a diario durante 2 semanas. Colar a través de una tela de muselina fina o un filtro de café, desechando los sólidos. Limpiar el recipiente de envejecimiento. Volver a poner el líquido en el recipiente. Poner el azúcar y el agua en un cazo y remover a fuego medio. Cuando el azúcar se haya disuelto por completo, apartar y dejar enfriar. Una vez frío, mezclar con el colorante alimentario y añadir al licor líquido. Tapar y dejar envejecer en un lugar fresco y oscuro durante un mes.'),
+(12796, 'Caribbean Orange Liqueur', 'https://www.thecocktaildb.com/images/media/drink/qwxuwy1472667570.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Picar muy fina la corteza de color brillante de las naranjas (sin blanco). Secar la piel en papel absorbente para eliminar el exceso de aceite. Poner la piel en un tarro de 4 tazas con tapa de rosca. Añadir 2 tazas de vodka. Cerrar el tarro. Guárdelo en un lugar fresco y oscuro durante 2 días o hasta que el vodka haya absorbido el sabor. Retire la cáscara y añada el vodka restante. Cierre el tarro y añada la taza de vodka restante. Cierre el tarro y guárdelo en un lugar fresco y oscuro durante al menos 1 mes para que envejezca.'),
+(12798, 'Coffee Liqueur', 'https://www.thecocktaildb.com/images/media/drink/ryvtsu1441253851.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Mezclar el café, el azúcar y el agua. Cocer a fuego lento durante 1 hora y dejar enfriar. Añadir la vainilla y el vodka. Envejecer en un tarro cerrado de 2 a 3 semanas.'),
+(12800, 'Coffee-Vodka', 'https://www.thecocktaildb.com/images/media/drink/qvrrvu1472667494.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Hervir el agua y el azúcar hasta que se disuelvan. Apague el fuego. Añadir lentamente el café instantáneo seco y seguir removiendo. Añadir una vaina de vainilla picada al vodka y, a continuación, mezclar el jarabe de azúcar enfriado y la solución de café con el vodka. Tapar bien y agitar enérgicamente todos los días durante 3 semanas. Colar y filtrar. También es mejor dejar enfriar completamente la mezcla de azúcar para que el vodka no se evapore al añadirlo. Si desea un licor más suave, puede añadir una cucharadita de glicerina al producto final.'),
+(12802, 'Cranberry Cordial', 'https://www.thecocktaildb.com/images/media/drink/qtspsx1472667392.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Poner los arándanos picados en un tarro de 2 litros con tapa hermética. Añada el azúcar y el ron. Ajuste bien la tapa y coloque el tarro en un lugar fresco y oscuro. Invierta el tarro y agítelo todos los días durante seis semanas. Cuela el cordial en botellas y ciérralas con tapones de corcho.'),
+(12808, 'Creme de Menthe', 'https://www.thecocktaildb.com/images/media/drink/yxswtp1441253918.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Llevar el azúcar y el agua a ebullición y cocer a fuego lento durante 10 minutos. Dejar enfriar. Añadir el resto de ingredientes y remover. Tapar y dejar madurar durante 1 mes.'),
+(12854, 'Scottish Highland Liqueur', 'https://www.thecocktaildb.com/images/media/drink/upqvvp1441253441.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Mezclar todos los ingredientes en un recipiente de envejecimiento. Tápelo bien y agítelo suavemente varias veces durante las primeras 24 horas. Transcurridas 24 horas, retirar la ralladura de limón. Tapar de nuevo y dejar reposar en un lugar fresco y oscuro durante 2 semanas, agitando suavemente cada dos días. Colar con un colador de alambre para eliminar la raíz de angélica y el hinojo. Vuelva a ponerlo en el recipiente de envejecimiento, tápelo y déjelo reposar en un lugar fresco y oscuro durante 6 meses. Sifonar o verter el licor claro en una botella estéril. Los posos turbios pueden guardarse para cocinar.'),
+(12856, 'Tia-Maria', 'https://www.thecocktaildb.com/images/media/drink/sih81u1504367097.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Hervir el agua, el azúcar y el café durante 10 minutos y dejar enfriar. Añadir el ron y la vainilla. Métalo en una botella limpia y déjelo reposar durante 1 semana antes de usarlo.'),
+(12862, 'Aloha Fruit punch', 'https://www.thecocktaildb.com/images/media/drink/wsyvrt1468876267.jpg', 'Punch / Party Drink', 'No Alcoholico', 'Collins Glass', 'Añada 1/4 de taza de agua a la raíz de jengibre. Hervir 3 minutos. Colar. Añada el líquido a los zumos de guayaba, limón y piña. Hacer un almíbar con el azúcar y el agua restante. Dejar enfriar. Mezclar con los jugos y la piña. Enfriar bien.'),
+(12870, 'Artillery Punch', 'https://www.thecocktaildb.com/images/media/drink/9a4vqb1493067692.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Mezclar todos los ingredientes en una ponchera grande con un bloque de hielo. Si resulta demasiado seco, puede añadirse jarabe de azúcar. Decorar con trocitos de piel de limón.'),
+(12876, 'Berry Deadly', 'https://www.thecocktaildb.com/images/media/drink/zk74k21593351065.jpg', 'Punch / Party Drink', 'Alcoholico', 'Collins Glass', 'Añadir todos los ingredientes a un bol grande. Remover suavemente. Sírvalo frío.'),
+(12890, 'Cranberry Punch', 'https://www.thecocktaildb.com/images/media/drink/mzgaqu1504389248.jpg', 'Punch / Party Drink', 'No Alcoholico', 'Punch Bowl', 'Mezclar los cuatro primeros ingredientes. Remover hasta que se disuelva el azúcar y enfriar. A continuación, añada ginger ale justo antes de servir. Añada un anillo de hielo para mantener el ponche frío.'),
+(12954, 'Holloween Punch', 'https://www.thecocktaildb.com/images/media/drink/lfeoe41504888925.jpg', 'Punch / Party Drink', 'No Alcoholico', 'Punch bowl', 'Coge un montón de zumo de uva y un montón de bebidas gaseosas (club soda, ginger ale, lima, lo que sea). Mézclalos en una ponchera. Coge sorbete de naranja y sorbete de lima. Saca cucharadas y ponlas a flotar en el ponche, deja que se derritan un poco para que se extienda una película desagradable por toda la parte superior del ponche, pero sigue habiendo \"burbujas\" en forma de cucharadas de sorbete. Tiene un aspecto horrible, pero sabe muy bien.'),
+(12988, 'Mulled Wine', 'https://www.thecocktaildb.com/images/media/drink/iuwi6h1504735724.jpg', 'Punch / Party Drink', 'Alcoholico', 'Collins Glass', 'Cocer a fuego lento 3 tazas de agua con, azúcar, clavo, canela en rama y piel de limón en una olla de acero inoxidable durante 10 minutos. Añadir el vino y calentar a \"temperatura de café\" (NO HERVIR) y, a continuación, añadir el brandy.'),
+(13020, 'Sangria', 'https://www.thecocktaildb.com/images/media/drink/xrvxpp1441249280.jpg', 'Punch / Party Drink', 'Alcoholico', 'Pitcher', 'Mézclelo todo en una jarra y refrigérelo. Añada clavo y canela en rama al gusto. Servir en copas de vino.'),
+(13024, 'Sweet Sangria', 'https://www.thecocktaildb.com/images/media/drink/uqqvsp1468924228.jpg', 'Punch / Party Drink', 'Alcoholico', 'Pitcher', 'Disolver el azúcar en agua caliente y enfriar. Pelar los cítricos y partirlos en gajos. Mezcle el vino, el jarabe de azúcar, la fruta y la Fresca en una jarra y métala en el frigorífico durante unas horas. Servir en vasos altos con pajita.'),
+(13026, 'Sangria The  Best', 'https://www.thecocktaildb.com/images/media/drink/vysywu1468924264.jpg', 'Punch / Party Drink', 'Alcoholico', 'Pitcher', 'Mezcle el vino, el azúcar y la fruta, y deje reposar en el frigorífico entre 18 y 24 horas. La mezcla tendrá una consistencia algo almibarada. Antes de servir, añada el brandy y reduzca la mezcla con agua de soda hasta que tenga una consistencia más fina y parecida al vino. Sírvalo en una jarra y en copas de vino.'),
+(13032, 'Spiced Peach Punch', 'https://www.thecocktaildb.com/images/media/drink/qxvypq1468924331.jpg', 'Punch / Party Drink', 'No Alcoholico', 'Collins Glass', 'Mezclar el néctar de melocotón, el zumo de naranja y el azúcar moreno en un cazo grande. Atar la canela y los clavos en una bolsita de estopilla. Calentar lentamente, sin dejar de remover, hasta que se disuelva el azúcar. Cocer a fuego lento durante 10 minutos. Añadir el zumo de lima. Servir en tazas calientes.'),
+(13036, 'Strawberry Lemonade', 'https://www.thecocktaildb.com/images/media/drink/spvvxp1468924425.jpg', 'Punch / Party Drink', 'No Alcoholico', 'Collins Glass', 'Póngalo todo en la batidora y mézclelo hasta obtener una mezcla homogénea. Sírvalo con hielo.'),
+(13058, 'Wine Punch', 'https://www.thecocktaildb.com/images/media/drink/txustu1473344310.jpg', 'Punch / Party Drink', 'Alcoholico', 'Collins Glass', 'Mezcle todos los ingredientes y viértalos sobre un bloque de hielo.'),
+(13072, 'Popped cherry', 'https://www.thecocktaildb.com/images/media/drink/sxvrwv1473344825.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Servido sobre hielo en un vaso alto con una cereza reventada (puede añadir más cerezas reventadas si le apetece).'),
+(13086, 'Atomic Lokade', 'https://www.thecocktaildb.com/images/media/drink/n3zfrh1493067412.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'En una coctelera, mezcla la limonada, el vodka, el Curaçao azul y el triple sec. Agitar con hielo y colar en un vaso. Añadir azúcar al gusto.'),
+(13162, 'Afternoon', 'https://www.thecocktaildb.com/images/media/drink/vyrurp1472667777.jpg', 'Coffee / Tea', 'Alcoholico', 'Collins Glass', 'Servir en un vaso adecuado, sin hielo. Póngale nata por encima si lo desea. Se sirve directamente.'),
+(13190, 'Kool-Aid Shot', 'https://www.thecocktaildb.com/images/media/drink/fegm621503564966.jpg', 'Shot', 'Alcoholico', 'Old-fashioned glass', 'Verter en un vaso grande con hielo y remover. Añada un poco de zumo de arándanos al gusto.'),
+(13192, 'National Aquarium', 'https://www.thecocktaildb.com/images/media/drink/dlw0om1503565021.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Vierta todos los ingredientes en una coctelera con hielo. Agitar bien. Servir con hielo.'),
+(13196, 'Long vodka', 'https://www.thecocktaildb.com/images/media/drink/9179i01503565212.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agite un vaso alto con cubitos de hielo y Angostura, cubriendo el interior del vaso. Vierta el vodka, añada una rodaja de lima y exprima el zumo restante, mezcle con la tónica, remueva y ya tiene un Long Vodka.'),
+(13200, 'Owen\'s Grandmother\'s Revenge', 'https://www.thecocktaildb.com/images/media/drink/0wt4uo1503565321.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Añada los ingredientes y mézclelos en la batidora.'),
+(13202, 'Flaming Dr. Pepper', 'https://www.thecocktaildb.com/images/media/drink/d30z931503565384.jpg', 'Shot', 'Alcoholico', 'Collins Glass', 'Añadir Amaretto, Bacardi y vodka. Mezclar el Dr. Pepper y la cerveza'),
+(13204, 'New York Lemonade', 'https://www.thecocktaildb.com/images/media/drink/b3n0ge1503565473.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Servir en una copa de cóctel fría. Limón y azúcar en el borde. Remover y colar.'),
+(13206, 'Caipirissima', 'https://www.thecocktaildb.com/images/media/drink/yd47111503565515.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Igual que la Caipirinha pero en vez de cachaca se le añade RON BLANCO. ¡¡¡¡¡¡¡¡Es genial!!!!!!!!'),
+(13214, 'Pisco Sour', 'https://www.thecocktaildb.com/images/media/drink/tsssur1439907622.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agite vigorosamente y cuele el contenido en una coctelera con cubitos de hielo, luego viértalo en un vaso y decore con amargo.'),
+(13222, 'Big Red', 'https://www.thecocktaildb.com/images/media/drink/yqwuwu1441248116.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Vierta los ingredientes en un vaso de chupito de 1 onza.'),
+(13332, 'B-53', 'https://www.thecocktaildb.com/images/media/drink/rwqxrv1461866023.jpg', 'Shot', 'Alcoholico', 'Collins Glass', 'Ponga el Kahlua, el Sambucca y el Grand Marnier en un vaso de chupito en ese orden. Mejor que el B-52'),
+(13423, 'Atlantic Sun', 'https://www.thecocktaildb.com/images/media/drink/doyxqb1493067556.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Agite todos los ingredientes y añada soda. Decorar con una rodaja de naranja.'),
+(13499, 'Oreo Mudslide', 'https://www.thecocktaildb.com/images/media/drink/tpwwut1468925017.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezcle bien en una batidora el vodka, el Kahlua, el Bailey\'s, el helado y las Oreo. Verter en un vaso grande escarchado. Decorar con nata montada y una cereza.'),
+(13501, 'ABC', 'https://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Coloque todos los ingredientes en un vaso de chupito.'),
+(13535, 'Pink Panty Pulldowns', 'https://www.thecocktaildb.com/images/media/drink/squsuy1468926657.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Agitar bien'),
+(13539, 'Ice Pick', 'https://www.thecocktaildb.com/images/media/drink/ypsrqp1469091726.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Ponga el vodka en un vaso y llénelo con té helado. Añada limón al gusto.'),
+(13581, '410 Gone', 'https://www.thecocktaildb.com/images/media/drink/xtuyqv1472669026.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', ''),
+(13675, 'Flander\'s Flake-Out', 'https://www.thecocktaildb.com/images/media/drink/sqvqrx1461866705.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Golpéalos a ambos.'),
+(13683, 'Apple Slammer', 'https://www.thecocktaildb.com/images/media/drink/09yd5f1493069852.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Viértalo en un vaso y preséntelo al consumidor, se espera que cubra la parte superior del vaso con la palma de la mano, levante el vaso, lo golpee en la barra y lo trague rápidamente.'),
+(13731, 'Amaretto Sour', 'https://www.thecocktaildb.com/images/media/drink/xnzc541493070211.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Agitar y colar. Decorar con una cereza y una rodaja de naranja.'),
+(13751, 'Cuba Libra', 'https://www.thecocktaildb.com/images/media/drink/ck6d0p1504388696.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Llene el vaso alto con cubitos de hielo. Añada ron. Frote el borde cortado de la lima en el borde del vaso y, a continuación, exprima el zumo en el vaso. Rellenar con Coca-Cola. Decóralo con una rodaja de lima. ¡Que aproveche!'),
+(13807, 'After Five', 'https://www.thecocktaildb.com/images/media/drink/sk3lr91493068595.jpg', 'Shot', 'Alcoholico', 'Shot glass', '1. Vierta el licor Kahlúa hasta la mitad en un vaso de chupito. 2. Usando una cuchara (invertida), vierta lentamente el Schnapps de menta hasta que el vaso esté lleno aproximadamente 3/4. Hecho correctamente, el Schnapps fluirá debajo del Kahlúa formando una capa transparente. 3. Nuevamente usando una cuchara, pero esta vez con el lado derecho hacia arriba, cubra lentamente el vaso con una capa de Bailey\'s. Tenga cuidado de colocar la cuchara justo encima de la capa de Kahlúa y levántela a medida que se llena el vaso. Hecho correctamente, esto proporcionará una capa de Baileys flotando sobre Kahlúa. 4. Agregue todo a la vez para algo como una pasta de menta, ¡¡¡CON GRAN ÉXITO!!! NOTA: Mejor si todos los ingredientes están refrigerados.'),
+(13825, 'Midnight Manx', 'https://www.thecocktaildb.com/images/media/drink/uqqurp1441208231.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Llenar una batidora con hielo y añadir Baileys, Kahlua, Goldshlager y nata. Agitar durante 5 segundos y colar en un vaso doble con hielo. Añade el café frío, remueve y ¡disfruta!'),
+(13847, 'Jackhammer', 'https://www.thecocktaildb.com/images/media/drink/9von5j1504388896.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Servir sobre hielo. ¡Advertencia, mortal!'),
+(13861, 'Nutty Irishman', 'https://www.thecocktaildb.com/images/media/drink/xspupx1441248014.jpg', 'Shake', 'Alcoholico', 'Highball Glass', 'Servir con hielo'),
+(13899, '3 Wise Men', 'https://www.thecocktaildb.com/images/media/drink/wxqpyw1468877677.jpg', 'Shot', 'Alcoholico', 'Collins glass', 'mételos en un vaso... y dáselo en la cabeza.'),
+(13936, 'Miami Vice', 'https://www.thecocktaildb.com/images/media/drink/qvuyqw1441208955.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Primero: Mezclar la piña colada con 2,5 onzas de ron con hielo (reservar). Segundo: Mezclar el daiquiri con 2,5 onzas de ron y hielo. Tercero: Mientras está congelado, añada la mezcla de piña colada y luego la de daiquiri en el vaso (asegurándose de que no se mezclen).'),
+(13938, 'AT&T', 'https://www.thecocktaildb.com/images/media/drink/rhhwmp1493067619.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball Glass', 'Vierta el vodka y la ginebra sobre el hielo, añada la tónica y remueva'),
+(13940, '69 Special', 'https://www.thecocktaildb.com/images/media/drink/vqyxqx1472669095.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Vierta 2 oz. de ginebra. Añada 4 oz. de 7-up. Añada zumo de limón para darle sabor. Si es débil, rellene el vaso con más 7-Up.'),
+(14029, '57 Chevy with a White License Plate', 'https://www.thecocktaildb.com/images/media/drink/qyyvtu1468878544.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', '1. Llenar un vaso con hielo 2.Añadir crema de cacao blanco y vodka 3.Remover'),
+(14053, 'Mother\'s Milk', 'https://www.thecocktaildb.com/images/media/drink/7stuuh1504885399.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Agitar sobre hielo, colar. Para dos porciones.'),
+(14065, 'Zippy\'s Revenge', 'https://www.thecocktaildb.com/images/media/drink/1sqm7n1485620312.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Mezclar Kool-Aid al gusto y añadir el ron y el ammaretto. agitar bien para disolver el azúcar en el Kool-Aid... servir frío'),
+(14071, 'Belgian Blue', 'https://www.thecocktaildb.com/images/media/drink/jylbrq1582580066.jpg', 'Soft Drink', 'Alcoholico', 'Highball glass', 'Basta con verter todos los ingredientes en el vaso y remover...'),
+(14087, 'Red Snapper', 'https://www.thecocktaildb.com/images/media/drink/7p607y1504735343.jpg', 'Shot', 'Alcoholico', 'Old-fashioned glass', 'Un disparo cada uno, agitar y disparar'),
+(14107, 'Absolut Summertime', 'https://www.thecocktaildb.com/images/media/drink/trpxxs1472669662.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Añada todos los ingredientes excepto el limón a una coctelera llena de hielo. Tapar y agitar enérgicamente. Cuele el contenido en un vaso Collins lleno de hielo. Decorar con limón.'),
+(14133, 'Cosmopolitan Martini', 'https://www.thecocktaildb.com/images/media/drink/upxxpq1439907580.jpg', 'Cocktail', 'Alcoholico', 'Cocktail Glass', 'Vierta todos los ingredientes en un vaso mezclador lleno hasta la mitad con hielo, agite y cuele en una copa de Martini fría.'),
+(14272, 'Addison Special', 'https://www.thecocktaildb.com/images/media/drink/4vo5651493068493.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Mezcle los ingredientes en el orden indicado en una coctelera. Llenar hasta la mitad con hielo y agitar bien. Colar en un vaso con hielo y decorar con una cereza y un gajo de naranja.'),
+(14282, 'California Root Beer', 'https://www.thecocktaildb.com/images/media/drink/rsxuyr1472719526.jpg', 'Soft Drink', 'Alcoholico', 'Highball glass', 'Poner Kahlua y Galliano en un vaso highball y rellenar con soda'),
+(14306, 'Amaretto Stone Sour', 'https://www.thecocktaildb.com/images/media/drink/xwryyx1472719921.jpg', 'Other / Unknown', 'Alcoholico', 'Collins Glass', 'Agitar y servir con hielo'),
+(14356, 'Blind Russian', 'https://www.thecocktaildb.com/images/media/drink/wxuqvr1472720408.jpg', 'Shake', 'Alcoholico', 'Collins glass', 'Llenar el vaso con hielo. Añadir todos los licores. Añadir leche. Agitar.'),
+(14360, 'Absolut Sex', 'https://www.thecocktaildb.com/images/media/drink/xtrvtx1472668436.jpg', 'Shot', 'Alcoholico', 'Old-fashioned glass', 'Agitar Absolut Kurant, Midori y zumo de arándanos en una coctelera con hielo: Colar en un vaso con hielo: Salpicar con 7 de Absolut Sex.'),
+(14364, 'Aztec Punch', 'https://www.thecocktaildb.com/images/media/drink/uqwuyp1454514591.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Mezcle todos los ingredientes en una jarra. Mézclelos bien y viértalos en cualquier recipiente disponible, ¡cuanto más grande mejor! Esta bebida es muy potente, así que no te pases.'),
+(14366, 'Lemon Drop', 'https://www.thecocktaildb.com/images/media/drink/mtpxgk1504373297.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar y colar en una copa de cóctel fría con borde de azúcar.'),
+(14372, 'Absolut limousine', 'https://www.thecocktaildb.com/images/media/drink/ssqpyw1472719844.jpg', 'Other / Unknown', 'Alcoholico', 'Collins Glass', 'Vierta Absolut en un vaso. Añada zumo de lima. Añadir hielo y rodajas de lima.'),
+(14374, 'Absolut Evergreen', 'https://www.thecocktaildb.com/images/media/drink/wrxrxp1472812609.jpg', 'Other / Unknown', 'Alcoholico', 'Collins Glass', 'Mezclar, verter sobre hielo y completar con Bitter Lemon.'),
+(14482, 'Darkwood Sling', 'https://www.thecocktaildb.com/images/media/drink/sxxsyq1472719303.jpg', 'Soft Drink', 'Alcoholico', 'Cocktail glass', 'Se pueden utilizar muchos licores de cereza buenos, pero yo prefiero el Heering. Añada una parte del licor. A continuación, añada una parte de soda. Para un sour sling utiliza Tónica (la mayoría de la gente prefiere la bebida sin Tónica). Después se llena el vaso con zumo de naranja y cubitos de hielo.'),
+(14510, 'Bailey\'s Dream Shake', 'https://www.thecocktaildb.com/images/media/drink/qxrvqw1472718959.jpg', 'Soft Drink', 'Alcoholico', 'Collins glass', 'Mezcle los ingredientes durante 30 segundos. ¡Definitivamente refrescante para un día caluroso de verano !'),
+(14560, 'A.D.M. (After Dinner Mint)', 'https://www.thecocktaildb.com/images/media/drink/ruxuvp1472669600.jpg', 'Cocktail', 'Alcoholico', 'Irish coffee cup', 'agitar enérgicamente'),
+(14564, 'A Splash of Nash', 'https://www.thecocktaildb.com/images/media/drink/rsvtrr1472668201.jpg', 'Shot', 'Alcoholico', 'Highball glass', 'Vierta el chupito con los licores de plátano y melón en un vaso hi-ball de 9 oz que contenga agua con gas y zumo de arándanos. Beber de un trago.'),
+(14578, 'Amaretto Sunrise', 'https://www.thecocktaildb.com/images/media/drink/akcpsh1493070267.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezcle el amaretto y el zumo de naranja. Viértalo en un vaso y añada la granadina hasta que vea el amanecer.'),
+(14584, 'Arizona Stingers', 'https://www.thecocktaildb.com/images/media/drink/y7w0721493068255.jpg', 'Cocktail', 'Alcoholico', 'Hurricane glass', 'Ponga cubitos de hielo en el vaso huracán. Añade los 2 chupitos de Vodka Absolute (Nota: ¡Puedes añadir tantos chupitos de Absolute como quieras!) Llena el resto del vaso con el Icetea Arizona con limón. Remover para mezclar con una cuchara. ¡¡¡¡¡¡¡Bebe y disfruta!!!!!!!'),
+(14594, 'Zizi Coin-coin', 'https://www.thecocktaildb.com/images/media/drink/0fbo2t1485620752.jpg', 'Punch / Party Drink', 'Alcoholico', 'Margarita/Coupette glass', 'Vierta 5 cl de Cointreau sobre hielo, añada 2 cl de zumo de limón (o lima) fresco, remueva suavemente y, por último, añada rodajas de limón/lima en el vaso.'),
+(14598, '50/50', 'https://www.thecocktaildb.com/images/media/drink/wwpyvr1461919316.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Llenar el vaso con hielo picado. Añada el vodka. Añada un chorrito de grand-marnier. Rellenar con O.J.'),
+(14608, 'Cream Soda', 'https://www.thecocktaildb.com/images/media/drink/yqstxr1479209367.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Vierta 1 onza de ron especiado en un vaso highball con hielo. Rellenar con Ginger Ale.'),
+(14610, 'ACID', 'https://www.thecocktaildb.com/images/media/drink/xuxpxt1479209317.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Vierta primero el Bacardi 151, seguido del Wild Turkey 101 y sirva con Coca-Cola o Dr Pepper.'),
+(14622, 'Arctic Fish', 'https://www.thecocktaildb.com/images/media/drink/ttsvwy1472668781.jpg', 'Punch / Party Drink', 'Alcoholico', 'Beer pilsner', 'Llenar el vaso con hielo y pescado, añadir el vodka, el refresco de uva y el zumo de naranja. ¡¡¡¡¡NO AGITAR!!!!! Servir bien frío.'),
+(14642, 'Grim Reaper', 'https://www.thecocktaildb.com/images/media/drink/kztu161504883192.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezclar Kahlua y 151 en el vaso. Añada hielo rápidamente y vierta granadina sobre el hielo para darle un tinte rojo.'),
+(14752, 'Kiwi Lemon', 'https://www.thecocktaildb.com/images/media/drink/tpupvr1478251697.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Mezclar en un vaso highball. Remover. Decorar con una rodaja de kiwi.'),
+(14842, 'Midnight Mint', 'https://www.thecocktaildb.com/images/media/drink/svuvrq1441208310.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Si se dispone de ella, poner el borde de la copa de cóctel (Martini) con sirope de azúcar y luego sumergirlo en copos o polvo de chocolate. Añada los ingredientes a la coctelera con hielo. Agitar bien y colar en una copa de cóctel.'),
+(14978, 'Rum Punch', 'https://www.thecocktaildb.com/images/media/drink/wyrsxu1441554538.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Mezclar todos los ingredientes en una ponchera y servir.'),
+(15024, 'Absolutely Cranberry Smash', 'https://www.thecocktaildb.com/images/media/drink/vqwstv1472811884.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Mezcle los ingredientes. Servir con hielo.'),
+(15026, 'Kiss me Quick', 'https://www.thecocktaildb.com/images/media/drink/m7iaxu1504885119.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'mezclar en el vaso'),
+(15082, 'Royal Flush', 'https://www.thecocktaildb.com/images/media/drink/7rnm8u1504888527.jpg', 'Shot', 'Alcoholico', 'Old-fashioned glass', 'Vierta todos los ingredientes en un vaso con hielo. Colar en un vaso.'),
+(15092, 'Pysch Vitamin Light', 'https://www.thecocktaildb.com/images/media/drink/xsqsxw1441553580.jpg', 'Ordinary Drink', 'No Alcoholico', 'Collins Glass', 'Agitar con hielo.'),
+(15106, 'Apello', 'https://www.thecocktaildb.com/images/media/drink/uptxtv1468876415.jpg', 'Other / Unknown', 'No Alcoholico', 'Collins Glass', 'Revuelva. Grnish con cereza al marrasquino.'),
+(15182, 'After sex', 'https://www.thecocktaildb.com/images/media/drink/xrl66i1493068702.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el vodka y la nata sobre unos cubitos de hielo en un vaso alto y llénelo de zumo. para que esté más lleno, cubra el vaso con granadina y azúcar.'),
+(15194, 'Amaretto Shake', 'https://www.thecocktaildb.com/images/media/drink/xk79al1493069655.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezclar todos los ingredientes en una batidora y batir a alta velocidad hasta obtener una mezcla homogénea. Sírvalo en un vaso frío adornado con virutas de chocolate amargo.'),
+(15200, 'A Day at the Beach', 'https://www.thecocktaildb.com/images/media/drink/trptts1454514474.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agitar el ron, el Amaretto y el zumo de naranja en una coctelera con hielo. Colar sobre hielo en un vaso highball. Añadir granadina y decorar con una rodaja de piña y una fresa.'),
+(15224, 'Malibu Twister', 'https://www.thecocktaildb.com/images/media/drink/2dwae41504885321.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Añada el ron y el licor y, a continuación, añada el zumo de arándanos y remueva.'),
+(15266, 'Avalon', 'https://www.thecocktaildb.com/images/media/drink/3k9qic1493068931.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Llene un vaso alto con hielo. Añadir el Finlandia Vodka, los zumos de limón y manzana, el Pisang Ambon y completar con limonada. Remover ligeramente y decorar con una piel de pepino en espiral y una cereza roja. El pepino aporta sabor y un aspecto atractivo. Esta bebida, creada por Timo Haimi, obtuvo el primer premio en el Concurso de Tragos Largos con Vodka Finlandia de 1991.'),
+(15288, '252', 'https://www.thecocktaildb.com/images/media/drink/rtpxqw1468877562.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Agrega ambos ingredientes al vaso de chupito, dispara y emborrachate rápidamente.'),
+(15300, '3-Mile Long Island Iced Tea', 'https://www.thecocktaildb.com/images/media/drink/rrtssw1472668972.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Llene un vaso de 14 onzas con hielo y alcohol. Llene 2/3 del vaso con cola y el resto con agridulce. Añadir un chorrito de amargo y una rodaja de limón.'),
+(15328, 'Zorro', 'https://www.thecocktaildb.com/images/media/drink/kvvd4z1485621283.jpg', 'Coffee / Tea', 'Alcoholico', 'Coffee Mug', 'agrega todo y vierte el café negro y agrega la crema batida encima.'),
+(15330, 'Orange Crush', 'https://www.thecocktaildb.com/images/media/drink/zvoics1504885926.jpg', 'Shot', 'Alcoholico', 'Shot glass', '\nAgregue todos los ingredientes al vaso. Vierta como trago.'),
+(15346, '155 Belmont', 'https://www.thecocktaildb.com/images/media/drink/yqvvqs1475667388.jpg', 'Cocktail', 'Alcoholico', 'White wine glass', 'Mezclar con hielo. Sírvalo en una copa de vino. Decorar con zanahoria.'),
+(15403, 'Vodka Russian', 'https://www.thecocktaildb.com/images/media/drink/rpttur1454515129.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mézclalo como una bebida normal .'),
+(15409, 'Danbooka', 'https://www.thecocktaildb.com/images/media/drink/vurrxr1441246074.jpg', 'Coffee / Tea', 'Alcoholico', 'Coffee Mug', 'viértalo y mézclelo.'),
+(15423, '110 in the shade', 'https://www.thecocktaildb.com/images/media/drink/xxyywq1454511117.jpg', 'Beer', 'Alcoholico', 'Beer Glass', '\nLanza el tirador en el vidrio. llenar con cerveza'),
+(15427, 'Grand Blue', 'https://www.thecocktaildb.com/images/media/drink/vsrsqu1472761749.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Servir en un vaso old fashioned.'),
+(15511, 'Baby Eskimo', 'https://www.thecocktaildb.com/images/media/drink/wywrtw1472720227.jpg', 'Shake', 'Alcoholico', 'Collins Glass', 'Dejar el helado fuera unos 10 minutos. Añadir los ingredientes en orden, remover con un palillo (un cuchillo de mantequilla o una cuchara también sirven). Consumir inmediatamente y a menudo. Agradable y ligero, ideal para después de una bebida fuerte.'),
+(15515, 'Tennesee Mud', 'https://www.thecocktaildb.com/images/media/drink/txruqv1441245770.jpg', 'Coffee / Tea', 'Alcoholico', 'Coffee Mug', 'Agitar, colar, levantar, copa de cóctel.'),
+(15521, 'Swedish Coffee', 'https://www.thecocktaildb.com/images/media/drink/ywtrvt1441246783.jpg', 'Coffee / Tea', 'Alcoholico', 'Coffee Mug', 'Vierta el café en una taza de café normal. Agrega el aquavit. Agrega azúcar al gusto. Revuelva y que tenga una buena tarde (mañana)'),
+(15567, 'Adam Sunrise', 'https://www.thecocktaildb.com/images/media/drink/vtuyvu1472812112.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Llene la licuadora con hielo. Llene la mitad con vodka Bartons. Ponga 10 cucharaditas de azúcar, añada 1/2 lata de concentrado de limonada y llene hasta arriba con agua. Licuar durante 60 segundos.'),
+(15597, 'Absolut Stress #2', 'https://www.thecocktaildb.com/images/media/drink/xuyqrw1472811825.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezclar bien. Decorar con naranja y cereza. Disfrute'),
+(15639, 'Texas Sling', 'https://www.thecocktaildb.com/images/media/drink/ypl13s1504890158.jpg', 'Shake', 'Alcoholico', 'Wine Glass', 'Licue con hielo hasta que quede suave. Sirva en una copa tulipán y cubra con crema batida.'),
+(15675, 'A midsummernight dream', 'https://www.thecocktaildb.com/images/media/drink/ysqvqp1461867292.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezcla las fresas en una batidora Vierte junto con el vodka, el kirch y el licor de fresa sobre hielo en una coctelera. Agitar bien y verter en un vaso alto. Rellenar con el agua rusa'),
+(15691, 'Zoksel', 'https://www.thecocktaildb.com/images/media/drink/ft8ed01485620930.jpg', 'Soft Drink', 'Alcoholico', 'Beer pilsner', 'No hay instrucciones de mezcla específicas, simplemente mezcla cada ingrediente en un vaso. El limón va con él.\n'),
+(15761, 'Quick-sand', 'https://www.thecocktaildb.com/images/media/drink/vprxqv1478963533.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Basta con añadir el zumo de naranja, vertiendo bastante rápido para mezclar la sambucca con el zumo de naranja. ¡El zumo DEBE tener pulpa de fruta!'),
+(15801, 'Zimadori Zinger', 'https://www.thecocktaildb.com/images/media/drink/bw8gzx1485619920.jpg', 'Punch / Party Drink', 'Alcoholico', 'Collins glass', 'Vierta Zima en un vaso Collins sobre hielo y, a continuación, vierta el chupito de Midori. No revuelva. Adorne con una cereza.'),
+(15841, 'Mojito Extra', 'https://www.thecocktaildb.com/images/media/drink/vwxrsw1478251483.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Ponga menta con zumo de limón en un vaso, machaque la menta con una cuchara, hielo, ron y rellene con club soda. Añada Angostura.'),
+(15849, 'Apricot punch', 'https://www.thecocktaildb.com/images/media/drink/tuxxtp1472668667.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Vierta todos los ingredientes en una ponchera grande. Añada hielo y 4 naranjas peladas y partidas.'),
+(15941, 'Americano', 'https://www.thecocktaildb.com/images/media/drink/709s6m1613655124.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Vierta el Campari y el vermut sobre hielo en un vaso, añada un chorrito de soda y decore con media rodaja de naranja.'),
+(15951, 'Black Forest Shake', 'https://www.thecocktaildb.com/images/media/drink/xxtxsu1472720505.jpg', 'Shake', 'Alcoholico', 'Collins Glass', 'En una batidora, ponga cubitos de hielo, sirope de chocolate, licor de cerezas, vodka y leche. Bata muy bien.'),
+(16031, 'Radler', 'https://www.thecocktaildb.com/images/media/drink/xz8igv1504888995.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierte la cerveza en una jarra grande y añade lentamente la 7-up (o Sprite).'),
+(16041, 'Mudslinger', 'https://www.thecocktaildb.com/images/media/drink/hepk6h1504885554.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Añada todo el contenido a una jarra grande o ponchera. Remuévalo bien.'),
+(16082, 'Almond Chocolate Coffee', 'https://www.thecocktaildb.com/images/media/drink/jls02c1493069441.jpg', 'Ordinary Drink', 'Alcoholico', 'Coffee mug', 'Verter por orden en una taza de café. Cubrir con nata montada y virutas de chocolate.'),
+(16100, 'Amaretto Stone Sour Alternative', 'https://www.thecocktaildb.com/images/media/drink/wutxqr1472720012.jpg', 'Other / Unknown', 'Alcoholico', 'Highball glass', 'Agite la mezcla agria, el tequila y el amaretto con hielo. Colar en un vaso highball. Añadir un chorrito de zumo de naranja. Decorar con una rodaja de naranja y una cereza.'),
+(16108, '9 1/2 Weeks', 'https://www.thecocktaildb.com/images/media/drink/xvwusr1472669302.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Mezclar todos los ingredientes en una batidora de vaso. Enfríe y cuele en una copa de cóctel. Decorar con rodajas de fresa.'),
+(16134, 'Absolutly Screwed Up', 'https://www.thecocktaildb.com/images/media/drink/yvxrwv1472669728.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Agítalo, sabe mejor así, pero puedes removerlo si quieres. 6 de esos y usted será desperdiciado por el resto de la noche.'),
+(16176, 'Bellini Martini', 'https://www.thecocktaildb.com/images/media/drink/3h9wv51504389379.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Añada cubitos de hielo a la coctelera.\r\nAñada el vodka.\r\nAñadir aguardiente de melocotón.\r\nAñadir néctar de melocotón.\r\nAgitar.\r\nColar en un vaso.\r\nAñadir cáscara de limón.'),
+(16178, 'Jitterbug', 'https://www.thecocktaildb.com/images/media/drink/wwqvrq1441245318.jpg', 'Cocktail', 'Alcoholico', 'Cocktail Glass', 'Moje el vaso, sumerja el borde en azúcar. A continuación, añada hielo. Luego añada todo lo demás. Así de sencillo.'),
+(16202, 'Amaretto Sweet & Sour', 'https://www.thecocktaildb.com/images/media/drink/vswwus1472668546.jpg', 'Punch / Party Drink', 'Alcoholico', 'Margarita/Coupette glass', 'Llene la batidora con 3/4 de hielo. Añada la mezcla agridulce en la parte superior del hielo. Añada aproximadamente 1 pulgada de zumo de piña, 1/2 pulgada de licor de melón y de 1/2 a 1/4 pulgada de amaretto. A continuación, bata la mezcla hasta que adquiera la consistencia de una margarita o quede más fina.'),
+(16250, 'Rum Runner', 'https://www.thecocktaildb.com/images/media/drink/vqws6t1504888857.jpg', 'Punch / Party Drink', 'Alcoholico', 'Cocktail glass', 'Mezcle todos los ingredientes en un vaso y añada hielo.'),
+(16271, 'The Evil Blue Thing', 'https://www.thecocktaildb.com/images/media/drink/ojnpz71504793059.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Vierte los ingredientes en un vaso y añade una ballena azul. La ballena azul no es realmente necesaria, pero hace que la bebida sea más \"divertida\".'),
+(16275, 'Jack\'s Vanilla Coke', 'https://www.thecocktaildb.com/images/media/drink/kjnt7z1504793319.jpg', 'Other / Unknown', 'Alcoholico', 'Old-fashioned glass', 'Después de verter los ingredientes y añadir de 3 a 5 cubitos de hielo, según el gusto. Remueve la bebida con un agitador para que la vainilla se despegue del fondo.'),
+(16289, 'Apple Grande', 'https://www.thecocktaildb.com/images/media/drink/wqrptx1472668622.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch Bowl', '¡¡Enfría ambos ingredientes!! ¡Mezclar en un vaso y disfrutar!'),
+(16295, 'Bleeding Surgeon', 'https://www.thecocktaildb.com/images/media/drink/usuvvr1472719118.jpg', 'Soft Drink', 'Alcoholico', 'Collins glass', 'Vierta el chupito de ron sobre la rodaja de naranja. Llene el espacio restante del vaso hasta la mitad con oleada o bebida similar. Terminar el vaso con zumo de arándanos. Tenga cuidado, la espuma caliente puede derramarse sobre el vaso.'),
+(16311, 'Applejack', 'https://www.thecocktaildb.com/images/media/drink/sutyqp1479209062.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Añadir todos los ingredientes en el vaso mezclador, enfriar y colar en una copa de cóctel'),
+(16333, 'Adam Bomb', 'https://www.thecocktaildb.com/images/media/drink/tpxurs1454513016.jpg', 'Punch / Party Drink', 'Alcoholico', 'Margarita/Coupette glass', 'Añada hielo a la batidora (o al vaso si lo prefiere con hielo), a continuación la fruta y el zumo de fruta, según prefiera, y después añada el ron, el vodka, el tequila y el triple sec.');
+INSERT INTO `cocteles` (`id`, `nombre`, `miniatura`, `categoria`, `tipo`, `vaso`, `instrucciones`) VALUES
+(16354, 'Arizona Antifreeze', 'https://www.thecocktaildb.com/images/media/drink/dbtylp1493067262.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Vierte todos los ingredientes en el vaso y tómate el trago en un solo golpe!!!!'),
+(16405, 'A Piece of Ass', 'https://www.thecocktaildb.com/images/media/drink/tqxyxx1472719737.jpg', 'Other / Unknown', 'Alcoholico', 'Highball glass', 'Poner hielo en el vaso. Vierta los chupitos. Rellenar con Sour Mix.'),
+(16419, 'Avalanche', 'https://www.thecocktaildb.com/images/media/drink/uppqty1472720165.jpg', 'Shake', 'Alcoholico', 'Highball glass', 'Mezclar en un vaso highball con hielo y agitar bien.'),
+(16485, 'Flaming Lamborghini', 'https://www.thecocktaildb.com/images/media/drink/yywpss1461866587.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Verter la Sambuca y el Kahlua en la copa de cóctel y dar al bebedor una pajita. Vierta el Baileys y el Blue Curacao en dos vasos de chupito de sepsrate a cada lado de la copa de cóctel. Encienda la cocción en la copa de cóctel y empiece a beber con la pajita (esta bebida debe beberse de un trago), cuando llegue al fondo de la copa apague el fuego vertiendo el Baileys y el Blue Curacao en la copa de cóctel y siga bebiendo hasta que se acabe.'),
+(16943, 'A Gilligan\'s Island', 'https://www.thecocktaildb.com/images/media/drink/wysqut1461867176.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', '¡Sacudido, no agitado!'),
+(16958, 'Apple Pie with A Crust', 'https://www.thecocktaildb.com/images/media/drink/qspqxt1472720078.jpg', 'Other / Unknown', 'Alcoholico', 'Collins Glass', 'Basta con mezclar los dos líquidos y espolvorear la canela. Servir frío o caliente.'),
+(16984, 'Radioactive Long Island Iced Tea', 'https://www.thecocktaildb.com/images/media/drink/rdvqmh1503563512.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Vierta todos los ingredientes sobre hielo en un vaso muy alto. Beber con precaución.'),
+(16986, 'Bible Belt', 'https://www.thecocktaildb.com/images/media/drink/6bec6v1503563675.jpg', 'Other / Unknown', 'Alcoholico', 'Highball glass', 'Mezcle todos los ingredientes y viértalos sobre hielo.'),
+(16987, 'Irish Curdling Cow', 'https://www.thecocktaildb.com/images/media/drink/yrhutv1503563730.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Vierta la crema irlandesa, el vodka y el bourbon en un vaso. Añade un poco de hielo y mezcla con el zumo de naranja.'),
+(16991, 'Downshift', 'https://www.thecocktaildb.com/images/media/drink/y36z8c1503563911.jpg', 'Punch / Party Drink', 'Alcoholico', 'Hurricane glass', 'Empieza con el Sprite. A continuación, el tequila. A continuación, añada Minute Maid Fruit Punch y deje flotar la 151. Rocas opcionales.'),
+(16992, 'Pink Penocha', 'https://www.thecocktaildb.com/images/media/drink/6vigjx1503564007.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'mezclar todos los ingredientes en un bol mantener en hielo remover con frecuencia'),
+(16995, 'Orange Whip', 'https://www.thecocktaildb.com/images/media/drink/ttyrxr1454514759.jpg', 'Other / Unknown', 'Alcoholico', 'Collins Glass', 'Vierta los ingredientes sobre el hielo y remueva.'),
+(17002, 'Gideon\'s Green Dinosaur', 'https://www.thecocktaildb.com/images/media/drink/p5r0tr1503564636.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Añadir todos los ingredientes en un vaso Collins con hielo y remover.'),
+(17005, 'A True Amaretto Sour', 'https://www.thecocktaildb.com/images/media/drink/rptuxy1472669372.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Frotar el borde de un vaso old fashioned con limón y sumergirlo repetidamente en azúcar granulada hasta que tenga un buen borde \"escarchado\". Agitar un jigger de Amaretto con el zumo de 1/2 limón. Cuele en el vaso y añada hielo. Decorar con una cereza Marachino.'),
+(17015, 'Irish Russian', 'https://www.thecocktaildb.com/images/media/drink/swqurw1454512730.jpg', 'Beer', 'Alcoholico', 'Highball glass', 'Añadir los ingredientes en el orden indicado en la receta. Hay que tener cuidado al añadir la Guinness para evitar un exceso de espuma. No añada hielo.'),
+(17020, 'Auburn Headbanger', 'https://www.thecocktaildb.com/images/media/drink/vw7iv91493067320.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Mezclar en un vaso con hielo. Colar y verter en el vaso. Siéntate antes de beber. ¡DISFRUTAR!'),
+(17044, 'Homemade Kahlua', 'https://www.thecocktaildb.com/images/media/drink/uwtsst1441254025.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Disolver el azúcar en 2 tazas de agua hirviendo y añadir el jarabe de maíz. Disuelva el café instantáneo en el agua restante. Vierta el jarabe y el café en una jarra de un galón. Dejar enfriar. Añada el vodka y la vainilla cuando esté frío. Para obtener el mejor resultado, deja que la mezcla \"madure\" durante 4-5 semanas.'),
+(17066, 'Army special', 'https://www.thecocktaildb.com/images/media/drink/55muhh1493068062.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Vierta el vodka, la ginebra y el cordial de lima en un vaso y rellene con hielo picado. Esperar a que el hielo se derrita ligeramente y beber sin pajita.'),
+(17074, 'Arizona Twister', 'https://www.thecocktaildb.com/images/media/drink/ido1j01493068134.jpg', 'Cocktail', 'Alcoholico', 'Hurricane glass', 'Mezcla los chupitos de ron, vodka y tequila. Añada chorritos de los tres zumos, sobre todo de piña. Completar con granadina. El hielo picado debe estar ya en el vaso. Completa el vaso con un gajo de piña.'),
+(17094, 'Alice in Wonderland', 'https://www.thecocktaildb.com/images/media/drink/g12lj41493069391.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Basta con mezclar los tres ingredientes uno a uno'),
+(17105, '501 Blue', 'https://www.thecocktaildb.com/images/media/drink/ywxwqs1461867097.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezcle cantidades iguales en un vaso con hielo.'),
+(17108, 'Coke and Drops', 'https://www.thecocktaildb.com/images/media/drink/yrtxxp1472719367.jpg', 'Soft Drink', 'No Alcoholico', 'Cocktail glass', 'Coge un vaso, vierte la Coca-Cola en el vaso, luego echa 7 gotas de zumo de limón. Adorne con una rodaja de limón en el borde del vaso.'),
+(17118, 'Arctic Mouthwash', 'https://www.thecocktaildb.com/images/media/drink/wqstwv1478963735.jpg', 'Punch / Party Drink', 'Alcoholico', 'Cocktail glass', 'Mezcle todos los ingredientes en una batidora a máxima potencia hasta que el hielo esté bien picado. Debe quedar una consistencia granizada. Verter inmediatamente y servir.'),
+(17120, 'Brain Fart', 'https://www.thecocktaildb.com/images/media/drink/rz5aun1504389701.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Mezclar todos los ingredientes. Lenta y suavemente. Funciona mejor si se añade hielo a la ponchera y los refrescos están muy fríos.'),
+(17135, 'Citrus Coke', 'https://www.thecocktaildb.com/images/media/drink/uyrvut1479473214.jpg', 'Soft Drink', 'Alcoholico', 'Highball Glass', 'Vierte la mitad de la coca-cola en un vaso. Añade Bacardi y completa con el resto de la Coca-Cola. Remueve y ¡a beber!'),
+(17141, 'Smut', 'https://www.thecocktaildb.com/images/media/drink/rx8k8e1504365812.jpg', 'Punch / Party Drink', 'Alcoholico', 'Beer mug', 'Mézclalo todo y sírvelo bien frío.'),
+(17167, 'Raspberry Cooler', 'https://www.thecocktaildb.com/images/media/drink/suqyyx1441254346.jpg', 'Other / Unknown', 'Alcoholico', 'Highball glass', 'Vierta el vodka de frambuesa y la soda en un vaso highball casi lleno de cubitos de hielo. Remuévalo bien.'),
+(17168, 'Amaretto Sunset', 'https://www.thecocktaildb.com/images/media/drink/apictz1493069760.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Agitar rápidamente los ingredientes en la coctelera, sólo 5 batidos. Colar sin hielo, servir en vaso inmediatamente con una rodaja de naranja.'),
+(17174, 'Cherry Electric Lemonade', 'https://www.thecocktaildb.com/images/media/drink/tquyyt1451299548.jpg', 'Cocktail', 'Alcoholico', 'Pint glass', 'Remuévelo enérgicamente y viértelo en un vaso grande con hielo. Ahora bébelo con una pajita y remueve de vez en cuando.'),
+(17177, 'Dark Caipirinha', 'https://www.thecocktaildb.com/images/media/drink/uwstrx1472406058.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mezcle el azúcar con los gajos de lima en un vaso old-fashioned.\r\nLlene el vaso con cubitos de hielo.\r\nVierta la cachaca en el vaso.\r\nRemuévalo bien.'),
+(17180, 'Aviation', 'https://www.thecocktaildb.com/images/media/drink/trbplb1606855233.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Añada todos los ingredientes en una coctelera llena de hielo. Agitar bien y colar en una copa de cóctel. Decorar con una cereza.'),
+(17181, 'Dirty Martini', 'https://www.thecocktaildb.com/images/media/drink/vcyvpq1485083300.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Vierta el vodka, el vermut seco y la salmuera de aceitunas en una coctelera con un puñado de hielo y agite bien.\r\nFrotar el borde de una copa de martini con la rodaja de limón.\r\nCuele el contenido de la coctelera en la copa y añada la aceituna.\r\nUn martini sucio contiene un chorrito de salmuera de aceituna o zumo de aceituna y suele adornarse con una aceituna.'),
+(17182, 'Duchamp\'s Punch', 'https://www.thecocktaildb.com/images/media/drink/g51naw1485084685.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Agitar todos los ingredientes.\r\nCuele dos veces en un vaso old fashioned doble con un cubito de hielo grande.\r\nDecorar con un par de ramitas de lavanda.'),
+(17183, 'Bacardi Cocktail', 'https://www.thecocktaildb.com/images/media/drink/n433t21504348259.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar con hielo. Colar en un vaso y servir.'),
+(17184, 'Between The Sheets', 'https://www.thecocktaildb.com/images/media/drink/of1rj41504348346.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en una coctelera con cubitos de hielo, agite y cuele en una copa de cóctel fría.'),
+(17185, 'Casino', 'https://www.thecocktaildb.com/images/media/drink/1mvjxg1504348579.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en una coctelera con cubitos de hielo. Agitar bien. Colar en una copa de cóctel fría. Decorar con un twist de limón y una cereza al marrasquino. Servir sin pajita.'),
+(17186, 'Clover Club', 'https://www.thecocktaildb.com/images/media/drink/t0aja61504348715.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar los ingredientes en seco para emulsionar, añadir hielo, agitar y servir directamente.'),
+(17187, 'Derby', 'https://www.thecocktaildb.com/images/media/drink/52weey1606772672.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en un vaso mezclador con hielo. Remover. Colar en una copa de cóctel. Decorar la copa con una ramita de menta fresca.'),
+(17188, 'Mary Pickford', 'https://www.thecocktaildb.com/images/media/drink/f9erqb1504350557.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar y colar en una copa de cóctel grande fría'),
+(17189, 'Monkey Gland', 'https://www.thecocktaildb.com/images/media/drink/94psp81504350690.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar bien con cubitos de hielo en una coctelera, colar en una copa de cóctel fría.'),
+(17191, 'Planter\'s Punch', 'https://www.thecocktaildb.com/images/media/drink/fdk8a31606854815.jpg', 'Punch / Party Drink', 'Alcoholico', 'Collins glass', 'Vierta todos los ingredientes, excepto el amargo, en una coctelera llena de hielo. Agitar bien. Verter en un vaso grande, lleno de hielo. Añada el amargo de Angostura \"por encima\". Decorar con cereza de cóctel y piña.'),
+(17195, 'Bellini', 'https://www.thecocktaildb.com/images/media/drink/eaag491504367543.jpg', 'Ordinary Drink', 'Alcoholico', 'Champagne Flute', 'Vierta el puré de melocotón en una copa fría y añada el vino espumoso. Remover suavemente.'),
+(17196, 'Cosmopolitan', 'https://www.thecocktaildb.com/images/media/drink/kpsajh1504368362.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Añada todos los ingredientes en una coctelera llena de hielo. Agite bien y cuele dos veces en una copa de cóctel grande. Decorar con una rueda de lima.'),
+(17197, 'French 75', 'https://www.thecocktaildb.com/images/media/drink/hrxfbl1606773109.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Mezcle la ginebra, el azúcar y el zumo de limón en una coctelera llena de hielo. Agitar enérgicamente y colar en una copa de champán fría. Completar con champán. Remover suavemente.'),
+(17198, 'French Connection', 'https://www.thecocktaildb.com/images/media/drink/zaqa381504368758.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta todos los ingredientes directamente en un vaso old fashioned lleno de cubitos de hielo. Remover suavemente.'),
+(17199, 'Golden dream', 'https://www.thecocktaildb.com/images/media/drink/qrot6j1504369425.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar con hielo picado. Colar en un vaso y servir.'),
+(17200, 'Grasshopper', 'https://www.thecocktaildb.com/images/media/drink/aqm9el1504369613.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta los ingredientes en una coctelera con hielo. Agitar enérgicamente y colar en una copa de cóctel fría.'),
+(17201, 'Hemingway Special', 'https://www.thecocktaildb.com/images/media/drink/jfcvps1504369888.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en una coctelera con hielo. Agitar.'),
+(17202, 'Horse\'s Neck', 'https://www.thecocktaildb.com/images/media/drink/006k4e1504370092.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el brandy y el ginger ale directamente en un vaso highball con cubitos de hielo. Remover suavemente. Decorar con ralladura de limón. Si lo desea, añada unos chorritos de amargo de angostura.'),
+(17204, 'Long Island Iced Tea', 'https://www.thecocktaildb.com/images/media/drink/wx7hsg1504370510.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Mezcle todo el contenido en un vaso highball y siéntelo suavemente. Añada un chorrito de Coca-Cola para dar color y decore con un twist de limón o lima.'),
+(17206, 'Mint Julep', 'https://www.thecocktaildb.com/images/media/drink/squyyq1439907312.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'En un vaso highball, mezclar suavemente la menta, el azúcar y el agua. Llenar el vaso con hielo picado, añadir Bourbon y remover bien hasta que el vaso esté bien escarchado. Decorar con una ramita de menta.'),
+(17207, 'Pina Colada', 'https://www.thecocktaildb.com/images/media/drink/upgsue1668419912.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Mezclar con hielo picado en la batidora hasta obtener una mezcla homogénea. Verter en un vaso frío, decorar y servir.'),
+(17209, 'Barracuda', 'https://www.thecocktaildb.com/images/media/drink/jwmr1x1504372337.jpg', 'Ordinary Drink', 'Alcoholico', 'Margarita glass', 'Agitar los ingredientes con hielo. Colar en un vaso y completar con vino espumoso.'),
+(17210, 'Bramble', 'https://www.thecocktaildb.com/images/media/drink/twtbh51630406392.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-Fashioned glass', 'Llenar el vaso con hielo picado. Echar por encima la ginebra, el zumo de limón y el sirope simple. Remover y, a continuación, verter el licor de mora en forma circular para crear un efecto marmolado. Decorar con dos moras y una rodaja de limón.'),
+(17211, 'Dark and Stormy', 'https://www.thecocktaildb.com/images/media/drink/t1tn0s1504374905.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'En un vaso highball lleno de hielo, añadir 6 cl de ron oscuro y completar con cerveza de jengibre. Decorar con una rodaja de lima.'),
+(17212, 'Espresso Martini', 'https://www.thecocktaildb.com/images/media/drink/n0sx531504372951.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Vierte los ingredientes en una coctelera llena de hielo, agita enérgicamente y cuela en una copa de martini fría'),
+(17213, 'French Martini', 'https://www.thecocktaildb.com/images/media/drink/clth721504373134.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en una coctelera con cubitos de hielo. Agitar bien y colar en una copa de cóctel fría. Exprima el aceite de la cáscara de limón sobre la bebida.'),
+(17215, 'Spritz', 'https://www.thecocktaildb.com/images/media/drink/j9evx11504373665.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-Fashioned glass', 'Servir en un vaso con hielo, decorar y servir.'),
+(17216, 'Tommy\'s Margarita', 'https://www.thecocktaildb.com/images/media/drink/loezxn1504373874.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-Fashioned glass', 'Agitar y colar en una copa de cóctel fría.'),
+(17217, 'Vampiro', 'https://www.thecocktaildb.com/images/media/drink/yfhn371504374246.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-Fashioned glass', 'Los vampiros pueden prepararse en un vaso alto o en un vaso old fashioned. En primer lugar, los camareros pueden \"poner el borde\" del vaso con sal Kosher, lo que se hace colocando una capa de sal Kosher sobre una tabla de cortar, humedeciendo el borde del vaso con zumo de lima o agua y colocando el borde del vaso boca abajo sobre la sal Kosher, de modo que la sal se pegue al borde humedecido. El segundo paso es llenar la mitad del vaso con hielo y añadir uno o dos vasos llenos de tequila de alta calidad. El siguiente paso es añadir los elementos aromatizantes. Para ello, se exprime una lima fresca en el vaso, se añaden unos granos de sal, se añade gaseosa con sabor a cítricos hasta que el vaso esté 4/5 lleno y, a continuación, se añade Viuda de Sánchez picante (o zumo de naranja, zumo de lima y pico de gallo). El último paso es remover los ingredientes para que se mezclen bien los sabores.'),
+(17218, 'Vesper', 'https://www.thecocktaildb.com/images/media/drink/mtdxpa1504374514.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agite sobre hielo hasta que esté bien frío, luego cuele en una copa honda y decore con una rodaja fina de cáscara de limón.'),
+(17219, 'Yellow Bird', 'https://www.thecocktaildb.com/images/media/drink/2t9r6w1504374811.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', '\nAgitar y colar en una copa de cóctel fría.'),
+(17220, 'Butter Baby', 'https://www.thecocktaildb.com/images/media/drink/1xhjk91504783763.jpg', 'Shake', 'Alcoholico', 'Beer mug', 'Mezclar en una licuadora. Sirva en una jarra de cerveza fría con arándanos frescos y caramelo como cobertura.'),
+(17221, 'Boozy Snickers Milkshake', 'https://www.thecocktaildb.com/images/media/drink/861tzm1504784164.jpg', 'Shake', 'Alcoholico', 'Mason jar', 'Coloque las barras de snickers en una bolsa de plástico y enróllelas con un rodillo hasta que queden trituradas. Agregue los trozos de snickers triturados, el helado, la leche, la salsa de caramelo, la salsa de chocolate y el licor de chocolate a una licuadora. Licue hasta que el batido esté espeso y espumoso. Vierta en vasos y cubra con licor de chocolate y crema batida.'),
+(17222, 'A1', 'https://www.thecocktaildb.com/images/media/drink/2x8thr1504816928.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Verter todos los ingredientes en una coctelera, mezclar y servir con hielo en una copa fría.'),
+(17223, 'Abbey Martini', 'https://www.thecocktaildb.com/images/media/drink/2mcozt1504817403.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Ponga todos los ingredientes en una coctelera, mézclelos y cuele el contenido en una copa de cóctel fría.'),
+(17224, 'Absolutely Fabulous', 'https://www.thecocktaildb.com/images/media/drink/abcpwr1504817734.jpg', 'Cocktail', 'Alcoholico', 'Champagne flute', 'Mezcle el vodka y el zumo de arándanos en una coctelera y cuélelo en un vaso. Completar con Champagne.'),
+(17225, 'Ace', 'https://www.thecocktaildb.com/images/media/drink/l3cd7f1504818306.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Agitar todos los ingredientes en una coctelera con hielo y colar en un vaso frío.'),
+(17226, 'Adam & Eve', 'https://www.thecocktaildb.com/images/media/drink/vfeumw1504819077.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agite todos los ingredientes y cuélelos en un vaso frío.'),
+(17227, 'Addington', 'https://www.thecocktaildb.com/images/media/drink/ib0b7g1504818925.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Mezcle ambos vermuts en una coctelera y cuélelos en un vaso frío. Completar con un chorrito de soda.'),
+(17228, 'Addison', 'https://www.thecocktaildb.com/images/media/drink/yzva7x1504820300.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Agite todos los ingredientes y cuélelos en un vaso frío.'),
+(17229, 'Adios Amigos Cocktail', 'https://www.thecocktaildb.com/images/media/drink/8nk2mp1504819893.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Agite todos los ingredientes y cuélelos en un vaso frío.'),
+(17230, 'Gin Rickey', 'https://www.thecocktaildb.com/images/media/drink/s00d6f1504883945.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llene hasta la mitad un vaso alto con hielo. Mezcle la ginebra y la granadina y viértalo sobre el hielo. Añada el zumo de lima o limón y complete con soda. Decore el vaso con rodajas de lima y/o limón.'),
+(17233, 'Salted Toffee Martini', 'https://www.thecocktaildb.com/images/media/drink/3s6mlr1509551211.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agrega hielo, ginebra toffee, licor de chocolate y Amaretto a una coctelera y agita vigorosamente. \nVierta el almíbar de chocolate en un platillo y sumerja la parte superior de una copa de martini en la salsa. Ralla un poco de chocolate con sal marina de Willie en otro platillo y sumerge el vaso revestido, de modo que las hojuelas se adhieran a la salsa, ¡creando un borde de chocolate!\nVierte el contenido de la coctelera en tu vaso de chocolate y espolvorea con más chocolate rallado. ¡Disfrútalo!'),
+(17239, 'Hunter\'s Moon', 'https://www.thecocktaildb.com/images/media/drink/t0iugg1509556712.jpg', 'Cocktail', 'Alcoholico', 'Balloon Glass', 'Ponga el Bombay Sapphire, el Martini Bianco, el sirope de azúcar y las moras en una coctelera con mucho hielo y agite enérgicamente antes de verter en una copa globo, completar con limonada y decorar con un gajo de naranja.'),
+(17241, 'Zombie', 'https://www.thecocktaildb.com/images/media/drink/2en3jk1509557725.jpg', 'Cocktail', 'Alcoholico', 'Hurricane glass', 'Licue a alta velocidad durante no más de 5 segundos.\n\nVierta en un vaso, agregue cubitos de hielo para llenar y luego agregue la guarnición.\n\n*Mezcla de Donn: hierva 3 ramas de canela trituradas, 1 taza de azúcar y 1 taza de agua, revolviendo hasta que el azúcar se disuelva.\n\nCocine a fuego lento durante 2 minutos, luego retírelo del fuego y déjelo reposar durante al menos 2 horas antes de colarlo en una botella de vidrio limpia.\n\nLuego agregue 1 parte de almíbar y 2 partes de jugo de pomelo fresco.'),
+(17242, 'Bombay Cassis', 'https://www.thecocktaildb.com/images/media/drink/h1e0e51510136907.jpg', 'Cocktail', 'Alcoholico', 'Balloon Glass', 'Añada el Bombay Sapphire, la Crème de Cassis y el zumo de lima a una copa de balón y agite bien para mezclar.\r\nLlene el vaso con cubitos de hielo de buena calidad.\r\nCompletar con Fever-Tree Ginger Beer fría y recién abierta.\r\nRemover suavemente para mezclar, añadir una rodaja de lima y terminar con una rodaja de jengibre fresco.'),
+(17245, 'Rosemary Blue', 'https://www.thecocktaildb.com/images/media/drink/qwc5f91512406543.jpg', 'Cocktail', 'Alcoholico', 'Balloon Glass', '1) Agregue Bombay Sapphire, Blue Curacao, una ramita de romero y una rodaja de limón suavemente exprimida a una copa tipo globo. Agite bien para combinar.\n2) Llénelo con cubitos de hielo y cubra con el agua tónica ligera Fever-Tree.\n3) Incorporar suavemente con una cuchara de bar para mezclar.'),
+(17246, 'Empellón Cocina\'s Fat-Washed Mezcal', 'https://www.thecocktaildb.com/images/media/drink/osgvxt1513595509.jpg', 'Cocktail', 'Alcoholico', 'Beer Glass', 'Para que tu grasa de cerdo sea tan deliciosa como la suya, aquí tienes su adobo y qué hacer con él (también necesitarás un costillar):\r\n\r\n4 chiles anchos, 8 chiles guajillos y 4 chiles chipotles, más 4 dientes de ajo asado, media taza de vinagre de sidra, un cuarto de cucharadita de orégano mexicano, 1 cucharadita de pimienta negra molida, un clavo entero, un cuarto de cucharadita de canela molida y media cucharadita de comino molido.\r\n\r\nTostar los chiles secos y remojarlos en agua durante al menos una hora hasta que se rehidraten. Escurrir y desechar el líquido de remojo. Mezclar los chiles remojados con el resto de ingredientes y hacer un puré hasta que quede suave.\r\n\r\nAhumar en frío un costillar de cerdo en una sartén grande con astillas de madera en un lado y carbón en el otro. Coloca otra sartén más pequeña con costillas de cerdo encima de la sartén con carbón y virutas de madera. Encienda el carbón con cuidado de no prender las astillas. Cubra ambas cacerolas con papel de aluminio y deje que se ahumen d'),
+(17247, 'The Last Word', 'https://www.thecocktaildb.com/images/media/drink/91oule1513702624.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar con hielo y colar en una copa de cóctel.'),
+(17248, 'French Negroni', 'https://www.thecocktaildb.com/images/media/drink/x8lhp41513703167.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Añada hielo a una coctelera y vierta todos los ingredientes.\r\nCon una cuchara de bar, agitar de 40 a 45 revoluciones o hasta que esté bien frío.\r\nCuele en una copa de martini o sobre hielo en un vaso con hielo. Decorar con un twist de naranja.'),
+(17249, 'Pegu Club', 'https://www.thecocktaildb.com/images/media/drink/jfkemm1513703902.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar, colar, levantar, copa de cóctel.'),
+(17250, 'Corpse Reviver', 'https://www.thecocktaildb.com/images/media/drink/gifgao1513704334.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar, colar, derecho, copa de cóctel enjuagada con absenta\r\n'),
+(17251, 'Boulevardier', 'https://www.thecocktaildb.com/images/media/drink/km84qi1513705868.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Remover con hielo, colar, decorar y servir.'),
+(17252, 'Greyhound', 'https://www.thecocktaildb.com/images/media/drink/g5upn41513706732.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Añada el vodka a un vaso Collins lleno de hielo.\r\nAñada zumo de pomelo y remueva.\r\n\r\n'),
+(17253, 'Paloma', 'https://www.thecocktaildb.com/images/media/drink/samm5j1513706393.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Remover y servir con hielo.'),
+(17254, 'Bijou', 'https://www.thecocktaildb.com/images/media/drink/rysb3r1513706985.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Remover en un vaso mezclador con hielo y colar\r\n'),
+(17255, 'Gimlet', 'https://www.thecocktaildb.com/images/media/drink/3xgldt1513707271.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Añada todos los ingredientes a una coctelera y llénela de hielo.\r\n\r\nAgitar y colar en una copa de cóctel fría o en un vaso Old Fashioned lleno de hielo fresco.\r\n\r\nDecorar con una rueda de lima.'),
+(17256, 'Martinez 2', 'https://www.thecocktaildb.com/images/media/drink/fs6kiq1513708455.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Añada todos los ingredientes a un vaso mezclador y llénelo de hielo.\r\n\r\nRemover hasta que se enfríe y colar en una copa coupé fría.'),
+(17266, 'Oatmeal Cookie', 'https://www.thecocktaildb.com/images/media/drink/bsvmlg1515792693.jpg', 'Cocktail', 'Alcoholico', 'Mason jar', 'Simplemente mézclalo todo junto.\nEstá destinado a ser un trago, pero funciona bien como una bebida adecuada para adultos con mucho hielo.\n\nSabe a galleta de avena.'),
+(17267, 'Bahama Mama', 'https://www.thecocktaildb.com/images/media/drink/tyb4a41515793339.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Añada 2 partes de club soda o más o menos al gusto.\r\n\r\nMézclelo todo y viértalo sobre un montón de hielo. Bébelo con una pajita.'),
+(17268, 'Blue Hurricane', 'https://www.thecocktaildb.com/images/media/drink/nwx02s1515795822.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Si cada parte es de 1/2 onza, utilice unas 2,5 tazas de hielo.\r\n\r\nMézclalo todo.\r\nBébelo con una pajita grande, si tienes.\r\n\r\n'),
+(17824, 'The Laverstoke', 'https://www.thecocktaildb.com/images/media/drink/6xfj5t1517748412.jpg', 'Cocktail', 'Alcoholico', 'Balloon Glass', '1) Exprima dos rodajas de lima en un vaso globo y luego agregue el cordial, Bombay Sapphire y MARTINI Rosso Vermouth y revuelva para mezclar.\n\n2) Llene completamente el vaso con cubitos de hielo y revuelva para que se enfríe.\n\n3) Cubra con Fever-Tree Ginger Ale y revuelva suavemente nuevamente para combinar.\n\n4) Adorne con una rodaja de jengibre partida y una ramita de menta despierta.'),
+(17825, 'Brigadier', 'https://www.thecocktaildb.com/images/media/drink/nl89tf1518947401.jpg', 'Cocktail', 'Alcoholico', 'Coupe Glass', 'Mezclar los ingredientes en una taza caliente y remover.'),
+(17826, 'The Jimmy Conway', 'https://www.thecocktaildb.com/images/media/drink/wbcvyo1535794478.jpg', 'Cocktail', 'Alcoholico', 'Whiskey sour glass', 'Llena el vaso con hielo\nVierta El irlandés y Disaronno\nRellenar hasta arriba con jugo de arándano\nAdorne con una rodaja de limón… ¡A disfrutar!'),
+(17827, 'Old Pal', 'https://www.thecocktaildb.com/images/media/drink/x03td31521761009.jpg', 'Cocktail', 'Alcoholico', 'Nick and Nora Glass', 'Copa de cóctel fría. Agregue los ingredientes a un vaso mezclador y llénelo 2/3 de su capacidad con hielo. Revuelva unos 20 segundos. Vaciar la copa de cóctel y colar en la copa. Adorne con una rodaja de piel de limón.'),
+(17828, 'Tipperary', 'https://www.thecocktaildb.com/images/media/drink/b522ek1521761610.jpg', 'Cocktail', 'Alcoholico', 'Nick and Nora Glass', 'Revuelva sobre hielo. Colar en vaso frío. Corta una franja amplia de cáscara de naranja y exprime los aceites de naranja sobre la bebida. Deseche la rodaja de naranja.'),
+(17829, 'Penicillin', 'https://www.thecocktaildb.com/images/media/drink/hc9b1a1521853096.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Agitar con hielo la mezcla de whisky, zumo de limón, sirope de miel y sirope de jengibre. Colar sobre hielo grande en un vaso con hielo frío. Dejar flotar el whisky ahumado por encima (asegúrese de utilizar un whisky ahumado como un Islay single malt). Decorar con jengibre confitado.'),
+(17830, 'Corn n Oil', 'https://www.thecocktaildb.com/images/media/drink/pk6dwi1592767243.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Volver a cortar la media lima por la mitad. Añada la lima, el falernum y el amargo a un vaso con hielo. Mezcle. Añadir el ron. (Se recomienda ron añejo de Barbados, como Plantation 5 años). Añadir hielo y remover. Dejar flotar el ron blackstrap por encima. Servir con pajita.'),
+(178306, 'Slippery Nipple', 'https://www.thecocktaildb.com/images/media/drink/l9tgru1551439725.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Vierta la Sambuca en un vaso de chupito, luego vierta la crema irlandesa encima para que los dos líquidos no se mezclen.'),
+(178307, 'Tequila Slammer', 'https://www.thecocktaildb.com/images/media/drink/43uhr51551451311.jpg', 'Shot', 'Alcoholico', 'Hurricane glass', 'Mezclar con cuidado para evitar que se libere el CO2 disuelto.'),
+(178308, 'Spritz Veneziano', 'https://www.thecocktaildb.com/images/media/drink/51ezka1551456113.jpg', 'Cocktail', 'Alcoholico', 'Wine Glass', 'Vierta en un vaso sobre hielo, decore y sirva.'),
+(178309, 'Espresso Rumtini', 'https://www.thecocktaildb.com/images/media/drink/acvf171561574403.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Mezclar todo en una copa de cóctel. Decorar con un poco de chocolate en polvo y granos de café.'),
+(17831, 'A Furlong Too Late', 'https://www.thecocktaildb.com/images/media/drink/ssxvww1472669166.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el ron y la cerveza de jengibre en un vaso highball casi lleno de cubitos de hielo. Remover bien. Decorar con el twist de limón.'),
+(178310, 'Brooklyn', 'https://www.thecocktaildb.com/images/media/drink/ojsezf1582477277.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Mezclar los ingredientes con hielo y remover hasta que estén bien fríos. Cuele en una copa de cóctel fría.'),
+(178311, 'Broadside', 'https://www.thecocktaildb.com/images/media/drink/l2o6xu1582476870.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llene el vaso hasta la mitad con cubitos de hielo. Machaque el ajenjo y añádalo al hielo. Vierta el ron, el whisky y las mantequillas, ¡y sírvalo!'),
+(178312, 'Bloody Punch', 'https://www.thecocktaildb.com/images/media/drink/5yhd3n1571687385.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Coloque las fresas descongeladas en un bol grande. Machácalas con un tenedor para que no queden trozos grandes.\r\n\r\nPaso\r\n2\r\n\r\n \r\nEn una ponchera o jarra, mezcla el puré de fresas, la pulpa de lima y la soda. Mezcle bien.\r\n\r\nPaso\r\n3\r\n\r\n \r\nAñade los arándanos y las pasas. Flotarán y parecerán bichos en el ponche.'),
+(178313, 'Halloween Punch', 'https://www.thecocktaildb.com/images/media/drink/7hcgyj1571687671.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Poner en un cazo grande el zumo de cereza, la piel de naranja, la guindilla, la canela en rama, el clavo y el jengibre. Cocer a fuego lento durante 5 minutos y apagar el fuego. Déjelo enfriar y póngalo a enfriar durante al menos 4 horas, o hasta 2 días; cuanto más tiempo lo deje, más intensos serán los sabores. Si se sirve a niños pequeños, retire la guindilla al cabo de unas horas.\r\n\r\nCuando esté listo para servir, vierta el zumo en una jarra. Sírvalo en botellas o vasos de cristal y coloque una pajita en cada uno. Si va a añadir vodka, hágalo en este momento. Cuelga un colmillo dulce de cada vaso.'),
+(178314, 'Gin Basil Smash', 'https://www.thecocktaildb.com/images/media/drink/jqh2141572807327.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mezcle hojas de albahaca (~ 10) con sirope de azúcar en una coctelera. Añadir ginebra y zumo de limón.\r\nFiltrar y servir en un vaso con hielo.'),
+(178315, 'Munich Mule', 'https://www.thecocktaildb.com/images/media/drink/rj55pl1582476101.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llenar el vaso con hielo\r\nVierta la ginebra y el zumo de lima\r\nLlenar el vaso con Ginger Beer\r\nDecorar con pepino y rodaja de lima'),
+(178316, 'Honey Bee', 'https://www.thecocktaildb.com/images/media/drink/vu8l7t1582475673.jpg', 'Cocktail', 'Alcoholico', 'Margarita glass', 'Agitar los ingredientes con hielo picado\r\n'),
+(178317, 'Bee\'s Knees', 'https://www.thecocktaildb.com/images/media/drink/tx8ne41582475326.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Agitar los ingredientes con hielo picado\r\nDecorar con piel de naranja\r\n'),
+(178318, '747 Drink', 'https://www.thecocktaildb.com/images/media/drink/i9suxb1582474926.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llene un vaso Collins con hielo.\r\nVierta el vodka, el cordial de lima y el zumo de arándanos.\r\nRellene con Sprite.\r\nDecorar con una rueda de lima o unos arándanos.'),
+(178319, 'Aquamarine', 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Agitar bien en una coctelera con hielo.\r\nColar en una copa de martini.'),
+(17832, 'A Night In Old Mandalay', 'https://www.thecocktaildb.com/images/media/drink/vyrvxt1461919380.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el ron ligero, el ron añejo, el zumo de naranja y el zumo de limón. Agitar bien. Colar en un vaso highball casi lleno de cubitos de hielo. Añadir el ginger ale. Decorar con el twist de limón.'),
+(178320, 'Banana Cream Pi', 'https://www.thecocktaildb.com/images/media/drink/m5p67n1582474609.jpg', 'Cocktail', 'Alcoholico', 'Wine Glass', 'Servir con hielo.'),
+(178321, 'Amaretto fizz', 'https://www.thecocktaildb.com/images/media/drink/92h3jz1582474310.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Mezcle Amaretto, zumo de naranja y vino espumoso en una jarra. Si lo desea, añada una tira de ralladura de naranja a cada vaso.'),
+(178322, 'Spice 75', 'https://www.thecocktaildb.com/images/media/drink/0108c41576797064.jpg', 'Cocktail', 'Alcoholico', 'Wine Glass', 'Caliente suavemente 60 g de azúcar en polvo dorado en una cacerola con 30 ml de agua y 1 cucharada de pimienta de Jamaica. Cocine a fuego lento hasta que el azúcar se disuelva, luego deje enfriar la mezcla. Colar por un colador forrado con un filtro de café (o una doble capa de papel de cocina).\n\nVierta 60 ml del almíbar especiado en una coctelera junto con 200 ml de ron y 90 ml de zumo de lima. Agitar con hielo y colar entre seis vasos flauta. Complete con 600 ml de champán y decore cada uno con un toque de naranja.'),
+(178323, 'Passion Fruit Martini', 'https://www.thecocktaildb.com/images/media/drink/6trfve1582473527.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en un vaso y revuelva. Adorne con medio trozo de maracuyá.'),
+(178325, 'Aperol Spritz', 'https://www.thecocktaildb.com/images/media/drink/iloasq1587661955.jpg', 'Cocktail', 'Alcoholico', 'Wine Glass', 'Pon un par de cubitos de hielo en 2 vasos y añade una medida de 50 ml de Aperol en cada uno. Reparta el prosecco entre los vasos y, si lo desea, rellene con soda.'),
+(178326, 'White Wine Sangria', 'https://www.thecocktaildb.com/images/media/drink/hnuod91587851576.jpg', 'Punch / Party Drink', 'Alcoholico', 'Pitcher', 'Picar el Limón, la Lima y las demás frutas en trozos grandes. Llenar la jarra con el vino blanco y mezclar con el Brandy de Manzana. Añada agua con gas al gusto.'),
+(178327, 'Pineapple Paloma', 'https://www.thecocktaildb.com/images/media/drink/pg8iw31593351601.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Frote el borde de cada vaso con una rodaja de lima y sumérjalo en sal.\r\nAñade hielo, tequila, zumo de pomelo, zumo de lima y completa con soda de piña.\r\nRemover rápidamente.\r\nDecorar con piña fresca o lima.'),
+(178328, 'Funk and Soul', 'https://www.thecocktaildb.com/images/media/drink/qtv83q1596015790.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Mezcle todos los ingredientes y cuélelos en un vaso Collins. Utilice ron jamaicano siempre que sea posible para obtener un sabor más auténtico.'),
+(178329, 'Captain Kidd\'s Punch', 'https://www.thecocktaildb.com/images/media/drink/d83spj1596017390.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Mezclar todos los ingredientes en una coctelera y colar en un vaso Collins. Utilice ron oscuro caribeño para un sabor más dulce.'),
+(17833, 'A. J.', 'https://www.thecocktaildb.com/images/media/drink/l74qo91582480316.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(178330, 'The Philosopher', 'https://www.thecocktaildb.com/images/media/drink/sp8hkp1596017787.jpg', 'Cocktail', 'Alcoholico', 'Margarita glass', 'Agrega todos los licores en una coctelera (es mejor usar ginebra Hendricks), así como el amargo de naranja y el jugo de limón. Colar en una copa Margarita y cubrir con Prosecco.'),
+(178331, 'Bounty Hunter', 'https://www.thecocktaildb.com/images/media/drink/t8bgxl1596018175.jpg', 'Cocktail', 'Alcoholico', 'Margarita glass', 'Añada los licores en una coctelera, así como el zumo de piña, y cuélelo en una copa Margarita. Añada Prosecco y decore con arándanos.'),
+(178332, 'Smashed Watermelon Margarita', 'https://www.thecocktaildb.com/images/media/drink/dztcv51598717861.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'En un tarro de cristal, mezcla la sandía y 5 hojas de menta hasta obtener un puré y cuélalo. A continuación, añade el zumo de pomelo, el zumo de media lima y el tequila, así como un poco de hielo. Tapar el tarro y agitar. Viértalo en un vaso y añada más hielo. Decorar con menta fresca y una rodajita de sandía.'),
+(178333, 'Raspberry Julep', 'https://www.thecocktaildb.com/images/media/drink/hyztmx1598719265.jpg', 'Cocktail', 'Alcoholico', 'Cordial glass', 'Triture suavemente las hojas de menta y el almíbar de frambuesa en el fondo de la taza. Agrega hielo picado y Bourbon a la taza y luego revuelve. Cubra con más hielo y decore con una ramita de menta.'),
+(178334, 'Death in the Afternoon', 'https://www.thecocktaildb.com/images/media/drink/y7s3rh1598719574.jpg', 'Cocktail', 'Alcoholico', 'Margarita glass', 'Tan fácil como te apetezca, vierte la absenta en una copa helada y completa con champán. Debe beberse a media tarde para obtener un efecto óptimo.'),
+(178335, 'Lazy Coconut Paloma', 'https://www.thecocktaildb.com/images/media/drink/rytuex1598719770.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mezclar el licor de coco (preferiblemente tequila) con el zumo de pomelo y completar con agua de soda. Decorar con una rodaja grande de pomelo en el interior del vaso.'),
+(178336, 'Blueberry Mojito', 'https://www.thecocktaildb.com/images/media/drink/07iep51598719977.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mezcla los arándanos con los demás ingredientes y sírvelo en un vaso highball. Decorar con menta y media rodaja de lima.'),
+(178337, 'Autumn Garibaldi', 'https://www.thecocktaildb.com/images/media/drink/ne7re71604179012.jpg', 'Cocktail', 'Alcoholico', 'Cordial glass', 'Vierta todos los ingredientes en un vaso con hielo y remuévalos con una cuchara de bar. Decorar con unas rodajas de naranja.'),
+(178338, 'Pure Passion', 'https://www.thecocktaildb.com/images/media/drink/4tymma1604179273.jpg', 'Cocktail', 'Alcoholico', 'Whiskey sour glass', 'Mezcle todos los ingredientes con una coctelera y sirva con hielo picado con menta y harina comestible si está disponible.'),
+(178339, 'The Strange Weaver', 'https://www.thecocktaildb.com/images/media/drink/opxjzh1604179528.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Mezclar los ingredientes lentamente en un vaso con hielo, decorar con una rodaja de naranja'),
+(17834, 'Abbey Cocktail', 'https://www.thecocktaildb.com/images/media/drink/mr30ob1582479875.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes (excepto la cereza) con hielo y colar en una copa de cóctel. Cubrir con la cereza y servir.'),
+(178340, 'Garibaldi Negroni', 'https://www.thecocktaildb.com/images/media/drink/kb4bjg1604179771.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mézclalo todo en una coctelera y adórnalo con una rodaja de naranja. ¡Llene su dosis de vitamina C y cóctel al mismo tiempo!'),
+(178341, 'Orange Rosemary Collins', 'https://www.thecocktaildb.com/images/media/drink/mokcas1604179977.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Añada las bebidas espirituosas en el fondo del vaso y complete a partes iguales con las bebidas mezcladas. Adorne con rodajas de naranja en el interior del vaso y un poco de romero en la parte superior.'),
+(178342, 'Gin and Soda', 'https://www.thecocktaildb.com/images/media/drink/nzlyc81605905755.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Vierta la ginebra y el agua de soda en un vaso highball casi lleno de cubitos de hielo.\r\nRemover bien.\r\nAdorne con la rodaja de lima.'),
+(178343, 'Michelada', 'https://www.thecocktaildb.com/images/media/drink/u736bd1605907086.jpg', 'Cocktail', 'Alcoholico', 'Pint glass', 'Mezcle la cerveza con zumo de tomate, zumo de lima recién exprimido y salsa Worcestershire, salsa teriyaki, salsa de soja o salsa picante.\r\nSe sirve en un vaso frío con borde de sal.\r\n'),
+(178344, 'Figgy Thyme', 'https://www.thecocktaildb.com/images/media/drink/pbw4e51606766578.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'En una bolsa lewis, tritura un poco de hielo como un baller/maníaco (@glacioice). Vierte tu preciado hielo en un vaso Collins. En una coctelera, mezcla los higos y el tomillo. Añade el vodka de miel, el zumo de limón y un cubito de hielo grande (@glacioice). Agitar hasta que esté bien frío y colar en el vaso. Añadir agua tónica y, por último, 2 chorritos de amargo de angostura. Decorar con rodajas de higo y tomillo.'),
+(178345, 'Hot Toddy', 'https://www.thecocktaildb.com/images/media/drink/ggx0lv1613942306.jpg', 'Cocktail', 'Alcoholico', 'Irish coffee cup', 'PASO 1\r\nBata el whisky y la miel y repártalos en 2 vasos refractarios. Añada la mitad de la rama de canela a cada uno y, a continuación, añada 200 ml de agua hirviendo.\r\n\r\nPASO 2\r\nAñada un chorrito de zumo de limón a cada vaso, pruébelo y añada el zumo que prefiera. Termine cada uno con una rodaja de limón, salpicada con un clavo, y sirva inmediatamente.'),
+(178346, 'Elderflower Caipirinha', 'https://www.thecocktaildb.com/images/media/drink/dif7a31614006331.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Coge el vaso y machaca la lima en él. Llene el vaso con hielo picado y añada la cachaca. Remueve bien y añade más hielo picado. Decóralo con lima y ¡a disfrutar!'),
+(178347, 'Winter Rita', 'https://www.thecocktaildb.com/images/media/drink/fwpd0v1614006733.jpg', 'Beer', 'Alcoholico', 'Highball Glass', 'Borde de sal. Combine todos los ingredientes, agite con hielo y cuele sobre hielo fresco.⠀'),
+(178348, 'Winter Paloma', 'https://www.thecocktaildb.com/images/media/drink/u5f0pz1614007748.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'La Paloma favorita de todos recibe un delicioso cambio de imagen indio. Tequila reposado infundido con \"Timur Pepper\", que tiene notas cítricas y de pomelo y se cultiva en las estribaciones del Himalaya. También produce una ligera sensación de entumecimiento y hormigueo en el labio cuando se consume. También hemos condimentado el zumo de pomelo fresco con la cálida mezcla de especias del Himalaya. La combinación de todos estos elementos interesantes nos ha permitido mejorar su experiencia al beber Paloma.'),
+(178349, 'Snowday', 'https://www.thecocktaildb.com/images/media/drink/4n1ipk1614009624.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Remover todos los ingredientes con hielo. Colar en un vaso con hielo fresco. Exprima la piel de naranja sobre la bebida y decore.'),
+(17835, 'Abilene', 'https://www.thecocktaildb.com/images/media/drink/smb2oe1582479072.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta todos los ingredientes en un vaso highball casi lleno de cubitos de hielo. Remover bien.'),
+(178350, 'The Galah', 'https://www.thecocktaildb.com/images/media/drink/sy7y6r1614775067.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Mezclar las porciones alcohólicas y cubrir con el zumo de piña y lima.'),
+(178352, 'Frosé', 'https://www.thecocktaildb.com/images/media/drink/b4cadp1619695347.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Paso 1\r\nVierta el rosado en un molde de 13x9\" y congélelo hasta que esté casi sólido (no se solidificará completamente debido al alcohol), al menos 6 horas.\r\n\r\nPaso 2\r\nMientras tanto, ponga a hervir el azúcar y ½ taza de agua en un cazo mediano; cocine, removiendo constantemente, hasta que el azúcar se disuelva, unos 3 minutos. Añada las fresas, retire del fuego y deje reposar 30 minutos para que el sirope adquiera el sabor a fresa. Páselo por un colador de malla fina a un bol pequeño (no presione los sólidos); cúbralo y refrigérelo hasta que se enfríe, unos 30 minutos.\r\n\r\nPaso 3\r\nPasar el rosado a una batidora. Añadir el zumo de limón, 3½ onzas de sirope de fresa y 1 taza de hielo picado y triturar hasta obtener una mezcla homogénea. Pasar la jarra de la batidora al congelador y congelar hasta que el frosé esté espeso (para que tenga consistencia de batido), entre 25 y 35 minutos.\r\n\r\nPaso 4\r\nVolver a batir hasta que el frosé esté espumoso. Repartir en vasos.\r\n\r\nPaso 5\r\nPrepáralo: El rosado se puede congelar '),
+(178353, 'Apple Highball', 'https://www.thecocktaildb.com/images/media/drink/66mt9b1619695719.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Ponga hielo en un vaso highball. Frote una rodaja de lima fresca alrededor del borde y colóquela en el vaso. Añade un chupito de aguardiente de manzana, otro de Courvoisier y completa con ginger ale.'),
+(178354, 'Pink Moon', 'https://www.thecocktaildb.com/images/media/drink/lnjoc81619696191.jpg', 'Cocktail', 'Alcoholico', 'Whiskey Glass', 'Agitar lentamente en una coctelera con hielo, colar en un vaso cuadrado de whisky. Cubrir con hielo fresco. Añadir las moras para adornar. Añada flores y una hoja verde para darle un toque especial.'),
+(178355, 'Mountain Bramble', 'https://www.thecocktaildb.com/images/media/drink/stwiva1619704025.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Machacar las moras en un vaso tumbler. Mezclar la ginebra, el zumo de limón y el jarabe de azúcar en una coctelera y colar sobre hielo picado. Añadir agua con gas y decorar con más moras y un poco de menta.'),
+(178356, 'Butterfly Effect', 'https://www.thecocktaildb.com/images/media/drink/ht3hnk1619704289.jpg', 'Cocktail', 'Alcoholico', 'Hurricane glass', 'Coge tu lata boston, llénala de cubitos de hielo e introduce todos los ingredientes menos la limonada.\r\nAhora es el momento de batir lo que te dio tu madre hasta que todos los ingredientes se mezclen a la perfección.\r\nPon unos cubitos de hielo en el vaso huracán, bátelos para enfriarlo todo y cuela el cóctel de frambuesa y vodka en el vaso.\r\nAñade limonada y una ramita de menta para decorar.\r\nPuedes seguir bebiendo en este punto o ir a intentar coger unas cuantas mariposas para terminar, la decisión es tuya.'),
+(178357, 'Pornstar Martini', 'https://www.thecocktaildb.com/images/media/drink/xjhjdf1630406071.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Directo: Vierta todos los ingredientes en un vaso mezclador con cubitos de hielo. Agite bien. Colar en una copa de cóctel de martini fría. Corta la maracuyá por la mitad y úsala como guarnición. Vierta el prosecco en un vaso de chupito frío y sírvalo junto con el martini.');
+INSERT INTO `cocteles` (`id`, `nombre`, `miniatura`, `categoria`, `tipo`, `vaso`, `instrucciones`) VALUES
+(178358, 'Mango Mojito', 'https://www.thecocktaildb.com/images/media/drink/wfqmgm1630406820.jpg', 'Cocktail', 'Alcoholico', 'Jar', 'Exprimir el zumo de 1½ limas y mezclarlo con el mango para obtener un puré suave.\r\nCorte el resto de las limas en cuartos y, a continuación, vuelva a cortar cada gajo por la mitad. Ponga 2 trozos de lima en un vaso alto para cada persona y añada 1 cucharadita de azúcar glas y 5-6 hojas de menta a cada vaso. Aplástelo todo con un batidor o con la punta de un rodillo para liberar todos los sabores de la lima y la menta.\r\nDivida el puré de mango entre los vasos y añada 30 ml de ron blanco y un puñado de hielo picado a cada uno, removiendo bien para mezclarlo todo. Completar con agua con gas para servir y decorar con más menta, si se desea.'),
+(178359, 'Kiwi Martini', 'https://www.thecocktaildb.com/images/media/drink/bmxmyq1630407098.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'El martini de kiwi es un cóctel de vodka muy divertido y una de las mejores bebidas que utilizan fruta fresca. Aunque hay algunas recetas circulando por ahí, esta es una de las más fáciles y es un martini verde absolutamente delicioso de beber.\r\n\r\nPara esta receta, basta con mezclar rodajas de kiwi con sirope simple y agitarlo con vodka. Es una bebida que cualquiera puede preparar en minutos y un cóctel perfecto para presumir de tu vodka favorito.'),
+(17836, 'Acapulco', 'https://www.thecocktaildb.com/images/media/drink/il9e0r1582478841.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezclar y agitar todos los ingredientes (excepto la menta) con hielo y colar en un vaso old-fashioned sobre cubitos de hielo. Añada la ramita de menta y sirva.'),
+(178360, 'Lemon Elderflower Spritzer', 'https://www.thecocktaildb.com/images/media/drink/125w0o1630407389.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Vierte todos los ingredientes sobre hielo, remueve y ¡a disfrutar!\r\n'),
+(178362, 'Vodka Slime', 'https://www.thecocktaildb.com/images/media/drink/apex461643588115.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llene el vaso con hielo. Añada el vodka, el 7-up y termine con el zumo de lima.'),
+(178363, 'Vodka Lemon', 'https://www.thecocktaildb.com/images/media/drink/mql55h1643820632.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'El vodka limón se prepara directamente en un vaso highball o en un vaso grande: pon 6-7 cubitos de hielo en el vaso, vierte el vodka, la limonada y mezcla con una cuchara de bar. Por último, decore con una rodaja de limón y, si lo prefiere, añada unas hojas de menta. Tu vodka limón está listo para servir.'),
+(178364, 'Vodka Tonic', 'https://www.thecocktaildb.com/images/media/drink/9koz3f1643821062.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Lavar y cortar 1 gajo y 1 rodaja de lima o limón.\r\nLlenar un vaso con hielo fresco.\r\nVierta la dosis deseada de vodka y complete con la tónica.\r\nExprima la rodaja de lima en el vaso y decore con la rodaja.\r\nEso es todo, muy sencillo: ¡es la receta de la felicidad!'),
+(178365, 'Gin Tonic', 'https://www.thecocktaildb.com/images/media/drink/qcgz0t1643821443.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llenar un vaso highball con hielo, verter la ginebra, completar con agua tónica y exprimir una rodaja de limón y decorar con una rodaja de limón.'),
+(178366, 'Gin Lemon', 'https://www.thecocktaildb.com/images/media/drink/6gdohq1681212476.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Para la preparación del gin lemon no necesitarás la coctelera. Llene el vaso con hielo, vierta la ginebra y la limonada por encima. Mezcle suavemente y decore con una rodaja de limón. Los que lo prefieran también pueden añadir unas hojas de menta. Su gin lemon está listo para servir.'),
+(178367, 'Ramos Gin Fizz', 'https://www.thecocktaildb.com/images/media/drink/967t911643844053.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Preparar todos los ingredientes en la encimera para poder trabajar bien y rápido, especialmente la nata y la clara de huevo.\r\n\r\nVierta todos los ingredientes en una coctelera.\r\n\r\nAgita enérgicamente durante 1 minuto: la nata y la clara de huevo deben mezclarse perfectamente, así que no tengas prisa.\r\n\r\nAhora abre la coctelera, pon un poco de hielo y agita durante 1-2 minutos. Depende de cuánto tiempo puedas resistir.\r\n\r\nVierte en un vaso highball, añade un chorrito de soda y adorna al gusto.\r\n\r\nEl Gin Fizz de Ramos se tomaba antiguamente como bebida tonificante o incluso como desayuno, pruébelo como aperitivo y después de cenar y descubrirá una pequeña joya hoy perdida.'),
+(178368, 'Planter’s Punch', 'https://www.thecocktaildb.com/images/media/drink/jn6o251643844541.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Exprimir una naranja y colar el zumo. Poner todos los ingredientes en una coctelera con hielo y agitar durante al menos 12 segundos. Cuélalo en un vaso highball y decóralo con un trozo de piña o la fruta que prefieras.'),
+(178369, 'Cocktail Horse’s Neck', 'https://www.thecocktaildb.com/images/media/drink/4vobt21643844913.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Lave y cepille un limón ecológico sin tratar y, a continuación, corte una espiral de piel de limón, utilizando una peladora de cítricos. Si es demasiado grande, córtela con un cuchillo afilado.\r\n\r\nPon un poco de hielo en un vaso alto, coloca la piel de limón dentro y vierte el coñac, añade la cerveza de jengibre y deja caer 2-3 gotas de Angostura. Es fácil de hacer, pero una vez que lo pruebes te encantará.'),
+(17837, 'Adam', 'https://www.thecocktaildb.com/images/media/drink/v0at4i1582478473.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en una copa de cóctel.'),
+(178370, 'Mauresque', 'https://www.thecocktaildb.com/images/media/drink/duwfa11686236556.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', '1 - Vierta el Ricard (o pastis)\n2 - Vierta el sirope de orgeat\n3 - Por último, vierta el agua y añada cubitos de hielo a su gusto.\n\nAñada los cubitos de hielo al final, de lo contrario el sirope y el pastis no se mezclan bien.'),
+(178371, 'Old Cuban', 'https://www.thecocktaildb.com/images/media/drink/eo8gfx1699022995.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agite con hielo un puñado de menta, 2 onzas de ron blanco, 1 onza de sirope de azúcar, 1 onza de zumo de lima y 2 chorritos de amargo de angostura. Cuele dos veces en un vaso y añada 2 onzas de prosecco.'),
+(17838, 'Adonis Cocktail', 'https://www.thecocktaildb.com/images/media/drink/xrvruq1472812030.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes con hielo, colar el contenido en una copa de cóctel y servir.'),
+(17839, 'Affair', 'https://www.thecocktaildb.com/images/media/drink/h5za6y1582477994.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el aguardiente, el zumo de naranja y el zumo de arándanos sobre hielo en un vaso alto. Añadir club soda y servir.'),
+(17840, 'Affinity', 'https://www.thecocktaildb.com/images/media/drink/wzdtnn1582477684.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Remover bien. Colar en una copa de cóctel.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ingredientes`
+--
+
+CREATE TABLE `ingredientes` (
+	`id` int(11) NOT NULL,
+	`nombre` varchar(255) DEFAULT NULL,
+	`nombre_en` varchar(255) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ingredientes`
+--
+
+INSERT INTO `ingredientes` (`id`, `nombre`, `nombre_en`) VALUES
+(1, NULL, 'Vodka'),
+(2, NULL, 'Gin'),
+(3, NULL, 'Rum'),
+(4, NULL, 'Tequila'),
+(5, NULL, 'Scotch'),
+(6, NULL, 'Absolut Kurant'),
+(7, NULL, 'Absolut Peppar'),
+(8, NULL, 'Absolut Vodka'),
+(9, NULL, 'Advocaat'),
+(10, NULL, 'Aejo Rum'),
+(11, NULL, 'Aftershock'),
+(12, NULL, 'Agave Syrup'),
+(13, NULL, 'Ale'),
+(14, NULL, 'Allspice'),
+(16, NULL, 'Almond Flavoring'),
+(17, NULL, 'Almond'),
+(18, NULL, 'Amaretto'),
+(19, NULL, 'Angelica Root'),
+(20, NULL, 'Angostura Bitters'),
+(21, NULL, 'Anis'),
+(22, NULL, 'Anise'),
+(23, NULL, 'Anisette'),
+(24, NULL, 'Aperol'),
+(25, NULL, 'Apfelkorn'),
+(26, NULL, 'Apple Brandy'),
+(27, NULL, 'Apple Cider'),
+(28, NULL, 'Apple Juice'),
+(29, NULL, 'Apple Schnapps'),
+(30, NULL, 'Apple'),
+(31, NULL, 'Applejack'),
+(32, NULL, 'Apricot Brandy'),
+(33, NULL, 'Apricot Nectar'),
+(34, NULL, 'Apricot'),
+(35, NULL, 'Aquavit'),
+(36, NULL, 'Asafoetida'),
+(37, NULL, 'Añejo Rum'),
+(39, NULL, 'Bacardi Limon'),
+(40, NULL, 'Bacardi'),
+(43, NULL, 'Baileys Irish Cream'),
+(44, NULL, 'Banana Liqueur'),
+(45, NULL, 'Banana Rum'),
+(46, NULL, 'Banana Syrup'),
+(47, NULL, 'Banana'),
+(48, NULL, 'Barenjager'),
+(49, NULL, 'Basil'),
+(51, NULL, 'Beef Stock'),
+(52, NULL, 'Beer'),
+(53, NULL, 'Benedictine'),
+(54, NULL, 'Berries'),
+(55, NULL, 'Bitter lemon'),
+(56, NULL, 'Bitters'),
+(57, NULL, 'Black Pepper'),
+(58, NULL, 'Black Rum'),
+(59, NULL, 'Black Sambuca'),
+(60, NULL, 'Blackberries'),
+(61, NULL, 'Blackberry Brandy'),
+(62, NULL, 'Blackberry Schnapps'),
+(63, NULL, 'Blackcurrant Cordial'),
+(64, NULL, 'Blackcurrant Schnapps'),
+(65, NULL, 'Blackcurrant Squash'),
+(66, NULL, 'Blended Whiskey'),
+(67, NULL, 'Blue Curacao'),
+(68, NULL, 'Blue Maui'),
+(69, NULL, 'Blueberries'),
+(70, NULL, 'Blueberry Schnapps'),
+(71, NULL, 'Bourbon'),
+(74, NULL, 'Brandy'),
+(77, NULL, 'Brown Sugar'),
+(79, NULL, 'Butter'),
+(80, NULL, 'Butterscotch Schnapps'),
+(81, NULL, 'Cachaca'),
+(82, NULL, 'Calvados'),
+(83, NULL, 'Campari'),
+(84, NULL, 'Canadian Whisky'),
+(85, NULL, 'Candy'),
+(86, NULL, 'Cantaloupe'),
+(87, NULL, 'Caramel Coloring'),
+(88, NULL, 'Carbonated Soft Drink'),
+(89, NULL, 'Carbonated Water'),
+(90, NULL, 'Cardamom'),
+(93, NULL, 'Cayenne Pepper'),
+(94, NULL, 'Celery Salt'),
+(95, NULL, 'Celery'),
+(96, NULL, 'Chambord Raspberry Liqueur'),
+(97, NULL, 'Champagne'),
+(99, NULL, 'Cherries'),
+(100, NULL, 'Cherry Brandy'),
+(101, NULL, 'Cherry Cola'),
+(102, NULL, 'Cherry Grenadine'),
+(103, NULL, 'Cherry Heering'),
+(104, NULL, 'Cherry Juice'),
+(105, NULL, 'Cherry Liqueur'),
+(106, NULL, 'Cherry'),
+(112, NULL, 'Chocolate Ice-cream'),
+(113, NULL, 'Chocolate Liqueur'),
+(114, NULL, 'Chocolate Milk'),
+(115, NULL, 'Chocolate Syrup'),
+(116, NULL, 'Chocolate'),
+(120, NULL, 'Cider'),
+(121, NULL, 'Cinnamon Schnapps'),
+(122, NULL, 'Cinnamon'),
+(123, NULL, 'Citrus Vodka'),
+(124, NULL, 'Clamato Juice'),
+(126, NULL, 'Cloves'),
+(127, NULL, 'Club Soda'),
+(128, NULL, 'Coca-Cola'),
+(130, NULL, 'Cocktail Onion'),
+(131, NULL, 'Cocoa Powder'),
+(132, NULL, 'Coconut Cream'),
+(133, NULL, 'Coconut Liqueur'),
+(134, NULL, 'Coconut Milk'),
+(135, NULL, 'Coconut Rum'),
+(136, NULL, 'Coconut Syrup'),
+(137, NULL, 'Coffee Brandy'),
+(138, NULL, 'Coffee Liqueur'),
+(139, NULL, 'Coffee'),
+(141, NULL, 'Cognac'),
+(142, NULL, 'Cointreau'),
+(143, NULL, 'Cola'),
+(144, NULL, 'Cold Water'),
+(145, NULL, 'Condensed Milk'),
+(147, NULL, 'Coriander'),
+(149, NULL, 'Corn Syrup'),
+(151, NULL, 'Cornstarch'),
+(152, NULL, 'Corona'),
+(154, NULL, 'Cranberries'),
+(155, NULL, 'Cranberry Juice'),
+(156, NULL, 'Cranberry Liqueur'),
+(157, NULL, 'Cranberry Vodka'),
+(158, NULL, 'Cream of Coconut'),
+(159, NULL, 'Cream Sherry'),
+(160, NULL, 'Cream Soda'),
+(161, NULL, 'Cream'),
+(162, NULL, 'Creme De Almond'),
+(163, NULL, 'Creme De Banane'),
+(164, NULL, 'Creme De Cacao'),
+(165, NULL, 'Creme De Cassis'),
+(166, NULL, 'Creme De Noyaux'),
+(167, NULL, 'Creme Fraiche'),
+(168, NULL, 'Crown Royal'),
+(169, NULL, 'Crystal Light'),
+(171, NULL, 'Cucumber'),
+(172, NULL, 'Cumin Powder'),
+(173, NULL, 'Cumin Seed'),
+(174, NULL, 'Curacao'),
+(175, NULL, 'Cynar'),
+(176, NULL, 'Daiquiri Mix'),
+(177, NULL, 'Dark Chocolate'),
+(178, NULL, 'Dark Creme De Cacao'),
+(179, NULL, 'Dark Rum'),
+(180, NULL, 'Dark Soy Sauce'),
+(181, NULL, 'Demerara Sugar'),
+(186, NULL, 'Dr. Pepper'),
+(187, NULL, 'Drambuie'),
+(188, NULL, 'Dried Oregano'),
+(189, NULL, 'Dry Vermouth'),
+(190, NULL, 'Dubonnet Blanc'),
+(191, NULL, 'Dubonnet Rouge'),
+(192, NULL, 'Egg White'),
+(193, NULL, 'Egg Yolk'),
+(194, NULL, 'Egg'),
+(195, NULL, 'Eggnog'),
+(199, NULL, 'Erin Cream'),
+(200, NULL, 'Espresso'),
+(201, NULL, 'Everclear'),
+(203, NULL, 'Fanta'),
+(205, NULL, 'Fennel Seeds'),
+(207, NULL, 'Firewater'),
+(208, NULL, 'Flaked Almonds'),
+(210, NULL, 'Food Coloring'),
+(211, NULL, 'Forbidden Fruit'),
+(212, NULL, 'Frangelico'),
+(215, NULL, 'Fresca'),
+(216, NULL, 'Fresh Basil'),
+(217, NULL, 'Fresh Lemon Juice'),
+(220, NULL, 'Fruit Juice'),
+(221, NULL, 'Fruit Punch'),
+(222, NULL, 'Fruit'),
+(223, NULL, 'Galliano'),
+(224, NULL, 'Garlic Sauce'),
+(226, NULL, 'Gatorade'),
+(228, NULL, 'Ginger Ale'),
+(229, NULL, 'Ginger Beer'),
+(230, NULL, 'Ginger'),
+(231, NULL, 'Glycerine'),
+(232, NULL, 'Godiva Liqueur'),
+(233, NULL, 'Gold rum'),
+(234, NULL, 'Gold Tequila'),
+(235, NULL, 'Goldschlager'),
+(237, NULL, 'Grain Alcohol'),
+(238, NULL, 'Grand Marnier'),
+(239, NULL, 'Granulated Sugar'),
+(240, NULL, 'Grape juice'),
+(241, NULL, 'Grape soda'),
+(242, NULL, 'Grapefruit Juice'),
+(243, NULL, 'Grapes'),
+(245, NULL, 'Green Chartreuse'),
+(246, NULL, 'Green Creme de Menthe'),
+(247, NULL, 'Green Ginger Wine'),
+(248, NULL, 'Green Olives'),
+(250, NULL, 'Grenadine'),
+(252, NULL, 'Ground Ginger'),
+(253, NULL, 'Guava juice'),
+(254, NULL, 'Guinness stout'),
+(255, NULL, 'Guinness'),
+(256, NULL, 'Half-and-half'),
+(257, NULL, 'Hawaiian punch'),
+(258, NULL, 'Hazelnut liqueur'),
+(259, NULL, 'Heavy cream'),
+(260, NULL, 'Honey'),
+(261, NULL, 'Hooch'),
+(264, 'Chocolate Caliente ', 'Hot Chocolate'),
+(265, NULL, 'Hot Damn'),
+(266, NULL, 'Hot Sauce'),
+(268, NULL, 'Hpnotiq'),
+(269, NULL, 'Ice-Cream'),
+(270, 'Hielo', 'Ice'),
+(271, NULL, 'Iced tea'),
+(272, NULL, 'Irish cream'),
+(273, NULL, 'Irish Whiskey'),
+(275, NULL, 'Jack Daniels'),
+(276, NULL, 'Jello'),
+(277, NULL, 'Jelly'),
+(278, NULL, 'Jagermeister'),
+(279, NULL, 'Jim Beam'),
+(280, NULL, 'Johnnie Walker'),
+(282, NULL, 'Kahlua'),
+(283, NULL, 'Key Largo Schnapps'),
+(284, NULL, 'Kirschwasser'),
+(285, NULL, 'Kiwi liqueur'),
+(286, NULL, 'Kiwi'),
+(287, NULL, 'Kool-Aid'),
+(288, NULL, 'Kummel'),
+(289, NULL, 'Lager'),
+(293, 'Zumo de limón ', 'Lemon Juice'),
+(294, NULL, 'Lemon Peel'),
+(295, NULL, 'Lemon soda'),
+(296, NULL, 'Lemon vodka'),
+(297, NULL, 'Lemon-lime soda'),
+(298, NULL, 'lemon-lime'),
+(299, NULL, 'lemon'),
+(300, NULL, 'Lemonade'),
+(303, NULL, 'Licorice Root'),
+(304, NULL, 'Light Cream'),
+(305, NULL, 'Light Rum'),
+(306, NULL, 'Lillet'),
+(307, NULL, 'Lime juice cordial'),
+(308, NULL, 'Lime Juice'),
+(309, NULL, 'Lime liqueur'),
+(310, NULL, 'Lime Peel'),
+(311, NULL, 'Lime vodka'),
+(312, NULL, 'Lime'),
+(313, NULL, 'Limeade'),
+(314, NULL, 'Madeira'),
+(315, NULL, 'Malibu Rum'),
+(317, NULL, 'Mandarin'),
+(318, NULL, 'Mandarine napoleon'),
+(319, NULL, 'Mango'),
+(320, NULL, 'Maple syrup'),
+(321, NULL, 'Maraschino cherry juice'),
+(322, NULL, 'Maraschino Cherry'),
+(323, NULL, 'Maraschino Liqueur'),
+(324, NULL, 'Margarita mix'),
+(325, NULL, 'Marjoram leaves'),
+(326, NULL, 'Marshmallows'),
+(327, NULL, 'Maui'),
+(328, NULL, 'Melon Liqueur'),
+(329, NULL, 'Melon Vodka'),
+(330, NULL, 'Mezcal'),
+(331, NULL, 'Midori Melon Liqueur'),
+(332, NULL, 'Midori'),
+(333, NULL, 'Milk'),
+(336, NULL, 'Mint syrup'),
+(337, NULL, 'Mint'),
+(338, NULL, 'Mountain Dew'),
+(344, NULL, 'Nutmeg'),
+(346, NULL, 'Olive Oil'),
+(347, NULL, 'Olive'),
+(348, NULL, 'Onion'),
+(350, NULL, 'Orange Bitters'),
+(351, NULL, 'Orange Curacao'),
+(352, NULL, 'Orange Juice'),
+(353, NULL, 'Orange liqueur'),
+(354, NULL, 'Orange Peel'),
+(355, NULL, 'Orange rum'),
+(356, NULL, 'Orange Soda'),
+(357, NULL, 'Orange spiral'),
+(358, NULL, 'Orange vodka'),
+(359, NULL, 'Orange'),
+(361, NULL, 'Oreo cookie'),
+(362, NULL, 'Orgeat Syrup'),
+(363, NULL, 'Ouzo'),
+(364, NULL, 'Oyster Sauce'),
+(365, NULL, 'Papaya juice'),
+(366, NULL, 'Papaya'),
+(367, NULL, 'Parfait amour'),
+(372, NULL, 'Passion fruit juice'),
+(373, NULL, 'Passion fruit syrup'),
+(374, NULL, 'Passoa'),
+(375, NULL, 'Peach brandy'),
+(376, NULL, 'Peach juice'),
+(377, NULL, 'Peach liqueur'),
+(378, NULL, 'Peach Nectar'),
+(379, NULL, 'Peach Schnapps'),
+(380, NULL, 'Peach Vodka'),
+(381, NULL, 'Peach'),
+(382, NULL, 'Peachtree schnapps'),
+(383, NULL, 'Peanut Oil'),
+(386, NULL, 'Pepper'),
+(387, NULL, 'Peppermint extract'),
+(388, NULL, 'Peppermint Schnapps'),
+(389, NULL, 'Pepsi Cola'),
+(390, NULL, 'Pernod'),
+(391, NULL, 'Peychaud bitters'),
+(392, NULL, 'Pina colada mix'),
+(393, NULL, 'Pineapple Juice'),
+(394, NULL, 'Pineapple rum'),
+(395, NULL, 'Pineapple vodka'),
+(396, NULL, 'Pineapple-orange-banana juice'),
+(397, NULL, 'Pineapple'),
+(398, NULL, 'Pink lemonade'),
+(399, NULL, 'Pisang Ambon'),
+(400, NULL, 'Pisco'),
+(402, NULL, 'Plain Chocolate'),
+(403, NULL, 'Plain Flour'),
+(405, NULL, 'Plums'),
+(406, NULL, 'Port'),
+(409, NULL, 'Powdered Sugar'),
+(411, NULL, 'Purple passion'),
+(412, NULL, 'Raisins'),
+(413, NULL, 'Raspberry cordial'),
+(414, NULL, 'Raspberry Jam'),
+(415, NULL, 'Raspberry Juice'),
+(416, NULL, 'Raspberry Liqueur'),
+(417, NULL, 'Raspberry schnapps'),
+(418, NULL, 'Raspberry syrup'),
+(419, NULL, 'Raspberry Vodka'),
+(421, NULL, 'Red Chile Flakes'),
+(422, NULL, 'Red Chili Flakes'),
+(423, NULL, 'Red Hot Chili Flakes'),
+(425, NULL, 'Red Wine'),
+(426, NULL, 'Rhubarb'),
+(427, NULL, 'Ricard'),
+(429, NULL, 'Rock Salt'),
+(430, NULL, 'Root beer schnapps'),
+(431, NULL, 'Root beer'),
+(432, NULL, 'Roses sweetened lime juice'),
+(433, NULL, 'Rosewater'),
+(435, NULL, 'Rumple Minze'),
+(436, NULL, 'Rye Whiskey'),
+(437, NULL, 'Sake'),
+(439, NULL, 'Salt'),
+(440, NULL, 'Sambuca'),
+(441, NULL, 'Sarsaparilla'),
+(442, NULL, 'Schnapps'),
+(443, NULL, 'Schweppes Lemon'),
+(444, NULL, 'Schweppes Russchian'),
+(448, NULL, 'Sherbet'),
+(449, NULL, 'Sherry'),
+(452, NULL, 'Sirup of roses'),
+(453, NULL, 'Sloe Gin'),
+(455, NULL, 'Soda Water'),
+(456, NULL, 'Sour Apple Pucker'),
+(457, NULL, 'Sour Mix'),
+(458, NULL, 'Southern Comfort'),
+(459, NULL, 'Soy Milk'),
+(460, NULL, 'Soy Sauce'),
+(461, NULL, 'Soya Milk'),
+(462, NULL, 'Soya Sauce'),
+(464, NULL, 'Spiced Rum'),
+(466, NULL, 'Sprite'),
+(467, NULL, 'Squeezed Orange'),
+(468, NULL, 'Squirt'),
+(470, NULL, 'Strawberries'),
+(471, NULL, 'Strawberry juice'),
+(472, NULL, 'Strawberry liqueur'),
+(473, NULL, 'Strawberry Schnapps'),
+(474, NULL, 'Strawberry syrup'),
+(475, NULL, 'Sugar Syrup'),
+(476, NULL, 'Sugar'),
+(477, NULL, 'Sunny delight'),
+(478, NULL, 'Surge'),
+(479, NULL, 'Swedish punsch'),
+(480, NULL, 'Sweet and Sour'),
+(481, NULL, 'Sweet Cream'),
+(482, NULL, 'Sweet Vermouth'),
+(483, NULL, 'Tabasco Sauce'),
+(484, NULL, 'Tang'),
+(485, NULL, 'Tawny port'),
+(486, NULL, 'Tea'),
+(487, NULL, 'Tennessee whiskey'),
+(488, NULL, 'Tequila rose'),
+(490, NULL, 'Tia Maria'),
+(492, NULL, 'Tomato Juice'),
+(494, NULL, 'Tomato'),
+(497, NULL, 'Tonic Water'),
+(498, NULL, 'Triple Sec'),
+(499, NULL, 'Tropicana'),
+(500, NULL, 'Tuaca'),
+(502, NULL, 'Vanilla extract'),
+(503, NULL, 'Vanilla Ice-Cream'),
+(504, NULL, 'Vanilla liqueur'),
+(505, NULL, 'Vanilla schnapps'),
+(506, NULL, 'Vanilla syrup'),
+(507, NULL, 'Vanilla vodka'),
+(508, NULL, 'Vanilla'),
+(510, NULL, 'Vermouth'),
+(511, NULL, 'Vinegar'),
+(513, NULL, 'Water'),
+(514, NULL, 'Watermelon schnapps'),
+(515, NULL, 'Whipped Cream'),
+(516, NULL, 'Whipping Cream'),
+(519, NULL, 'White chocolate liqueur'),
+(520, NULL, 'White Creme de Menthe'),
+(521, NULL, 'White grape juice'),
+(522, NULL, 'White port'),
+(523, NULL, 'White Rum'),
+(524, NULL, 'White Vinegar'),
+(525, NULL, 'White Wine'),
+(526, NULL, 'Wild Turkey'),
+(527, NULL, 'Wildberry schnapps'),
+(528, NULL, 'Wine'),
+(529, NULL, 'Worcestershire Sauce'),
+(530, NULL, 'Wormwood'),
+(531, NULL, 'Yeast'),
+(532, NULL, 'Yellow Chartreuse'),
+(533, NULL, 'Yoghurt'),
+(534, NULL, 'Yukon Jack'),
+(535, NULL, 'Zima'),
+(537, NULL, 'Caramel Sauce'),
+(538, NULL, 'Chocolate Sauce'),
+(539, NULL, 'Lillet Blanc'),
+(540, NULL, 'Peach Bitters'),
+(541, NULL, 'Mini-snickers bars'),
+(542, NULL, 'Prosecco'),
+(543, NULL, 'Salted Chocolate'),
+(544, NULL, 'Martini Rosso'),
+(545, NULL, 'Martini Bianco'),
+(546, NULL, 'Martini Extra Dry'),
+(547, NULL, 'Fresh Lime Juice'),
+(548, NULL, 'Fresh Mint'),
+(549, NULL, 'Rosemary'),
+(550, NULL, 'Habanero Peppers'),
+(551, NULL, 'Ilegal Joven mezcal'),
+(552, NULL, 'Elderflower cordial'),
+(553, NULL, 'Rosso Vermouth'),
+(554, NULL, 'Creme de Violette'),
+(555, NULL, 'Cocchi Americano'),
+(556, NULL, 'White Vermouth'),
+(557, NULL, 'Dry Curacao'),
+(558, NULL, 'Nocino'),
+(559, NULL, 'Averna'),
+(560, NULL, 'Ramazzotti'),
+(561, NULL, 'Fernet-Branca'),
+(562, NULL, 'Allspice Dram'),
+(563, NULL, 'Falernum'),
+(564, NULL, 'Singani'),
+(565, NULL, 'Arrack'),
+(566, NULL, 'Blackstrap rum'),
+(567, NULL, 'Ginger Syrup'),
+(568, NULL, 'Honey syrup'),
+(569, NULL, 'Blended Scotch'),
+(570, NULL, 'Islay single malt Scotch'),
+(571, NULL, '151 proof rum'),
+(572, NULL, '7-up'),
+(573, NULL, 'Absinthe'),
+(574, NULL, 'Absolut citron'),
+(575, NULL, 'Creme de Mure'),
+(576, NULL, 'Olive Brine'),
+(577, NULL, 'Pineapple Syrup'),
+(578, NULL, 'St. Germain'),
+(579, NULL, 'Lavender'),
+(600, NULL, 'Whiskey'),
+(601, NULL, 'Whisky'),
+(602, NULL, 'Pomegranate juice'),
+(603, NULL, 'Watermelon'),
+(604, NULL, 'Chareau'),
+(605, NULL, 'Cinnamon Whisky'),
+(606, NULL, 'Red Bull'),
+(607, NULL, 'Diet Coke'),
+(608, NULL, 'Rosemary Syrup'),
+(609, NULL, 'Figs'),
+(610, NULL, 'Thyme'),
+(611, NULL, 'Orange Slice'),
+(612, NULL, 'Blood Orange'),
+(613, NULL, 'Amaro Montenegro'),
+(614, NULL, 'Ruby Port'),
+(615, NULL, 'Rose'),
+(616, NULL, 'Tajin');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tiene`
+--
+
+CREATE TABLE `tiene` (
+	`coctel` int(11) NOT NULL,
+	`ingrediente` int(11) NOT NULL,
+	`medida` varchar(100) DEFAULT NULL,
+	`medida_en` varchar(100) DEFAULT NULL,
+	PRIMARY KEY (`coctel`, `ingrediente`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tiene`
+--
+
+INSERT INTO `tiene` (`coctel`, `ingrediente`, `medida`, `medida_en`) VALUES
+(11000, 305, NULL, '2-3 oz '),
+(11000, 312, NULL, 'Juice of 1 '),
+(11000, 476, NULL, '2 tsp '),
+(11000, 337, NULL, '2-4 '),
+(11000, 455, NULL, NULL),
+(11001, 71, NULL, '4.5 cL'),
+(11001, 20, NULL, '2 dashes'),
+(11001, 476, NULL, '1 cube'),
+(11001, 513, NULL, 'dash'),
+(11002, 1, NULL, '1/2 oz '),
+(11002, 305, NULL, '1/2 oz '),
+(11002, 2, NULL, '1/2 oz '),
+(11002, 4, NULL, '1/2 oz '),
+(11002, 299, NULL, 'Juice of 1/2 '),
+(11002, 128, NULL, '1 splash '),
+(11003, 2, NULL, '1 oz '),
+(11003, 83, NULL, '1 oz '),
+(11003, 482, NULL, '1 oz '),
+(11004, 66, NULL, '2 oz '),
+(11004, 299, NULL, 'Juice of 1/2 '),
+(11004, 409, NULL, '1/2 tsp '),
+(11004, 106, NULL, '1 '),
+(11005, 2, NULL, '1 2/3 oz '),
+(11005, 189, NULL, '1/3 oz '),
+(11005, 347, NULL, '1 '),
+(11006, 305, NULL, '1 1/2 oz '),
+(11006, 312, NULL, 'Juice of 1/2 '),
+(11006, 409, NULL, '1 tsp '),
+(11007, 4, NULL, '1 1/2 oz '),
+(11007, 498, NULL, '1/2 oz '),
+(11007, 308, NULL, '1 oz '),
+(11007, 439, NULL, NULL),
+(11008, 482, NULL, '3/4 oz '),
+(11008, 71, NULL, '2 1/2 oz Blended '),
+(11008, 20, NULL, 'dash '),
+(11008, 270, NULL, '2 or 3 '),
+(11008, 322, NULL, '1 '),
+(11008, 354, NULL, '1 twist of '),
+(11009, 1, NULL, '2 oz '),
+(11009, 308, NULL, '2 oz '),
+(11009, 228, NULL, '8 oz '),
+(11010, 32, NULL, '1 oz '),
+(11010, 498, NULL, '1 oz '),
+(11010, 312, NULL, 'Juice of 1 '),
+(11011, 498, NULL, '1 oz '),
+(11011, 32, NULL, '1 oz '),
+(11011, 293, NULL, '1/2 tsp '),
+(11012, 458, NULL, '1 oz '),
+(11012, 18, NULL, '1 oz '),
+(11012, 453, NULL, '1/2 oz '),
+(11012, 293, NULL, '1 dash '),
+(11013, 350, NULL, '2 dashes '),
+(11013, 2, NULL, '1 1/2 oz '),
+(11013, 532, NULL, '3/4 oz '),
+(11013, 294, NULL, 'Twist of '),
+(11014, 2, NULL, '1/2 oz '),
+(11014, 164, NULL, '1/2 oz white '),
+(11014, 304, NULL, '2 oz '),
+(11014, 344, NULL, NULL),
+(11016, 74, NULL, '1 oz '),
+(11016, 164, NULL, '1 oz white '),
+(11016, 304, NULL, '1 oz '),
+(11016, 344, NULL, NULL),
+(11019, 296, NULL, '1 1/2 oz '),
+(11019, 498, NULL, '1 dash '),
+(11019, 393, NULL, '1 tblsp '),
+(11020, 66, NULL, '1 1/2 oz '),
+(11020, 189, NULL, '1 oz '),
+(11020, 393, NULL, '1 oz '),
+(11021, 189, NULL, '1 oz '),
+(11021, 71, NULL, '1 oz '),
+(11021, 61, NULL, '1 1/2 tsp '),
+(11021, 293, NULL, '1 1/2 tsp '),
+(11021, 294, NULL, '1 twist of '),
+(11022, 189, NULL, '1 oz '),
+(11022, 2, NULL, '1 oz '),
+(11022, 288, NULL, '1/2 tsp '),
+(11023, 179, NULL, '2 oz '),
+(11023, 282, NULL, '1 oz '),
+(11023, 192, NULL, '1 '),
+(11024, 18, NULL, '1/2 oz '),
+(11024, 164, NULL, '1/2 oz white '),
+(11024, 304, NULL, '2 oz '),
+(11025, 18, NULL, '1 1/2 oz '),
+(11025, 304, NULL, '1 1/2 oz '),
+(11026, 18, NULL, '1 1/2 oz '),
+(11026, 312, NULL, '1 '),
+(11027, 18, NULL, '1 1/2 oz '),
+(11027, 308, NULL, '1/2 oz '),
+(11027, 127, NULL, NULL),
+(11028, 18, NULL, '1 1/2 oz '),
+(11028, 520, NULL, '3/4 oz '),
+(11029, 486, NULL, '6 oz hot '),
+(11029, 18, NULL, '2 oz '),
+(11029, 515, NULL, 'Chilled '),
+(11034, 32, NULL, '1/2 oz '),
+(11034, 26, NULL, '1/2 oz '),
+(11034, 2, NULL, '1 oz '),
+(11046, 31, NULL, '1 oz '),
+(11046, 498, NULL, '1 oz '),
+(11046, 293, NULL, '1 oz '),
+(11050, 305, NULL, '1 1/2 oz '),
+(11050, 32, NULL, '1 oz '),
+(11050, 498, NULL, '1 tsp '),
+(11050, 293, NULL, '1/2 oz '),
+(11050, 192, NULL, '1 '),
+(11050, 359, NULL, '1 '),
+(11052, 2, NULL, '2 oz '),
+(11052, 528, NULL, '1 oz Green Ginger '),
+(11052, 53, NULL, '1 tsp '),
+(11052, 312, NULL, '1 '),
+(11053, 97, NULL, 'Chilled '),
+(11053, 246, NULL, '1 tsp '),
+(11054, 2, NULL, '2 oz '),
+(11054, 238, NULL, '1/2 oz '),
+(11054, 293, NULL, '2 tsp '),
+(11054, 294, NULL, '1 twist of '),
+(11055, 482, NULL, '1 1/2 tsp '),
+(11055, 2, NULL, '1 1/2 oz '),
+(11055, 56, NULL, '2 dashes '),
+(11060, 5, NULL, '1 1/2 oz '),
+(11060, 482, NULL, '1/2 oz '),
+(11060, 189, NULL, '1/2 oz '),
+(11060, 56, NULL, '2 dashes '),
+(11064, 305, NULL, '1 1/2 oz '),
+(11064, 498, NULL, '1 tblsp '),
+(11064, 47, NULL, '1 '),
+(11064, 308, NULL, '1 1/2 oz '),
+(11064, 476, NULL, '1 tsp '),
+(11064, 106, NULL, '1 '),
+(11084, 74, NULL, '3/4 oz '),
+(11084, 2, NULL, '3/4 oz '),
+(11084, 189, NULL, '3/4 oz '),
+(11084, 89, NULL, NULL),
+(11084, 294, NULL, NULL),
+(11102, 138, NULL, '3/4 oz '),
+(11102, 1, NULL, '1 1/2 oz '),
+(11106, 482, NULL, '1 oz '),
+(11106, 453, NULL, '1 1/2 oz '),
+(11106, 294, NULL, '1 twist of '),
+(11112, 4, NULL, '1 oz '),
+(11112, 492, NULL, '2 oz '),
+(11112, 293, NULL, '1 dash '),
+(11112, 483, NULL, '1 dash '),
+(11112, 94, NULL, '1 dash '),
+(11112, 299, NULL, '1 slice '),
+(11113, 1, NULL, '1 1/2 oz '),
+(11113, 492, NULL, '3 oz '),
+(11113, 293, NULL, '1 dash '),
+(11113, 529, NULL, '1/2 tsp '),
+(11113, 483, NULL, '2-3 drops '),
+(11113, 312, NULL, '1 wedge '),
+(11117, 1, NULL, '1 oz '),
+(11117, 67, NULL, '1 oz '),
+(11117, 300, NULL, NULL),
+(11117, 106, NULL, NULL),
+(11118, 4, NULL, '1 1/2 oz '),
+(11118, 67, NULL, '1 oz '),
+(11118, 308, NULL, '1 oz '),
+(11118, 439, NULL, 'Coarse '),
+(11119, 37, NULL, '1 1/2 oz '),
+(11119, 490, NULL, '1/2 oz '),
+(11119, 1, NULL, '1/2 oz '),
+(11119, 352, NULL, '1 oz '),
+(11119, 293, NULL, '1 tsp '),
+(11120, 2, NULL, '1 1/2 oz '),
+(11120, 498, NULL, '1/2 oz '),
+(11120, 67, NULL, '1/2 oz '),
+(11120, 56, NULL, '2 dashes '),
+(11120, 322, NULL, '1 '),
+(11120, 294, NULL, '1 twist of '),
+(11121, 482, NULL, '1 1/2 oz '),
+(11121, 5, NULL, '1 1/2 oz '),
+(11121, 53, NULL, '1 1/4 tsp '),
+(11121, 294, NULL, '1 twist of '),
+(11124, 2, NULL, '2 oz '),
+(11124, 189, NULL, '1/2 oz '),
+(11124, 56, NULL, '2 dashes '),
+(11124, 323, NULL, '1/2 tsp '),
+(11124, 322, NULL, '1 '),
+(11128, 305, NULL, '3/4 oz '),
+(11128, 74, NULL, '3/4 oz '),
+(11128, 498, NULL, '3/4 oz '),
+(11128, 312, NULL, 'Juice of 1/2 '),
+(11129, 66, NULL, '2 oz '),
+(11129, 299, NULL, 'Juice of 1/2 '),
+(11129, 409, NULL, '1 tsp '),
+(11129, 192, NULL, '1 '),
+(11129, 106, NULL, '1 '),
+(11145, 56, NULL, '3 dashes '),
+(11145, 513, NULL, '1 tsp '),
+(11145, 476, NULL, '1 '),
+(11145, 71, NULL, '3 oz '),
+(11145, 359, NULL, '1 '),
+(11145, 322, NULL, '1 '),
+(11146, 476, NULL, '1 tsp superfine '),
+(11146, 513, NULL, '2 tsp '),
+(11146, 293, NULL, '1 oz '),
+(11146, 71, NULL, '2 oz '),
+(11146, 294, NULL, '1 twist of '),
+(11147, 71, NULL, '2 oz '),
+(11147, 293, NULL, '1 oz '),
+(11147, 476, NULL, '1/2 tsp superfine '),
+(11147, 359, NULL, '1 '),
+(11147, 322, NULL, '1 '),
+(11149, 2, NULL, '1 1/2 oz '),
+(11149, 498, NULL, '1 oz '),
+(11149, 293, NULL, '1 tsp '),
+(11149, 250, NULL, '1/2 tsp '),
+(11149, 192, NULL, '1 '),
+(11157, 476, NULL, '1 tsp superfine '),
+(11157, 127, NULL, '3 oz '),
+(11157, 299, NULL, '1 '),
+(11157, 74, NULL, '2 oz '),
+(11157, 322, NULL, '1 '),
+(11157, 359, NULL, '1 '),
+(11164, 74, NULL, '2 oz '),
+(11164, 194, NULL, '1 whole '),
+(11164, 476, NULL, '1 tsp superfine '),
+(11164, 304, NULL, '1/2 oz '),
+(11164, 344, NULL, '1/8 tsp grated '),
+(11170, 74, NULL, '2 oz '),
+(11170, 299, NULL, 'Juice of 1/2 '),
+(11170, 409, NULL, '1/2 tsp '),
+(11170, 106, NULL, '1 '),
+(11202, 476, NULL, '2 tsp'),
+(11202, 312, NULL, '1 '),
+(11202, 81, NULL, '2 1/2 oz '),
+(11205, 66, NULL, '2 oz '),
+(11205, 299, NULL, 'Juice of 1 '),
+(11205, 312, NULL, 'Juice of 1 '),
+(11205, 409, NULL, '1 tblsp'),
+(11205, 250, NULL, '1/4 tsp'),
+(11205, 89, NULL, NULL),
+(11222, 305, NULL, '2 oz '),
+(11222, 498, NULL, '1 1/2 tsp '),
+(11222, 308, NULL, '1 1/2 tsp '),
+(11222, 323, NULL, '1 1/2 tsp '),
+(11224, 2, NULL, '2 oz '),
+(11224, 293, NULL, '1/2 oz '),
+(11224, 323, NULL, '1 tsp '),
+(11224, 350, NULL, '1 dash '),
+(11224, 193, NULL, '1 '),
+(11227, 97, NULL, 'Chilled '),
+(11227, 476, NULL, '1 piece '),
+(11227, 56, NULL, '2 dashes '),
+(11227, 294, NULL, '1 twist of '),
+(11227, 141, NULL, '1 dash'),
+(11239, 305, NULL, '1 1/4 oz '),
+(11239, 100, NULL, '1 1/2 tsp '),
+(11239, 304, NULL, '1 tblsp '),
+(11242, 305, NULL, '1 oz '),
+(11242, 406, NULL, '1 oz '),
+(11242, 299, NULL, 'Juice of 1/2 '),
+(11242, 409, NULL, '1 tsp '),
+(11242, 192, NULL, '1 '),
+(11242, 89, NULL, NULL),
+(11243, 282, NULL, '1 oz '),
+(11243, 1, NULL, '1/2 oz '),
+(11243, 112, NULL, '5 oz '),
+(11251, 74, NULL, '2 oz '),
+(11251, 498, NULL, '1/2 oz '),
+(11251, 293, NULL, '1 tblsp '),
+(11255, 482, NULL, '1 oz '),
+(11255, 453, NULL, '1/2 oz '),
+(11255, 528, NULL, '1/2 oz Muscatel '),
+(11288, 305, NULL, '2 oz '),
+(11288, 312, NULL, 'Juice of 1/2 '),
+(11288, 128, NULL, NULL),
+(11320, 2, NULL, '1 1/2 oz '),
+(11320, 228, NULL, '4 oz '),
+(11320, 312, NULL, '1 '),
+(11324, 5, NULL, '2 1/2 oz '),
+(11324, 189, NULL, '1 1/2 tsp '),
+(11324, 294, NULL, '1 twist of '),
+(11326, 191, NULL, '1 1/2 oz '),
+(11326, 2, NULL, '3/4 oz '),
+(11326, 56, NULL, '1 dash '),
+(11326, 294, NULL, '1 twist of '),
+(11338, 74, NULL, '3/4 oz '),
+(11338, 2, NULL, '3/4 oz '),
+(11338, 482, NULL, '3/4 oz '),
+(11338, 89, NULL, NULL),
+(11338, 294, NULL, NULL),
+(11339, 32, NULL, '3/4 oz '),
+(11339, 2, NULL, '1 1/2 oz '),
+(11339, 189, NULL, '3/4 oz '),
+(11339, 250, NULL, '1 tsp '),
+(11339, 293, NULL, '1/4 tsp '),
+(11339, 106, NULL, '1 '),
+(11368, 2, NULL, '2 oz '),
+(11368, 498, NULL, '1/2 oz '),
+(11369, 5, NULL, '1 oz '),
+(11369, 482, NULL, '1 oz '),
+(11369, 56, NULL, '1 dash '),
+(11369, 475, NULL, '1/4 tsp '),
+(11375, 18, NULL, '1/2 oz '),
+(11375, 164, NULL, '1/2 oz '),
+(11375, 304, NULL, '2 oz '),
+(11390, 305, NULL, '2 oz '),
+(11390, 308, NULL, '1 tblsp '),
+(11390, 337, NULL, '6 '),
+(11390, 476, NULL, '1 tsp '),
+(11391, 305, NULL, '1 1/2 oz '),
+(11391, 397, NULL, '4 chunks '),
+(11391, 308, NULL, '1 tblsp '),
+(11391, 476, NULL, '1/2 tsp '),
+(11396, 2, NULL, '1 1/2 oz '),
+(11396, 74, NULL, '1 oz '),
+(11396, 482, NULL, '1 oz '),
+(11396, 127, NULL, '1 oz '),
+(11403, 2, NULL, '2 oz '),
+(11403, 497, NULL, '5 oz '),
+(11403, 312, NULL, '1 '),
+(11407, 2, NULL, '2 oz '),
+(11407, 89, NULL, NULL),
+(11407, 409, NULL, NULL),
+(11407, 357, NULL, NULL),
+(11407, 294, NULL, NULL),
+(11408, 2, NULL, '2 oz '),
+(11408, 293, NULL, '1 oz '),
+(11408, 476, NULL, '1/2 tsp superfine '),
+(11408, 250, NULL, '1/2 tsp '),
+(11408, 322, NULL, '1 '),
+(11408, 359, NULL, '1 '),
+(11410, 2, NULL, '2 oz '),
+(11410, 299, NULL, 'Juice of 1/2 '),
+(11410, 409, NULL, '1 tsp '),
+(11410, 89, NULL, NULL),
+(11415, 2, NULL, '2 oz '),
+(11415, 299, NULL, 'Juice of 1/2 '),
+(11415, 409, NULL, '1 tsp '),
+(11415, 513, NULL, '1 tsp '),
+(11415, 354, NULL, 'Twist of '),
+(11416, 2, NULL, '2 oz '),
+(11416, 89, NULL, '1 oz '),
+(11416, 476, NULL, '1 cube '),
+(11416, 337, NULL, '4 '),
+(11416, 359, NULL, '1 slice '),
+(11416, 106, NULL, '1 '),
+(11418, 2, NULL, '1 1/2 oz '),
+(11418, 250, NULL, '1 tsp '),
+(11418, 409, NULL, '1 tblsp '),
+(11418, 397, NULL, '3 chunks'),
+(11418, 470, NULL, '2 '),
+(11418, 89, NULL, NULL),
+(11419, 308, NULL, '1 1/2 oz '),
+(11419, 476, NULL, '1 tsp superfine '),
+(11419, 2, NULL, '2 oz '),
+(11419, 56, NULL, '1 dash '),
+(11419, 127, NULL, '3 oz '),
+(11420, 2, NULL, '2 oz '),
+(11420, 513, NULL, '2 tsp '),
+(11420, 409, NULL, '1/2 tsp '),
+(11420, 294, NULL, '1 twist of '),
+(11423, 5, NULL, '1 1/2 oz '),
+(11423, 18, NULL, '3/4 oz '),
+(11424, 1, NULL, '1 1/2 oz '),
+(11424, 18, NULL, '3/4 oz '),
+(11433, 2, NULL, '1 1/2 oz '),
+(11433, 498, NULL, '1 oz '),
+(11433, 393, NULL, '1 oz '),
+(11433, 250, NULL, '1/2 tsp '),
+(11433, 397, NULL, '1 '),
+(11462, 1, NULL, '1 oz '),
+(11462, 223, NULL, '1/2 oz '),
+(11462, 352, NULL, '4 oz '),
+(11470, 305, NULL, '1 oz '),
+(11470, 393, NULL, '1 oz '),
+(11470, 293, NULL, '1 tsp '),
+(11472, 2, NULL, '2 oz '),
+(11472, 498, NULL, '1/2 oz '),
+(11472, 393, NULL, '1 tblsp '),
+(11476, 5, NULL, '1 1/2 oz '),
+(11476, 482, NULL, '3/4 oz '),
+(11476, 350, NULL, '2 dashes '),
+(11476, 347, NULL, '1 '),
+(11524, 305, NULL, '1/2 oz '),
+(11524, 66, NULL, '1 1/2 oz '),
+(11524, 299, NULL, 'Juice of 1/2 '),
+(11524, 409, NULL, '1 tsp '),
+(11524, 89, NULL, NULL),
+(11528, 273, NULL, '1 oz '),
+(11528, 375, NULL, '1/2 oz '),
+(11528, 352, NULL, '1 oz '),
+(11528, 480, NULL, '1 oz '),
+(11528, 359, NULL, '1 slice '),
+(11528, 106, NULL, '1 '),
+(11542, 26, NULL, '1 1/2 oz '),
+(11542, 250, NULL, '1 tsp '),
+(11542, 312, NULL, 'Juice of 1/2 '),
+(11558, 66, NULL, '1 1/2 oz '),
+(11558, 299, NULL, 'Juice of 1/2 '),
+(11558, 409, NULL, '1 tsp '),
+(11558, 406, NULL, '1 tblsp'),
+(11558, 192, NULL, '1 '),
+(11558, 89, NULL, NULL),
+(11566, 2, NULL, '1 1/2 oz '),
+(11566, 245, NULL, '1/2 oz '),
+(11566, 532, NULL, '1/2 oz '),
+(11580, 71, NULL, '2 oz '),
+(11580, 293, NULL, '1 oz '),
+(11580, 476, NULL, '1 tsp superfine '),
+(11580, 127, NULL, '3 oz '),
+(11580, 322, NULL, '1 '),
+(11580, 359, NULL, '1 '),
+(11600, 1, NULL, '1 oz '),
+(11600, 498, NULL, '1 oz '),
+(11600, 308, NULL, '1 oz '),
+(11604, 71, NULL, '3 oz '),
+(11604, 53, NULL, '1/2 oz '),
+(11604, 294, NULL, '1 twist of '),
+(11634, 2, NULL, '2 oz '),
+(11634, 304, NULL, '2 tsp '),
+(11634, 409, NULL, '1 tsp '),
+(11634, 299, NULL, 'Juice of 1/2'),
+(11634, 192, NULL, '1 '),
+(11634, 89, NULL, NULL),
+(11658, 5, NULL, '2 oz '),
+(11658, 187, NULL, '1/2 oz '),
+(11658, 189, NULL, '1/2 oz '),
+(11658, 294, NULL, '1 twist of '),
+(11662, 2, NULL, '1 1/2 oz '),
+(11662, 323, NULL, '1/2 oz '),
+(11662, 350, NULL, '2 dashes '),
+(11664, 482, NULL, '3/4 oz '),
+(11664, 2, NULL, '1 1/2 oz '),
+(11666, 89, NULL, NULL),
+(11666, 2, NULL, NULL),
+(11666, 189, NULL, NULL),
+(11666, 409, NULL, NULL),
+(11666, 357, NULL, NULL),
+(11666, 294, NULL, NULL),
+(11670, 179, NULL, '1 1/2 oz '),
+(11670, 490, NULL, '1/2 oz '),
+(11690, 305, NULL, '1 oz '),
+(11690, 362, NULL, '1/2 oz '),
+(11690, 498, NULL, '1/2 oz '),
+(11690, 480, NULL, '1 1/2 oz '),
+(11690, 106, NULL, '1 '),
+(11720, 2, NULL, '1 oz '),
+(11720, 189, NULL, '1 oz '),
+(11720, 498, NULL, '1/4 tsp '),
+(11720, 350, NULL, '1 dash '),
+(11720, 106, NULL, '1 '),
+(11728, 2, NULL, '1 2/3 oz '),
+(11728, 189, NULL, '1/3 oz '),
+(11728, 347, NULL, '1 '),
+(11766, 71, NULL, '2 oz '),
+(11766, 179, NULL, '1 oz '),
+(11766, 259, NULL, '1/2 oz '),
+(11786, 74, NULL, '1 oz '),
+(11786, 305, NULL, '1/2 oz '),
+(11786, 71, NULL, '1/2 oz '),
+(11786, 299, NULL, 'Juice of 1/2'),
+(11786, 409, NULL, '1 tblsp'),
+(11786, 89, NULL, NULL),
+(11798, 305, NULL, '1 1/2 oz '),
+(11798, 242, NULL, '3 oz '),
+(11798, 56, NULL, '1 dash '),
+(11870, 100, NULL, '1/2 oz '),
+(11870, 2, NULL, '1 1/2 oz '),
+(11870, 352, NULL, '4 oz '),
+(11870, 228, NULL, NULL),
+(11872, 164, NULL, '1/2 oz white '),
+(11872, 18, NULL, '1/2 oz '),
+(11872, 498, NULL, '1/2 oz '),
+(11872, 1, NULL, '1/2 oz '),
+(11872, 304, NULL, '1 oz '),
+(11989, 425, NULL, '2 oz '),
+(11989, 250, NULL, '1 oz '),
+(11989, 297, NULL, NULL),
+(12055, 2, NULL, '1 oz '),
+(12055, 480, NULL, '2 oz '),
+(12055, 194, NULL, '1 whole '),
+(12055, 128, NULL, NULL),
+(12067, 476, NULL, '1 tsp superfine '),
+(12067, 127, NULL, '3 oz '),
+(12067, 299, NULL, '1 '),
+(12067, 179, NULL, '2 oz '),
+(12067, 322, NULL, '1 '),
+(12067, 359, NULL, '1 '),
+(12071, 3, NULL, '2 oz light or dark '),
+(12071, 297, NULL, '4 oz '),
+(12071, 299, NULL, '1 '),
+(12087, 305, NULL, '2 oz '),
+(12087, 333, NULL, '1 cup '),
+(12087, 409, NULL, '1 tsp '),
+(12087, 344, NULL, NULL),
+(12089, 305, NULL, '1 1/2 oz '),
+(12089, 571, NULL, '1 tsp '),
+(12089, 409, NULL, '1/2 tsp '),
+(12089, 56, NULL, '1 dash '),
+(12089, 513, NULL, '1 tsp '),
+(12089, 310, NULL, 'Twist of '),
+(12097, 3, NULL, '2 oz light or dark '),
+(12097, 409, NULL, '2 tsp '),
+(12097, 294, NULL, '1 twist of '),
+(12097, 513, NULL, '2 tsp '),
+(12101, 5, NULL, '1 1/2 oz '),
+(12101, 187, NULL, '1/2 oz '),
+(12101, 294, NULL, '1 twist of '),
+(12127, 427, NULL, '1 tsp '),
+(12127, 476, NULL, '1/2 tsp superfine '),
+(12127, 391, NULL, '2 dashes '),
+(12127, 513, NULL, '1 tsp '),
+(12127, 71, NULL, '2 oz '),
+(12127, 294, NULL, '1 twist of '),
+(12130, 74, NULL, '1 oz '),
+(12130, 18, NULL, '1 oz '),
+(12130, 304, NULL, '1 oz '),
+(12138, 5, NULL, '2 oz '),
+(12138, 74, NULL, '4 dashes '),
+(12138, 174, NULL, '4 dashes '),
+(12138, 359, NULL, '1 slice '),
+(12138, 337, NULL, '1 '),
+(12188, 449, NULL, '2 oz cream '),
+(12188, 409, NULL, '1 tsp '),
+(12188, 194, NULL, '1 whole '),
+(12188, 333, NULL, NULL),
+(12188, 344, NULL, NULL),
+(12308, 32, NULL, '1 oz '),
+(12308, 352, NULL, '1 oz '),
+(12308, 480, NULL, '1 oz '),
+(12362, 4, NULL, '2 oz '),
+(12362, 293, NULL, '1 tblsp '),
+(12362, 250, NULL, '3/4 oz '),
+(12362, 192, NULL, '1 '),
+(12362, 228, NULL, NULL),
+(12402, 2, NULL, '2 oz '),
+(12402, 293, NULL, '1 oz '),
+(12402, 476, NULL, '1 tsp superfine '),
+(12402, 127, NULL, '3 oz '),
+(12402, 322, NULL, '1 '),
+(12402, 359, NULL, '1 '),
+(12436, 305, NULL, '3 oz '),
+(12436, 320, NULL, '1 oz '),
+(12436, 293, NULL, '1 oz '),
+(12444, 305, NULL, '1 oz '),
+(12444, 482, NULL, '1/2 oz '),
+(12444, 299, NULL, 'Juice of 1/2 '),
+(12444, 409, NULL, '1 tsp '),
+(12444, 192, NULL, '1 '),
+(12446, 179, NULL, '2 oz '),
+(12446, 100, NULL, '1/2 oz '),
+(12452, 1, NULL, '1 1/2 oz '),
+(12452, 293, NULL, '3 oz '),
+(12452, 240, NULL, '3 oz unsweetened '),
+(12452, 409, NULL, '1 tsp '),
+(12452, 359, NULL, '1 slice '),
+(12518, 5, NULL, '1 1/2 oz '),
+(12518, 528, NULL, '1 oz Green Ginger '),
+(12528, 1, NULL, '2 oz '),
+(12528, 138, NULL, '1 oz '),
+(12528, 304, NULL, NULL),
+(12560, 250, NULL, '1 part '),
+(12560, 352, NULL, '4 parts '),
+(12560, 393, NULL, '4 parts '),
+(12562, 250, NULL, '1 cl '),
+(12562, 352, NULL, '1 cl '),
+(12562, 393, NULL, '2 cl '),
+(12562, 161, NULL, '4 cl '),
+(12572, 393, NULL, '10 cl '),
+(12572, 372, NULL, '6 cl '),
+(12572, 293, NULL, '1 cl '),
+(12572, 250, NULL, '1 cl '),
+(12618, 293, NULL, '5 cl '),
+(12618, 352, NULL, '15 cl '),
+(12618, 475, NULL, '2-3 cl '),
+(12618, 455, NULL, NULL),
+(12630, 475, NULL, '2 tsp '),
+(12630, 293, NULL, NULL),
+(12630, 228, NULL, NULL),
+(12656, 470, NULL, '1/2 lb frozen '),
+(12656, 47, NULL, '1 frozen '),
+(12656, 533, NULL, '1 cup plain '),
+(12656, 333, NULL, '1 cup '),
+(12656, 260, NULL, ' to taste\n'),
+(12658, 470, NULL, '1/2 lb frozen '),
+(12658, 47, NULL, '1 frozen '),
+(12658, 28, NULL, '2 cups fresh '),
+(12670, 28, NULL, '1 can frozen '),
+(12670, 470, NULL, '1 cup '),
+(12670, 476, NULL, '2 tblsp '),
+(12670, 299, NULL, '1 '),
+(12670, 30, NULL, '1 '),
+(12670, 455, NULL, '1 L '),
+(12670, 270, NULL, NULL),
+(12672, 533, NULL, '1 cup '),
+(12672, 220, NULL, '1 cup '),
+(12674, 533, NULL, '1 cup fruit '),
+(12674, 47, NULL, '1 '),
+(12674, 352, NULL, '4 oz frozen '),
+(12674, 222, NULL, '1/2 piece textural '),
+(12674, 270, NULL, '6 '),
+(12688, 333, NULL, '2 cups '),
+(12688, 115, NULL, NULL),
+(12688, 336, NULL, NULL),
+(12690, 533, NULL, '1/2 cup plain '),
+(12690, 513, NULL, '1 1/4 cup cold '),
+(12690, 173, NULL, '1/2 tsp ground roasted '),
+(12690, 439, NULL, '1/4 tsp '),
+(12690, 337, NULL, '1/4 tsp dried '),
+(12692, 533, NULL, '1 cup '),
+(12692, 513, NULL, '2 cups cold '),
+(12692, 439, NULL, '1 tsp '),
+(12692, 36, NULL, '1 pinch '),
+(12694, 533, NULL, '2 cups '),
+(12694, 270, NULL, '4-6 '),
+(12694, 476, NULL, NULL),
+(12694, 312, NULL, NULL),
+(12694, 439, NULL, NULL),
+(12696, 533, NULL, '1 cup '),
+(12696, 513, NULL, '2 cups cold '),
+(12696, 476, NULL, '4 tblsp '),
+(12696, 439, NULL, 'pinch '),
+(12696, 293, NULL, '2 tblsp '),
+(12698, 319, NULL, '2 '),
+(12698, 533, NULL, '2 cups '),
+(12698, 476, NULL, '1/2 cup '),
+(12698, 513, NULL, '1 cup iced '),
+(12702, 230, NULL, '2 pieces '),
+(12702, 513, NULL, '1 gal '),
+(12702, 299, NULL, '1 lb '),
+(12702, 476, NULL, '1 cup '),
+(12702, 93, NULL, 'ground '),
+(12704, 312, NULL, 'Juice of 1 '),
+(12704, 476, NULL, '1 tblsp '),
+(12704, 455, NULL, ' (seltzer water)\n'),
+(12704, 310, NULL, NULL),
+(12706, 308, NULL, '4 cl '),
+(12706, 2, NULL, '2 cl '),
+(12706, 24, NULL, '4 cl '),
+(12708, 86, NULL, 'Juice of 1/2 '),
+(12708, 47, NULL, '1 '),
+(12710, 54, NULL, '1 cup '),
+(12710, 30, NULL, '2 '),
+(12712, 243, NULL, '1 cup '),
+(12712, 299, NULL, '1/4 '),
+(12712, 397, NULL, '1/2 '),
+(12714, 286, NULL, '3 '),
+(12714, 366, NULL, '1/2 '),
+(12716, 319, NULL, '1 '),
+(12716, 359, NULL, '2 '),
+(12718, 230, NULL, '1/4 inch '),
+(12718, 397, NULL, '1/2 '),
+(12720, 230, NULL, '1 inch '),
+(12720, 299, NULL, '1/4 '),
+(12720, 513, NULL, '1 cup hot '),
+(12726, 492, NULL, '2 cups '),
+(12726, 293, NULL, '1-2 tblsp '),
+(12726, 94, NULL, '1 dash '),
+(12728, 533, NULL, '1 cup '),
+(12728, 222, NULL, '1 cup '),
+(12728, 270, NULL, NULL),
+(12730, 131, NULL, '1/2 cup '),
+(12730, 476, NULL, '1 cup '),
+(12730, 151, NULL, '7 tsp '),
+(12730, 513, NULL, '1/2 cup '),
+(12730, 333, NULL, '1 qt '),
+(12732, 333, NULL, '6 cups '),
+(12732, 116, NULL, '3 oz Mexican '),
+(12732, 122, NULL, '1 tsp powdered '),
+(12732, 194, NULL, '3 '),
+(12734, 116, NULL, '125 gr'),
+(12734, 333, NULL, '3/4 L '),
+(12734, 513, NULL, NULL),
+(12736, 259, NULL, '2 oz '),
+(12736, 333, NULL, '6-8 oz '),
+(12736, 122, NULL, '1 stick '),
+(12736, 508, NULL, '1 '),
+(12736, 116, NULL, '2 oz finely chopped dark '),
+(12736, 515, NULL, 'Fresh '),
+(12738, 116, NULL, '12 oz fine '),
+(12738, 79, NULL, '1 tsp '),
+(12738, 502, NULL, '1/2 tsp '),
+(12738, 256, NULL, '1 cup '),
+(12738, 326, NULL, 'mini '),
+(12744, 476, NULL, '5 tblsp '),
+(12744, 131, NULL, '3 tblsp '),
+(12744, 439, NULL, '1 dash '),
+(12744, 513, NULL, '3 tblsp hot '),
+(12744, 333, NULL, '2 cups '),
+(12744, 502, NULL, '1/4 tsp '),
+(12746, 131, NULL, '2 tsp '),
+(12746, 476, NULL, '1 tsp '),
+(12746, 502, NULL, '1/2 tsp '),
+(12746, 333, NULL, '12 oz '),
+(12748, 333, NULL, '2 cups '),
+(12748, 116, NULL, '4 oz chopped bittersweet or semi-sweet '),
+(12748, 354, NULL, '3 2-inch strips '),
+(12748, 200, NULL, '1/2 tsp instant '),
+(12748, 344, NULL, '1/8 tsp ground '),
+(12750, 333, NULL, '2 cups '),
+(12750, 116, NULL, '2 oz sweet '),
+(12750, 122, NULL, '1/2 tsp '),
+(12750, 193, NULL, '2 beaten '),
+(12752, 223, NULL, '1/2 oz '),
+(12752, 574, NULL, '1/2 oz '),
+(12752, 299, NULL, ' wedge\n'),
+(12752, 476, NULL, 'Bacardi '),
+(12752, 571, NULL, NULL),
+(12754, 1, NULL, '1 oz '),
+(12754, 379, NULL, '3/4 oz '),
+(12754, 155, NULL, NULL),
+(12754, 352, NULL, NULL),
+(12756, 1, NULL, '4 cl '),
+(12756, 308, NULL, '1 dash '),
+(12756, 455, NULL, NULL),
+(12758, 380, NULL, '5 parts '),
+(12758, 293, NULL, '3 parts '),
+(12758, 223, NULL, '1 part '),
+(12758, 452, NULL, '1 part '),
+(12760, 363, NULL, '1 part '),
+(12760, 43, NULL, '1 part '),
+(12760, 2, NULL, '2 parts '),
+(12760, 238, NULL, '1/2 part '),
+(12762, 18, NULL, '1 part '),
+(12762, 278, NULL, '1 part '),
+(12762, 282, NULL, '1 part '),
+(12762, 333, NULL, '2 1/2 parts '),
+(12764, 139, NULL, '1 part '),
+(12764, 237, NULL, '2 parts '),
+(12766, 464, NULL, '1 1/2 cl '),
+(12766, 228, NULL, NULL),
+(12766, 312, NULL, NULL),
+(12766, 270, NULL, NULL),
+(12768, 139, NULL, '1/2 cup black '),
+(12768, 333, NULL, '1/2 cup '),
+(12768, 476, NULL, '1-2 tsp '),
+(12770, 139, NULL, '1/4 cup instant '),
+(12770, 476, NULL, '1/4 cup '),
+(12770, 513, NULL, '1/4 cup hot '),
+(12770, 333, NULL, '4 cups cold '),
+(12772, 282, NULL, '2 tsp '),
+(12772, 139, NULL, 'Strong cold '),
+(12774, 513, NULL, '2 cups '),
+(12774, 486, NULL, '3-4 tsp '),
+(12774, 230, NULL, '1 chunk dried '),
+(12774, 90, NULL, '3-4 crushed '),
+(12774, 126, NULL, '3 '),
+(12774, 122, NULL, '1 piece '),
+(12774, 57, NULL, '1-2 whole '),
+(12774, 476, NULL, ' to taste\n'),
+(12774, 333, NULL, 'to taste'),
+(12776, 200, NULL, NULL),
+(12776, 260, NULL, 'Unsweetened '),
+(12776, 131, NULL, NULL),
+(12780, 139, NULL, NULL),
+(12780, 122, NULL, NULL),
+(12782, 139, NULL, '6 tblsp ground'),
+(12782, 147, NULL, '1/4 tsp '),
+(12782, 90, NULL, '4-5 whole green '),
+(12782, 476, NULL, NULL),
+(12782, 516, NULL, NULL),
+(12782, 270, NULL, NULL),
+(12784, 139, NULL, 'black'),
+(12784, 476, NULL, NULL),
+(12784, 161, NULL, ' pods\n'),
+(12784, 90, NULL, NULL),
+(12786, 486, NULL, '1/4 cup Thai '),
+(12786, 513, NULL, '1/2 cup boiling '),
+(12786, 145, NULL, '2 tsp sweetened '),
+(12786, 270, NULL, 'cubes'),
+(12786, 337, NULL, 'garnish'),
+(12790, 1, NULL, '1 bottle '),
+(12790, 476, NULL, '50 gr '),
+(12790, 22, NULL, '50 ml pure '),
+(12790, 303, NULL, '1 tblsp '),
+(12790, 530, NULL, '1 '),
+(12792, 476, NULL, '1 cup'),
+(12792, 513, NULL, '3/4 cup '),
+(12792, 34, NULL, '2 '),
+(12792, 16, NULL, '1 tblsp '),
+(12792, 237, NULL, '1/2 cup pure '),
+(12792, 74, NULL, '1 cup '),
+(12792, 210, NULL, '3 drops yellow '),
+(12792, 231, NULL, '1/2 tsp '),
+(12794, 19, NULL, '3 tblsp chopped'),
+(12794, 17, NULL, '1 tblsp chopped '),
+(12794, 14, NULL, '1 cracked '),
+(12794, 122, NULL, '1 one-inch '),
+(12794, 22, NULL, '3-6 crushed '),
+(12794, 147, NULL, '1/8 tsp powdered '),
+(12794, 325, NULL, '1 tblsp fresh chopped '),
+(12794, 1, NULL, '1.5 cup '),
+(12794, 476, NULL, '1/2 cup granulated '),
+(12794, 513, NULL, '1/4 cup '),
+(12794, 210, NULL, '1 drop yellow '),
+(12796, 359, NULL, '3 large '),
+(12796, 1, NULL, '3 cups '),
+(12796, 476, NULL, '1 1/3 cup superfine '),
+(12798, 139, NULL, '10 tblsp instant '),
+(12798, 502, NULL, '4 tblsp '),
+(12798, 476, NULL, '2 1/2 cups '),
+(12798, 1, NULL, '1 qt '),
+(12798, 513, NULL, '2 1/2 cups '),
+(12800, 513, NULL, '2 cups '),
+(12800, 476, NULL, '2 cups white '),
+(12800, 139, NULL, '1/2 cup instant '),
+(12800, 508, NULL, '1/2'),
+(12800, 1, NULL, '1 1/2 cup'),
+(12800, 87, NULL, NULL),
+(12802, 154, NULL, '1/2 kg chopped '),
+(12802, 476, NULL, '3/4 L '),
+(12802, 305, NULL, '1/2 L '),
+(12808, 476, NULL, '8 cups '),
+(12808, 513, NULL, '6 cups '),
+(12808, 237, NULL, '1 pint '),
+(12808, 387, NULL, '1 oz pure '),
+(12808, 210, NULL, '1 tblsp green '),
+(12854, 280, NULL, '1 fifth '),
+(12854, 260, NULL, '1 1/2 cup mild '),
+(12854, 19, NULL, '2 tsp dried and chopped '),
+(12854, 205, NULL, '1/4 tsp crushed '),
+(12854, 294, NULL, '2 2 inch strips '),
+(12856, 513, NULL, '1 cup '),
+(12856, 77, NULL, '3/4-1 cup '),
+(12856, 139, NULL, '4 tsp '),
+(12856, 3, NULL, '1 cup '),
+(12856, 502, NULL, '4 tsp '),
+(12862, 513, NULL, '3/4 cup '),
+(12862, 230, NULL, '2 tsp '),
+(12862, 253, NULL, '2 cups '),
+(12862, 293, NULL, '1 1/2 tblsp '),
+(12862, 397, NULL, '1 1/2 cup '),
+(12862, 476, NULL, '1 cup '),
+(12862, 393, NULL, '3-4 cups '),
+(12870, 486, NULL, '1 quart black '),
+(12870, 436, NULL, '1 quart '),
+(12870, 425, NULL, '1 fifth '),
+(12870, 3, NULL, '1 pint Jamaican '),
+(12870, 74, NULL, '1/2 pint '),
+(12870, 53, NULL, '1 1/2 oz '),
+(12870, 352, NULL, '1 pint '),
+(12870, 293, NULL, '1/2 pint '),
+(12876, 201, NULL, '2 pint '),
+(12876, 528, NULL, '1 bottle Boone Strawberry Hill '),
+(12876, 352, NULL, '1/2 gal '),
+(12876, 287, NULL, '1 gal Tropical Berry '),
+(12890, 155, NULL, '4 cups '),
+(12890, 476, NULL, '1 1/2 cup '),
+(12890, 393, NULL, '4 cups '),
+(12890, 16, NULL, '1 tblsp '),
+(12890, 228, NULL, '2 qt '),
+(12954, 240, NULL, NULL),
+(12954, 88, NULL, ', orange\n'),
+(12954, 448, NULL, NULL),
+(12988, 513, NULL, '3 cups '),
+(12988, 476, NULL, '1 cup '),
+(12988, 126, NULL, '12 '),
+(12988, 122, NULL, '2 '),
+(12988, 294, NULL, '1 '),
+(12988, 425, NULL, '750 ml '),
+(12988, 74, NULL, '1/4 cup '),
+(13020, 425, NULL, '1 bottle '),
+(13020, 476, NULL, '1/2 cup '),
+(13020, 352, NULL, '1 cup '),
+(13020, 293, NULL, '1 cup '),
+(13020, 126, NULL, NULL),
+(13020, 122, NULL, NULL),
+(13024, 425, NULL, '2 bottles '),
+(13024, 476, NULL, '1 cup '),
+(13024, 513, NULL, '2 cups hot '),
+(13024, 30, NULL, '1 cup'),
+(13024, 359, NULL, ' wedges\n'),
+(13024, 312, NULL, ' wedges\n'),
+(13024, 299, NULL, NULL),
+(13024, 215, NULL, NULL),
+(13026, 425, NULL, '1 1/2 L '),
+(13026, 476, NULL, '1 cup '),
+(13026, 299, NULL, '1 large '),
+(13026, 359, NULL, '1 large '),
+(13026, 30, NULL, '1 large '),
+(13026, 74, NULL, '3-4 oz plain '),
+(13026, 455, NULL, NULL),
+(13032, 378, NULL, '46 oz '),
+(13032, 352, NULL, '20 oz '),
+(13032, 77, NULL, '1/2 cup '),
+(13032, 122, NULL, '3 3-inch '),
+(13032, 126, NULL, '1/2 tsp '),
+(13032, 308, NULL, '2 tblsp '),
+(13036, 299, NULL, 'Juice of 1 '),
+(13036, 476, NULL, '1 tblsp '),
+(13036, 470, NULL, '8-10 ripe '),
+(13036, 513, NULL, '1 cup '),
+(13058, 425, NULL, '1 bottle '),
+(13058, 299, NULL, '2 '),
+(13058, 352, NULL, '1 cup '),
+(13058, 359, NULL, '3 '),
+(13058, 393, NULL, '1 cup '),
+(13072, 1, NULL, '2 oz '),
+(13072, 105, NULL, '2 oz '),
+(13072, 155, NULL, '4 oz '),
+(13072, 352, NULL, '4 oz '),
+(13086, 300, NULL, '5 oz '),
+(13086, 1, NULL, '1 oz '),
+(13086, 67, NULL, '1/2 oz '),
+(13086, 498, NULL, '1/2 oz '),
+(13086, 476, NULL, NULL),
+(13086, 270, NULL, NULL),
+(13162, 282, NULL, '1 cl '),
+(13162, 43, NULL, '1 cl '),
+(13162, 212, NULL, '1 1/2 '),
+(13162, 139, NULL, '4 cl hot '),
+(13162, 161, NULL, NULL),
+(13190, 1, NULL, '1 shot '),
+(13190, 18, NULL, '1 shot '),
+(13190, 453, NULL, '1 shot '),
+(13190, 498, NULL, '1 shot '),
+(13190, 155, NULL, NULL),
+(13192, 3, NULL, '1/2 oz '),
+(13192, 1, NULL, '1/2 oz '),
+(13192, 2, NULL, '1/2 oz '),
+(13192, 67, NULL, '1/2 oz '),
+(13192, 457, NULL, '2 oz '),
+(13192, 297, NULL, '1 splash '),
+(13196, 1, NULL, '5 cl '),
+(13196, 312, NULL, '1/2 '),
+(13196, 20, NULL, '4 dashes '),
+(13196, 497, NULL, '1 dl Schweppes '),
+(13196, 270, NULL, '4 '),
+(13200, 600, NULL, '12 oz '),
+(13200, 52, NULL, '12 oz '),
+(13200, 300, NULL, '12 oz frozen '),
+(13200, 270, NULL, '1 cup crushed '),
+(13202, 18, NULL, '1 oz '),
+(13202, 1, NULL, '1 oz '),
+(13202, 571, NULL, '1 oz Bacardi '),
+(13202, 186, NULL, '1 oz '),
+(13202, 52, NULL, '1 oz '),
+(13204, 574, NULL, '2 oz '),
+(13204, 238, NULL, '1 oz '),
+(13204, 293, NULL, '2 oz sweetened '),
+(13204, 127, NULL, '1 oz '),
+(13206, 312, NULL, '2 '),
+(13206, 476, NULL, '2 tblsp '),
+(13206, 523, NULL, '2-3 oz '),
+(13206, 270, NULL, 'crushed '),
+(13214, 400, NULL, '2 oz '),
+(13214, 293, NULL, '1 oz '),
+(13214, 476, NULL, '1-2 tblsp '),
+(13214, 270, NULL, '1'),
+(13214, 192, NULL, NULL),
+(13222, 272, NULL, '1/2 oz '),
+(13222, 235, NULL, '1/2 oz '),
+(13332, 282, NULL, '1/3 shot '),
+(13332, 440, NULL, '1/3 shot '),
+(13332, 238, NULL, '1/3 shot '),
+(13423, 1, NULL, '2 cl Smirnoff '),
+(13423, 458, NULL, '2 cl '),
+(13423, 373, NULL, '2 cl '),
+(13423, 480, NULL, '6 cl '),
+(13423, 127, NULL, '1 dash '),
+(13499, 1, NULL, '1 oz '),
+(13499, 282, NULL, '1 oz '),
+(13499, 43, NULL, '1 oz '),
+(13499, 503, NULL, '2 scoops '),
+(13499, 361, NULL, '1 '),
+(13501, 18, NULL, '1/3 '),
+(13501, 43, NULL, '1/3 '),
+(13501, 141, NULL, '1/3 '),
+(13535, 466, NULL, '1 L '),
+(13535, 398, NULL, '2 cups '),
+(13535, 1, NULL, '2 cups '),
+(13539, 1, NULL, '1 1/2 oz '),
+(13539, 271, NULL, '6 oz '),
+(13539, 293, NULL, ' to taste\n'),
+(13581, 380, NULL, '2-3 oz'),
+(13581, 128, NULL, NULL),
+(13675, 440, NULL, '1/4 glass '),
+(13675, 441, NULL, '3/4 glass '),
+(13683, 572, NULL, '1 part '),
+(13683, 29, NULL, '1 part '),
+(13731, 18, NULL, '1 1/2 oz '),
+(13731, 457, NULL, '3 oz '),
+(13751, 179, NULL, '1-2 shot '),
+(13751, 312, NULL, 'Squeeze '),
+(13751, 128, NULL, 'Fill with '),
+(13751, 270, NULL, NULL),
+(13807, 388, NULL, NULL),
+(13807, 282, NULL, NULL),
+(13807, 43, NULL, NULL),
+(13825, 282, NULL, '1 oz '),
+(13825, 43, NULL, '1 oz '),
+(13825, 235, NULL, 'dash '),
+(13825, 259, NULL, '2 oz '),
+(13825, 139, NULL, '2 oz Hazlenut '),
+(13847, 275, NULL, '1 oz '),
+(13847, 18, NULL, '1 oz '),
+(13861, 43, NULL, '1 part '),
+(13861, 212, NULL, '1 part '),
+(13861, 333, NULL, '1 part '),
+(13899, 275, NULL, '1/3 oz '),
+(13899, 280, NULL, '1/3 oz '),
+(13899, 279, NULL, '1/3 oz '),
+(13936, 571, NULL, '5 oz Bacardi '),
+(13936, 392, NULL, 'frozen '),
+(13936, 176, NULL, 'frozen '),
+(13938, 8, NULL, '1 oz '),
+(13938, 2, NULL, '1 oz '),
+(13938, 497, NULL, '4 oz '),
+(13940, 2, NULL, '2 oz dry '),
+(13940, 572, NULL, '4 oz '),
+(13940, 293, NULL, '0.75 oz '),
+(14029, 164, NULL, '1 oz white '),
+(14029, 1, NULL, '1 oz '),
+(14053, 235, NULL, '1 oz '),
+(14053, 80, NULL, '1 oz '),
+(14053, 333, NULL, '1 oz '),
+(14065, 18, NULL, '2 oz '),
+(14065, 3, NULL, '2 oz '),
+(14065, 287, NULL, '4 oz Grape '),
+(14071, 1, NULL, '2 cl '),
+(14071, 133, NULL, '1 cl '),
+(14071, 67, NULL, '1 cl '),
+(14071, 466, NULL, 'Fill with '),
+(14087, 168, NULL, '1 shot '),
+(14087, 18, NULL, '1 shot '),
+(14087, 155, NULL, '1 shot '),
+(14107, 574, NULL, '1 1/2 oz '),
+(14107, 480, NULL, '3/4 oz '),
+(14107, 466, NULL, '1/2 oz '),
+(14107, 455, NULL, '3 oz '),
+(14107, 299, NULL, '1 slice '),
+(14133, 142, NULL, '1/2 oz '),
+(14133, 1, NULL, '1 oz '),
+(14133, 312, NULL, 'Juice of 1/2 '),
+(14133, 155, NULL, '1 splash '),
+(14272, 1, NULL, '1 shot '),
+(14272, 250, NULL, '1 tblsp '),
+(14272, 352, NULL, 'Fill with '),
+(14282, 282, NULL, '3/4 oz '),
+(14282, 223, NULL, '3/4 oz '),
+(14282, 455, NULL, 'Fill with '),
+(14306, 18, NULL, '1 part '),
+(14306, 457, NULL, '1 part '),
+(14306, 352, NULL, '1 part '),
+(14356, 43, NULL, '3/4 oz '),
+(14356, 232, NULL, '3/4 oz '),
+(14356, 282, NULL, '3/4 oz '),
+(14356, 80, NULL, '1/2 oz '),
+(14356, 333, NULL, ' to fill\n'),
+(14360, 6, NULL, '3/4 oz '),
+(14360, 331, NULL, '3/4 oz '),
+(14360, 155, NULL, '1 oz '),
+(14360, 466, NULL, '1 splash '),
+(14364, 300, NULL, '1 can '),
+(14364, 1, NULL, '5 oz '),
+(14364, 3, NULL, '7 oz '),
+(14364, 228, NULL, 'About 1 bottle '),
+(14366, 1, NULL, '1 1/2 shot '),
+(14366, 142, NULL, '1 1/2 shot '),
+(14366, 299, NULL, 'Juice of 1 wedge '),
+(14372, 574, NULL, '2/3 '),
+(14372, 308, NULL, '1/3 '),
+(14372, 270, NULL, 'Fill with '),
+(14372, 497, NULL, 'Top it up with '),
+(14374, 574, NULL, '2/3 part '),
+(14374, 399, NULL, '1/3 part '),
+(14374, 270, NULL, 'cubes'),
+(14374, 55, NULL, NULL),
+(14482, 103, NULL, '1 part '),
+(14482, 455, NULL, '1 part '),
+(14482, 352, NULL, '1 part '),
+(14482, 270, NULL, 'cubes'),
+(14510, 43, NULL, '2 oz '),
+(14510, 503, NULL, '2 scoops '),
+(14510, 161, NULL, NULL),
+(14560, 520, NULL, '1/2 oz '),
+(14560, 458, NULL, '3/4 oz '),
+(14560, 1, NULL, '1/2 oz '),
+(14560, 264, NULL, 'Fill with '),
+(14564, 155, NULL, '2 oz '),
+(14564, 455, NULL, '2 oz '),
+(14564, 331, NULL, '0.5 oz '),
+(14564, 163, NULL, '0.5 oz '),
+(14578, 18, NULL, '1 cl '),
+(14578, 352, NULL, '4 oz '),
+(14578, 250, NULL, '1/4 cl '),
+(14584, 8, NULL, '2 shots '),
+(14584, 271, NULL, '12 oz lemon '),
+(14594, 142, NULL, '5 cl '),
+(14594, 293, NULL, '2 cl '),
+(14594, 270, NULL, 'cubes'),
+(14594, 299, NULL, ' or lime\n'),
+(14598, 507, NULL, '2 1/2 oz '),
+(14598, 238, NULL, '1 splash '),
+(14598, 352, NULL, 'Fill with '),
+(14608, 464, NULL, '1 oz '),
+(14608, 228, NULL, NULL),
+(14610, 571, NULL, '1 oz Bacardi '),
+(14610, 526, NULL, '1 oz '),
+(14622, 1, NULL, '1/3 part '),
+(14622, 241, NULL, '1/3 part '),
+(14622, 352, NULL, '1/3 part '),
+(14622, 270, NULL, 'lots '),
+(14622, 85, NULL, '1 dash '),
+(14642, 282, NULL, '1 oz '),
+(14642, 571, NULL, '1 oz Bacardi '),
+(14642, 250, NULL, '1 dash '),
+(14752, 285, NULL, '1 part '),
+(14752, 55, NULL, '2 parts '),
+(14752, 270, NULL, 'cubes'),
+(14842, 43, NULL, '1 oz '),
+(14842, 520, NULL, '3/4 oz '),
+(14842, 161, NULL, '3/4 oz double '),
+(14978, 3, NULL, 'mikey bottle '),
+(14978, 228, NULL, 'large bottle '),
+(14978, 221, NULL, '355 ml frozen '),
+(14978, 352, NULL, '355 ml frozen '),
+(14978, 270, NULL, 'crushed '),
+(15024, 8, NULL, '2 oz '),
+(15024, 155, NULL, '4 oz '),
+(15024, 228, NULL, '2 oz '),
+(15024, 270, NULL, 'Add '),
+(15026, 157, NULL, '4 cl '),
+(15026, 25, NULL, '2 cl '),
+(15026, 444, NULL, '7 cl '),
+(15026, 28, NULL, '8 cl '),
+(15026, 270, NULL, 'cubes'),
+(15082, 168, NULL, '1 1/2 oz '),
+(15082, 379, NULL, '1 oz '),
+(15082, 96, NULL, '1/2 oz '),
+(15082, 155, NULL, '1 oz '),
+(15092, 352, NULL, '1 part '),
+(15092, 28, NULL, '1 part '),
+(15092, 393, NULL, '1 part '),
+(15092, 270, NULL, NULL),
+(15106, 352, NULL, '4 cl '),
+(15106, 242, NULL, '3 cl '),
+(15106, 28, NULL, '1 cl '),
+(15106, 322, NULL, '1 '),
+(15182, 1, NULL, '2 cl '),
+(15182, 163, NULL, '1 cl '),
+(15182, 352, NULL, NULL),
+(15194, 112, NULL, '2 scoops '),
+(15194, 74, NULL, '2 oz '),
+(15194, 18, NULL, '2 oz '),
+(15200, 135, NULL, '1 oz '),
+(15200, 18, NULL, '1/2 oz '),
+(15200, 352, NULL, '4 oz '),
+(15200, 250, NULL, '1/2 oz '),
+(15224, 315, NULL, '2 parts '),
+(15224, 499, NULL, '2 parts '),
+(15224, 155, NULL, '1 part '),
+(15266, 1, NULL, '3 parts'),
+(15266, 399, NULL, '1 part '),
+(15266, 28, NULL, '6 parts '),
+(15266, 293, NULL, '1 1/2 part '),
+(15266, 300, NULL, NULL),
+(15288, 571, NULL, '1/2 shot Bacardi '),
+(15288, 526, NULL, '1/2 shot '),
+(15300, 2, NULL, '1/2 oz'),
+(15300, 305, NULL, '1/2 oz'),
+(15300, 4, NULL, '1/2 oz'),
+(15300, 498, NULL, '1/2 oz'),
+(15300, 1, NULL, '1/2 oz'),
+(15300, 128, NULL, '1/2 oz'),
+(15300, 480, NULL, '1-2 dash '),
+(15300, 56, NULL, '1 wedge '),
+(15300, 299, NULL, 'Garnish with'),
+(15328, 440, NULL, '2 cl '),
+(15328, 43, NULL, '2 cl '),
+(15328, 520, NULL, '2 cl '),
+(15330, 1, NULL, '1 oz '),
+(15330, 498, NULL, '1 oz '),
+(15330, 352, NULL, '1 oz '),
+(15346, 179, NULL, '1 shot '),
+(15346, 305, NULL, '2 shots '),
+(15346, 1, NULL, '1 shot '),
+(15346, 352, NULL, '1 shot '),
+(15403, 1, NULL, '2 oz '),
+(15403, 444, NULL, NULL),
+(15409, 139, NULL, '3 parts '),
+(15409, 201, NULL, '1 part '),
+(15423, 289, NULL, '16 oz '),
+(15423, 4, NULL, '1.5 oz '),
+(15427, 315, NULL, '1 1/2 cl '),
+(15427, 379, NULL, '1 1/2 cl '),
+(15427, 67, NULL, '1 1/2 cl '),
+(15427, 480, NULL, '3 cl '),
+(15511, 282, NULL, '2 oz '),
+(15511, 333, NULL, '8 oz '),
+(15511, 503, NULL, '2 scoops '),
+(15515, 139, NULL, '8 oz '),
+(15515, 275, NULL, '4 oz '),
+(15515, 18, NULL, '4 oz '),
+(15515, 515, NULL, NULL),
+(15521, 139, NULL, '1 cup'),
+(15521, 35, NULL, '4 cl '),
+(15521, 476, NULL, 'By taste '),
+(15567, 1, NULL, '1/2 '),
+(15567, 300, NULL, '1/2 can '),
+(15567, 513, NULL, '1/2 '),
+(15567, 476, NULL, '10 tsp '),
+(15597, 8, NULL, '1 1/2 oz '),
+(15597, 379, NULL, '1/2 oz '),
+(15597, 133, NULL, '1/2 oz '),
+(15597, 155, NULL, '1 1/2 oz '),
+(15597, 393, NULL, '1 1/2 oz '),
+(15639, 282, NULL, '1/2 oz '),
+(15639, 272, NULL, '1/2 oz '),
+(15639, 18, NULL, '1/2 oz '),
+(15639, 571, NULL, '1/2 oz Bacardi '),
+(15639, 161, NULL, '1 oz '),
+(15675, 1, NULL, '2 oz '),
+(15675, 284, NULL, '1 oz '),
+(15675, 472, NULL, '1 tsp '),
+(15675, 470, NULL, '5 '),
+(15675, 444, NULL, NULL),
+(15691, 52, NULL, NULL),
+(15691, 431, NULL, NULL),
+(15691, 300, NULL, NULL),
+(15691, 128, NULL, ' slice\n'),
+(15691, 572, NULL, NULL),
+(15691, 165, NULL, NULL),
+(15691, 299, NULL, NULL),
+(15761, 59, NULL, '25 ml '),
+(15761, 352, NULL, 'Add 250 ml '),
+(15801, 331, NULL, '1.5 oz '),
+(15801, 535, NULL, '12 oz '),
+(15841, 337, NULL, '1/2 handful '),
+(15841, 293, NULL, '3 cl '),
+(15841, 179, NULL, '1/8 L Jamaican '),
+(15841, 127, NULL, '1/8 L '),
+(15841, 20, NULL, '8 drops '),
+(15849, 32, NULL, '1 qt '),
+(15849, 97, NULL, '4 fifth '),
+(15849, 1, NULL, '1 fifth '),
+(15849, 572, NULL, '4 L '),
+(15849, 352, NULL, '1/2 gal '),
+(15941, 83, NULL, '1 oz '),
+(15941, 482, NULL, '1 oz red '),
+(15941, 294, NULL, 'Twist of '),
+(15941, 354, NULL, 'Twist of '),
+(15951, 270, NULL, 'cubes'),
+(15951, 115, NULL, NULL),
+(15951, 100, NULL, NULL),
+(15951, 1, NULL, NULL),
+(15951, 333, NULL, NULL),
+(16031, 52, NULL, '12 oz '),
+(16031, 572, NULL, '12 oz '),
+(16041, 458, NULL, '750 ml '),
+(16041, 352, NULL, '1 L '),
+(16041, 389, NULL, '750 ml '),
+(16082, 18, NULL, '3/4 oz '),
+(16082, 178, NULL, '1/2 oz '),
+(16082, 139, NULL, '8 oz '),
+(16100, 457, NULL, '2 oz '),
+(16100, 18, NULL, '2 oz '),
+(16100, 4, NULL, '2 oz '),
+(16100, 352, NULL, 'Add splash '),
+(16108, 574, NULL, '2 oz '),
+(16108, 351, NULL, '1/2 oz '),
+(16108, 472, NULL, '1 splash '),
+(16108, 352, NULL, '1 oz '),
+(16134, 574, NULL, '1 shot '),
+(16134, 352, NULL, '1 shot '),
+(16134, 498, NULL, '1 shot '),
+(16134, 228, NULL, 'Fill to top '),
+(16176, 270, NULL, '8 cubes'),
+(16176, 1, NULL, '3 oz '),
+(16176, 378, NULL, '1.5 oz '),
+(16176, 379, NULL, '1.5 oz '),
+(16176, 294, NULL, '1 '),
+(16178, 2, NULL, '2 jiggers '),
+(16178, 1, NULL, '1 jigger '),
+(16178, 250, NULL, '3 dashes '),
+(16178, 308, NULL, '1 shot '),
+(16178, 476, NULL, 'Around rim put 1 pinch '),
+(16178, 475, NULL, '3 dashes '),
+(16178, 455, NULL, 'Fill to top with '),
+(16202, 18, NULL, NULL),
+(16202, 480, NULL, NULL),
+(16202, 331, NULL, NULL),
+(16202, 393, NULL, NULL),
+(16250, 315, NULL, '1 1/2 oz '),
+(16250, 61, NULL, '1 oz '),
+(16250, 352, NULL, '3-4 oz '),
+(16250, 393, NULL, '3-4 oz '),
+(16250, 155, NULL, '3-4 oz '),
+(16271, 164, NULL, '1 1/2 oz '),
+(16271, 67, NULL, '1 oz '),
+(16271, 305, NULL, '1/2 oz '),
+(16275, 270, NULL, '4-5 '),
+(16275, 487, NULL, '2 oz '),
+(16275, 502, NULL, '1 tsp '),
+(16275, 128, NULL, '10-12 oz '),
+(16289, 4, NULL, '3 oz '),
+(16289, 27, NULL, '12 oz '),
+(16295, 179, NULL, '1 shot '),
+(16295, 359, NULL, '1 slice '),
+(16295, 478, NULL, '1/2 glass '),
+(16295, 155, NULL, '1/2 glass '),
+(16311, 275, NULL, '1 oz '),
+(16311, 331, NULL, '1/2 oz '),
+(16311, 457, NULL, '2 oz '),
+(16333, 3, NULL, '1 part '),
+(16333, 1, NULL, '1 part '),
+(16333, 4, NULL, '1 part '),
+(16333, 498, NULL, '1/2 part '),
+(16333, 222, NULL, NULL),
+(16333, 270, NULL, NULL),
+(16333, 439, NULL, '1-3 pint '),
+(16333, 220, NULL, NULL),
+(16354, 1, NULL, '1/3 oz '),
+(16354, 331, NULL, '1/3 oz '),
+(16354, 480, NULL, '1/3 oz '),
+(16405, 18, NULL, '1 shot '),
+(16405, 458, NULL, '1 shot '),
+(16405, 270, NULL, 'cubes'),
+(16405, 457, NULL, NULL),
+(16419, 168, NULL, '1 shot '),
+(16419, 282, NULL, '1 shot '),
+(16419, 161, NULL, 'Fill with '),
+(16485, 282, NULL, '1 oz '),
+(16485, 440, NULL, '1 oz '),
+(16485, 67, NULL, '1 oz '),
+(16485, 43, NULL, '1 oz '),
+(16943, 1, NULL, '1 oz '),
+(16943, 379, NULL, '1 oz '),
+(16943, 352, NULL, '3 oz '),
+(16943, 155, NULL, '3 oz '),
+(16958, 28, NULL, '3 parts '),
+(16958, 315, NULL, '1 part '),
+(16958, 122, NULL, '3 dashes '),
+(16984, 3, NULL, '1 oz '),
+(16984, 1, NULL, '1 oz '),
+(16984, 4, NULL, '1 oz '),
+(16984, 2, NULL, '1 oz '),
+(16984, 498, NULL, '1 oz '),
+(16984, 96, NULL, '1 oz '),
+(16984, 331, NULL, '1 oz '),
+(16984, 315, NULL, '1 oz '),
+(16986, 458, NULL, '2 oz '),
+(16986, 498, NULL, '1/2 oz '),
+(16986, 312, NULL, '2 wedges '),
+(16986, 457, NULL, '2 oz '),
+(16987, 43, NULL, '3/4 oz '),
+(16987, 71, NULL, '3/4 oz '),
+(16987, 1, NULL, '3/4 oz '),
+(16987, 352, NULL, '2-3 oz '),
+(16991, 221, NULL, '2 part '),
+(16991, 466, NULL, '1 part '),
+(16991, 4, NULL, '2 shots '),
+(16991, 571, NULL, 'Float Bacardi '),
+(16992, 201, NULL, '750 ml '),
+(16992, 1, NULL, '1750 ml '),
+(16992, 379, NULL, '1750 ml '),
+(16992, 352, NULL, '1 gal '),
+(16992, 155, NULL, '1 gal '),
+(16995, 352, NULL, '4 oz '),
+(16995, 3, NULL, '1 oz '),
+(16995, 1, NULL, '1 oz '),
+(16995, 161, NULL, '1 package '),
+(16995, 270, NULL, 'Over '),
+(17002, 179, NULL, '1/2 oz '),
+(17002, 1, NULL, '1/2 oz '),
+(17002, 498, NULL, '1/2 oz '),
+(17002, 4, NULL, '1/2 oz '),
+(17002, 328, NULL, '1/2 oz '),
+(17002, 338, NULL, 'Fill with '),
+(17005, 18, NULL, '1 jigger '),
+(17005, 299, NULL, 'Juice of 1/2 '),
+(17005, 270, NULL, NULL),
+(17005, 322, NULL, NULL),
+(17015, 1, NULL, '1 shot '),
+(17015, 282, NULL, '1 shot '),
+(17015, 128, NULL, '1 dash '),
+(17015, 254, NULL, 'Fill with '),
+(17020, 278, NULL, '1 oz '),
+(17020, 235, NULL, '1 oz '),
+(17044, 476, NULL, '2 1/2 cups '),
+(17044, 149, NULL, '1 cup '),
+(17044, 139, NULL, '1 1/2 oz instant '),
+(17044, 502, NULL, '2 oz '),
+(17044, 513, NULL, '3 cups boiling '),
+(17044, 1, NULL, '1 fifth '),
+(17066, 1, NULL, '30 ml '),
+(17066, 2, NULL, '30 ml '),
+(17066, 307, NULL, '45 ml '),
+(17066, 270, NULL, '1/2 glass crushed '),
+(17074, 1, NULL, '1 shot '),
+(17074, 315, NULL, '1 shot '),
+(17074, 234, NULL, '1 shot '),
+(17074, 352, NULL, '1 splash '),
+(17074, 393, NULL, '1 splash '),
+(17074, 158, NULL, '1 splash '),
+(17074, 250, NULL, '1 dash '),
+(17074, 270, NULL, 'crushed '),
+(17074, 397, NULL, '1 wedge '),
+(17094, 18, NULL, '1 shot '),
+(17094, 238, NULL, '1 shot '),
+(17094, 458, NULL, '1 shot '),
+(17105, 67, NULL, NULL),
+(17105, 70, NULL, NULL),
+(17105, 1, NULL, NULL),
+(17105, 457, NULL, NULL),
+(17105, 572, NULL, NULL),
+(17108, 128, NULL, '1 dl '),
+(17108, 293, NULL, '7 drops '),
+(17118, 327, NULL, '5 oz blue '),
+(17118, 338, NULL, '5 oz '),
+(17118, 270, NULL, 'cubes'),
+(17120, 201, NULL, '1 fifth '),
+(17120, 1, NULL, '1 fifth Smirnoff red label '),
+(17120, 338, NULL, '2 L '),
+(17120, 478, NULL, '2 L '),
+(17120, 293, NULL, '1 small bottle '),
+(17120, 3, NULL, '1 pint '),
+(17135, 39, NULL, '1 part '),
+(17135, 128, NULL, '2 parts '),
+(17141, 425, NULL, '1/3 part '),
+(17141, 379, NULL, '1 shot '),
+(17141, 389, NULL, '1/3 part '),
+(17141, 352, NULL, '1/3 part '),
+(17167, 419, NULL, '2 oz '),
+(17167, 297, NULL, '4 oz '),
+(17167, 270, NULL, NULL),
+(17168, 498, NULL, '1/2 jigger '),
+(17168, 18, NULL, '3 shots '),
+(17168, 120, NULL, '1/2 cup '),
+(17168, 270, NULL, 'Add 1/2 cup '),
+(17174, 2, NULL, '1 oz'),
+(17174, 4, NULL, '1 oz'),
+(17174, 1, NULL, '1 oz'),
+(17174, 523, NULL, '1 oz'),
+(17174, 498, NULL, '1 oz'),
+(17174, 102, NULL, '1 oz'),
+(17174, 480, NULL, '1 oz'),
+(17174, 127, NULL, '3 oz'),
+(17177, 181, NULL, '2 tsp '),
+(17177, 312, NULL, '1'),
+(17177, 81, NULL, '2 1/2 oz'),
+(17180, 2, NULL, '4.5 cl'),
+(17180, 293, NULL, '1.5 cl'),
+(17180, 323, NULL, '1.5 cl'),
+(17181, 1, NULL, '70ml/2fl oz'),
+(17181, 189, NULL, '1 tbsp'),
+(17181, 576, NULL, '2 tbsp'),
+(17181, 299, NULL, '1 wedge'),
+(17181, 347, NULL, '1'),
+(17182, 400, NULL, '5 cl'),
+(17182, 308, NULL, '2.5 cl'),
+(17182, 577, NULL, '2.5 cl'),
+(17182, 578, NULL, '1.5 cl'),
+(17182, 20, NULL, '2 Dashes'),
+(17182, 386, NULL, 'Pinch'),
+(17182, 579, NULL, '2 sprigs'),
+(17183, 305, NULL, '1 3/4 oz Bacardi '),
+(17183, 308, NULL, '1 oz '),
+(17183, 475, NULL, '1/2 tsp '),
+(17183, 250, NULL, '1 dash '),
+(17184, 74, NULL, '1 oz '),
+(17184, 305, NULL, '1 oz '),
+(17184, 498, NULL, '1 oz '),
+(17184, 293, NULL, '1 oz '),
+(17185, 2, NULL, '2 oz '),
+(17185, 323, NULL, '1/4 tsp '),
+(17185, 293, NULL, '1/4 tsp '),
+(17185, 350, NULL, '2 dashes '),
+(17185, 106, NULL, '1 '),
+(17186, 2, NULL, '1 1/2 oz '),
+(17186, 250, NULL, '2 tsp '),
+(17186, 299, NULL, 'Juice of 1/2 '),
+(17186, 192, NULL, '1 '),
+(17187, 2, NULL, '6 cl'),
+(17187, 540, NULL, '2 dashes'),
+(17187, 337, NULL, '2 Fresh leaves'),
+(17188, 305, NULL, '1 1/2 oz '),
+(17188, 393, NULL, '1 oz '),
+(17188, 323, NULL, '1/2 tsp '),
+(17188, 250, NULL, '1/2 tsp '),
+(17188, 322, NULL, '1 '),
+(17189, 2, NULL, '2 oz '),
+(17189, 53, NULL, '1 tsp '),
+(17189, 352, NULL, '1/2 oz '),
+(17189, 250, NULL, '1 tsp '),
+(17191, 179, NULL, '1 part '),
+(17191, 362, NULL, '1/2 part '),
+(17191, 352, NULL, '2 parts '),
+(17191, 393, NULL, '1 part '),
+(17195, 97, NULL, '6 oz '),
+(17195, 379, NULL, '1 oz '),
+(17196, 1, NULL, '1 1/4 oz '),
+(17196, 308, NULL, '1/4 oz '),
+(17196, 142, NULL, '1/4 oz '),
+(17196, 155, NULL, '1/4 cup '),
+(17197, 2, NULL, '1 1/2 oz '),
+(17197, 476, NULL, '2 tsp superfine '),
+(17197, 293, NULL, '1 1/2 oz '),
+(17197, 97, NULL, '4 oz Chilled '),
+(17197, 359, NULL, '1 '),
+(17197, 322, NULL, '1 '),
+(17198, 141, NULL, '1 1/2 oz '),
+(17198, 18, NULL, '3/4 oz '),
+(17199, 223, NULL, '2 parts'),
+(17199, 498, NULL, '2 parts'),
+(17199, 352, NULL, '2 parts'),
+(17199, 161, NULL, '1 part'),
+(17200, 246, NULL, '3/4 oz '),
+(17200, 164, NULL, '3/4 oz white '),
+(17200, 304, NULL, '3/4 oz '),
+(17201, 3, NULL, '12 parts'),
+(17201, 242, NULL, '8 parts'),
+(17201, 323, NULL, '3 parts'),
+(17201, 308, NULL, '3 parts'),
+(17202, 294, NULL, '1 long strip '),
+(17202, 74, NULL, '2 oz '),
+(17202, 228, NULL, '5 oz '),
+(17202, 56, NULL, '2 dashes '),
+(17204, 1, NULL, '1/2 oz '),
+(17204, 4, NULL, '1/2 oz '),
+(17204, 305, NULL, '1/2 oz '),
+(17204, 2, NULL, '1/2 oz '),
+(17204, 128, NULL, '1 dash '),
+(17204, 294, NULL, 'Twist of '),
+(17206, 337, NULL, '4 fresh '),
+(17206, 71, NULL, '2 1/2 oz '),
+(17206, 409, NULL, '1 tsp '),
+(17206, 513, NULL, '2 tsp '),
+(17207, 305, NULL, '3 oz '),
+(17207, 134, NULL, '3 tblsp '),
+(17207, 397, NULL, '3 tblsp '),
+(17209, 3, NULL, '4.5 cl'),
+(17209, 223, NULL, '1.5 cl'),
+(17209, 393, NULL, '6 cl'),
+(17209, 308, NULL, ' 1 dash'),
+(17209, 542, NULL, 'top up '),
+(17210, 2, NULL, '4 cl'),
+(17210, 293, NULL, '1.5 cl'),
+(17210, 475, NULL, '1 cl'),
+(17210, 575, NULL, '1.5 cl'),
+(17211, 179, NULL, '5 cl'),
+(17211, 229, NULL, '10 cl'),
+(17212, 1, NULL, '5 cl'),
+(17212, 282, NULL, '1 cl'),
+(17212, 475, NULL, '1 dash'),
+(17213, 1, NULL, '4.5 cl'),
+(17213, 416, NULL, '1.5 cl'),
+(17213, 393, NULL, '1.5 cl'),
+(17215, 542, NULL, '6 cl'),
+(17215, 83, NULL, '4 cl'),
+(17215, 455, NULL, 'splash'),
+(17216, 4, NULL, '4.5 cl'),
+(17216, 308, NULL, '1.5 cl'),
+(17216, 12, NULL, '2 spoons'),
+(17217, 4, NULL, '6 cl'),
+(17217, 492, NULL, '3 cl'),
+(17217, 352, NULL, '3 cl'),
+(17217, 308, NULL, '1.5 cl'),
+(17217, 475, NULL, '1 dash'),
+(17217, 439, NULL, '1 pinch'),
+(17218, 2, NULL, '6 cl'),
+(17218, 1, NULL, '1.5 cl'),
+(17218, 539, NULL, '0.75 cl'),
+(17219, 523, NULL, '3 cl'),
+(17219, 223, NULL, '1.5 cl'),
+(17219, 498, NULL, '1.5 cl'),
+(17219, 308, NULL, '1.5 cl'),
+(17220, 503, NULL, '2 scoops '),
+(17220, 80, NULL, '1 part '),
+(17220, 333, NULL, 'full glass '),
+(17220, 1, NULL, '2 parts '),
+(17221, 503, NULL, '3 cups '),
+(17221, 333, NULL, '1 cup '),
+(17221, 232, NULL, '1/2 cup '),
+(17221, 515, NULL, 'for topping'),
+(17221, 537, NULL, '4 tablespoons\r\n'),
+(17221, 538, NULL, '4 tablespoons\r\n'),
+(17221, 541, NULL, '15\r\n'),
+(17222, 2, NULL, '1 3/4 shot '),
+(17222, 238, NULL, '1 Shot '),
+(17222, 293, NULL, '1/4 Shot'),
+(17222, 250, NULL, '1/8 Shot'),
+(17223, 2, NULL, '2 shots '),
+(17223, 482, NULL, '1 shot '),
+(17223, 352, NULL, '1 shot '),
+(17223, 20, NULL, '3 dashes '),
+(17224, 1, NULL, '1 shot '),
+(17224, 155, NULL, '2 shots '),
+(17224, 97, NULL, 'Top up with'),
+(17225, 2, NULL, '2 shots '),
+(17225, 250, NULL, '1/2 shot '),
+(17225, 259, NULL, '1/2 shot '),
+(17225, 333, NULL, '1/2 shot'),
+(17225, 192, NULL, '1/2 Fresh'),
+(17226, 2, NULL, '1 shot '),
+(17226, 141, NULL, '1 shot '),
+(17226, 165, NULL, '1 shot '),
+(17226, 217, NULL, '1/8 shot '),
+(17227, 482, NULL, '2 shots '),
+(17227, 189, NULL, '1 shot '),
+(17227, 455, NULL, 'Top up with\r\n'),
+(17228, 2, NULL, '1 1/2 shot '),
+(17228, 510, NULL, '1 1/2 shot '),
+(17229, 3, NULL, '1 shot '),
+(17229, 189, NULL, '1/2 shot '),
+(17229, 141, NULL, '1/2 shot '),
+(17229, 2, NULL, '1/2 shot '),
+(17229, 547, NULL, '1/4 shot'),
+(17229, 475, NULL, '1/4 shot'),
+(17229, 513, NULL, '1/2 shot '),
+(17230, 2, NULL, '2 oz '),
+(17230, 250, NULL, '1 tsp '),
+(17230, 299, NULL, 'Juice of 1/2 '),
+(17230, 455, NULL, 'Top up with'),
+(17230, 312, NULL, 'Garnish'),
+(17233, 2, NULL, '50 ml '),
+(17233, 113, NULL, '30 ml '),
+(17233, 18, NULL, '15 ml'),
+(17233, 538, NULL, 'Garnish'),
+(17233, 543, NULL, 'Grated'),
+(17239, 510, NULL, '25 ml'),
+(17239, 322, NULL, '15 ml'),
+(17239, 475, NULL, '10 ml'),
+(17239, 300, NULL, '100 ml'),
+(17239, 60, NULL, '2'),
+(17241, 3, NULL, '1 1/2 oz'),
+(17241, 233, NULL, '1 1/2 oz'),
+(17241, 571, NULL, '1 oz'),
+(17241, 390, NULL, '1 tsp'),
+(17241, 250, NULL, '1 tsp'),
+(17241, 308, NULL, '1 tsp'),
+(17241, 20, NULL, '1 drop'),
+(17242, 2, NULL, '50 ml'),
+(17242, 165, NULL, '20 ml'),
+(17242, 547, NULL, '15 ml'),
+(17242, 229, NULL, '75 ml'),
+(17242, 312, NULL, '1'),
+(17242, 230, NULL, '1 long strip'),
+(17245, 2, NULL, '50 ml'),
+(17245, 67, NULL, '15 ml'),
+(17245, 497, NULL, '100 ml'),
+(17245, 549, NULL, 'Garnish with'),
+(17246, 330, NULL, '2 oz'),
+(17246, 113, NULL, '3/4 oz'),
+(17246, 138, NULL, '1/2 oz'),
+(17247, 245, NULL, '1 oz'),
+(17247, 323, NULL, '1 oz'),
+(17247, 308, NULL, '1 oz'),
+(17247, 2, NULL, '1 oz'),
+(17248, 2, NULL, '1 oz'),
+(17248, 306, NULL, '1 oz'),
+(17248, 482, NULL, '1 oz'),
+(17248, 354, NULL, '1'),
+(17249, 2, NULL, '1 1/2 oz'),
+(17249, 351, NULL, '3/4 oz'),
+(17249, 308, NULL, '3/4 oz'),
+(17249, 20, NULL, '1 dash'),
+(17249, 350, NULL, '1 dash'),
+(17250, 2, NULL, '3/4 oz'),
+(17250, 498, NULL, '3/4 oz'),
+(17250, 539, NULL, '3/4 oz'),
+(17250, 293, NULL, '3/4 oz'),
+(17250, 573, NULL, '1 dash'),
+(17251, 83, NULL, '1 oz'),
+(17251, 482, NULL, '1 oz'),
+(17251, 436, NULL, '1 1/4 oz'),
+(17251, 354, NULL, '1'),
+(17252, 1, NULL, '1 1/2 oz'),
+(17252, 242, NULL, '3 oz'),
+(17253, 241, NULL, '3 oz'),
+(17253, 4, NULL, '1 1/2 oz'),
+(17254, 350, NULL, '1 dash'),
+(17254, 245, NULL, '1 oz'),
+(17254, 2, NULL, '1 oz'),
+(17254, 482, NULL, '1 oz'),
+(17255, 2, NULL, '2 1/2 oz'),
+(17255, 308, NULL, '1/2 oz'),
+(17255, 475, NULL, '1/2 oz'),
+(17255, 312, NULL, '1'),
+(17256, 2, NULL, '1 1/2 oz'),
+(17256, 482, NULL, '1 1/2 oz'),
+(17256, 323, NULL, '1 tsp'),
+(17256, 20, NULL, '2 dashes'),
+(17266, 282, NULL, '2 parts'),
+(17266, 43, NULL, '2 parts'),
+(17266, 80, NULL, '4 parts'),
+(17266, 278, NULL, '1 part'),
+(17266, 235, NULL, '1/2 part'),
+(17267, 3, NULL, '3 parts'),
+(17267, 179, NULL, '1 part'),
+(17267, 44, NULL, '1 part'),
+(17267, 250, NULL, '1 part'),
+(17267, 393, NULL, '2 parts'),
+(17267, 352, NULL, '2 parts'),
+(17267, 480, NULL, '1 part'),
+(17268, 3, NULL, '4 parts'),
+(17268, 179, NULL, '2 parts'),
+(17268, 374, NULL, '1 part'),
+(17268, 67, NULL, '1 part'),
+(17268, 480, NULL, '6 parts'),
+(17268, 270, NULL, 'cubes'),
+(17824, 2, NULL, '50 ml'),
+(17824, 552, NULL, '15 ml'),
+(17824, 553, NULL, '15 ml'),
+(17824, 497, NULL, '75 ml'),
+(17824, 312, NULL, '2 Wedges'),
+(17824, 230, NULL, '1 Slice'),
+(17824, 337, NULL, '1 Large Sprig'),
+(17825, 264, NULL, '4 oz'),
+(17825, 245, NULL, '1 oz'),
+(17825, 103, NULL, '1 oz'),
+(17826, 273, NULL, '50 ml'),
+(17826, 18, NULL, '50 ml'),
+(17826, 155, NULL, '4 oz'),
+(17827, 436, NULL, '2 oz'),
+(17827, 83, NULL, '1 oz'),
+(17827, 189, NULL, '1 oz'),
+(17828, 273, NULL, '2 oz'),
+(17828, 482, NULL, '1 oz'),
+(17828, 245, NULL, '1/2 oz'),
+(17829, 569, NULL, '2 oz'),
+(17829, 293, NULL, '3/4 oz'),
+(17829, 568, NULL, '2 tsp'),
+(17829, 567, NULL, '2 tsp'),
+(17829, 570, NULL, '1/4 oz'),
+(17830, 312, NULL, '1/2'),
+(17830, 563, NULL, '1/3 oz'),
+(17830, 20, NULL, '2 dashes'),
+(17830, 37, NULL, '1 oz'),
+(17830, 566, NULL, '1 oz'),
+(178306, 440, NULL, '1 part'),
+(178306, 272, NULL, '1 part'),
+(178307, 4, NULL, '1 shot'),
+(178307, 572, NULL, '1 part'),
+(178308, 542, NULL, '6 cl'),
+(178308, 24, NULL, '4 cl'),
+(178308, 455, NULL, 'Top'),
+(178309, 3, NULL, '1 shot'),
+(178309, 506, NULL, '1/2 shot'),
+(178309, 200, NULL, '1 shot'),
+(178309, 139, NULL, '1 shot'),
+(17831, 305, NULL, '2 oz '),
+(17831, 229, NULL, '4 oz '),
+(17831, 294, NULL, '1 twist of '),
+(178310, 436, NULL, '2 oz'),
+(178310, 189, NULL, '1 oz'),
+(178310, 323, NULL, '1/4 oz'),
+(178310, 20, NULL, '3 dashes'),
+(178310, 322, NULL, '1'),
+(178311, 571, NULL, '1 shot'),
+(178311, 5, NULL, '1/2 shot'),
+(178311, 56, NULL, '3 drops'),
+(178311, 530, NULL, '1 Fresh'),
+(178311, 270, NULL, 'cubes'),
+(178312, 1, NULL, '10 shots');
+INSERT INTO `tiene` (`coctel`, `ingrediente`, `medida`, `medida_en`) VALUES
+(178312, 470, NULL, '3 cups'),
+(178312, 308, NULL, '1/2 cup'),
+(178312, 297, NULL, '12 oz'),
+(178312, 412, NULL, '1 cup'),
+(178312, 69, NULL, '1 cup'),
+(178313, 104, NULL, '1 bottle'),
+(178313, 354, NULL, '3'),
+(178313, 422, NULL, '1'),
+(178313, 126, NULL, '10'),
+(178313, 230, NULL, '6'),
+(178313, 1, NULL, '20 cl'),
+(178314, 2, NULL, '6 cl'),
+(178314, 293, NULL, '2 cl'),
+(178314, 475, NULL, '2 cl'),
+(178314, 49, NULL, 'Whole'),
+(178315, 2, NULL, '5 cl'),
+(178315, 308, NULL, '2 cl'),
+(178315, 229, NULL, '10 cl'),
+(178315, 171, NULL, 'Chopped'),
+(178315, 299, NULL, 'Chopped'),
+(178316, 523, NULL, '6 cl'),
+(178316, 260, NULL, '2 cl'),
+(178316, 293, NULL, '2 cl'),
+(178317, 233, NULL, '6 cl'),
+(178317, 352, NULL, '2 cl'),
+(178317, 308, NULL, '2 cl'),
+(178317, 498, NULL, '2 jiggers'),
+(178318, 1, NULL, '1 oz'),
+(178318, 432, NULL, '1 oz'),
+(178318, 155, NULL, '1 oz'),
+(178318, 466, NULL, 'Top'),
+(178319, 268, NULL, '2 oz'),
+(178319, 393, NULL, '1 oz'),
+(178319, 44, NULL, '1 oz'),
+(17832, 305, NULL, '1 oz '),
+(17832, 37, NULL, '1 oz '),
+(17832, 352, NULL, '1 oz '),
+(17832, 293, NULL, '1/2 oz '),
+(17832, 228, NULL, '3 oz '),
+(17832, 294, NULL, '1 twist of '),
+(178320, 315, NULL, '1 oz'),
+(178320, 44, NULL, '1 oz'),
+(178320, 393, NULL, 'Top'),
+(178321, 18, NULL, '4 cl'),
+(178321, 352, NULL, '6 cl'),
+(178321, 525, NULL, '15 cl'),
+(178321, 354, NULL, 'Garnish with'),
+(178322, 476, NULL, '60 ml'),
+(178322, 14, NULL, '1 tblsp'),
+(178322, 3, NULL, '20 cl'),
+(178322, 308, NULL, '90 ml'),
+(178322, 97, NULL, '6 cl'),
+(178322, 357, NULL, 'Garnish with'),
+(178323, 1, NULL, '1 shot'),
+(178323, 475, NULL, '1/2 shot'),
+(178323, 372, NULL, 'Full Glass'),
+(178325, 24, NULL, '100 ml'),
+(178325, 542, NULL, '150 ml'),
+(178325, 455, NULL, 'Top'),
+(178326, 312, NULL, '1'),
+(178326, 299, NULL, '1'),
+(178326, 525, NULL, '750 ml'),
+(178326, 470, NULL, '1 cup'),
+(178326, 30, NULL, '1 cup'),
+(178326, 26, NULL, '3 shots'),
+(178326, 455, NULL, 'Top'),
+(178327, 4, NULL, '4 oz'),
+(178327, 242, NULL, '4 oz'),
+(178327, 547, NULL, '1 oz'),
+(178327, 393, NULL, '8 oz'),
+(178327, 312, NULL, 'Garnish with'),
+(178327, 386, NULL, 'Rimmed'),
+(178328, 3, NULL, '2 shots'),
+(178328, 33, NULL, '1 shot'),
+(178328, 602, NULL, '1 shot'),
+(178328, 299, NULL, 'Juice of 1/2'),
+(178328, 455, NULL, 'Top'),
+(178329, 3, NULL, '2 shots'),
+(178329, 308, NULL, '1 shot'),
+(178329, 192, NULL, '1 shot'),
+(178329, 56, NULL, '1 dash'),
+(178329, 476, NULL, 'Ground'),
+(178329, 344, NULL, 'Top'),
+(17833, 31, NULL, '1 1/2 oz '),
+(17833, 242, NULL, '1 oz '),
+(178330, 2, NULL, '1 shot'),
+(178330, 328, NULL, '1 shot'),
+(178330, 350, NULL, '1 dash'),
+(178330, 293, NULL, '1 dash'),
+(178330, 542, NULL, 'Top'),
+(178331, 3, NULL, '1 shot'),
+(178331, 133, NULL, '1 shot'),
+(178331, 69, NULL, 'Garnish with'),
+(178331, 393, NULL, 'Dash'),
+(178331, 542, NULL, 'Top'),
+(178332, 603, NULL, '1/2 cup'),
+(178332, 337, NULL, '5'),
+(178332, 242, NULL, '1/3 Cup'),
+(178332, 312, NULL, 'Juice of 1/2'),
+(178332, 4, NULL, '1 shot'),
+(178333, 71, NULL, '2 oz'),
+(178333, 418, NULL, '1/2 oz'),
+(178333, 337, NULL, '8'),
+(178334, 573, NULL, '2 shots'),
+(178334, 97, NULL, 'Top'),
+(178335, 133, NULL, '30 ml'),
+(178335, 242, NULL, '75 ml'),
+(178335, 455, NULL, 'Top'),
+(178336, 179, NULL, '2 shots'),
+(178336, 308, NULL, '1 shot'),
+(178336, 476, NULL, 'Dash'),
+(178336, 69, NULL, 'Whole'),
+(178336, 297, NULL, 'Top'),
+(178337, 83, NULL, '1 1/2 oz'),
+(178337, 352, NULL, '2 1/2 oz'),
+(178337, 229, NULL, '2 1/2 oz'),
+(178337, 354, NULL, 'Garnish with'),
+(178338, 3, NULL, '40 ml'),
+(178338, 374, NULL, '20 ml'),
+(178338, 308, NULL, '30 ml'),
+(178338, 373, NULL, '15 ml'),
+(178338, 540, NULL, 'Dash'),
+(178338, 337, NULL, 'Garnish with'),
+(178339, 305, NULL, '1 oz'),
+(178339, 2, NULL, '1 oz'),
+(178339, 482, NULL, '0.75 oz'),
+(178339, 83, NULL, '0.75 oz'),
+(178339, 293, NULL, 'Dash'),
+(178339, 362, NULL, 'Dash'),
+(178339, 354, NULL, 'Garnish with'),
+(17834, 2, NULL, '1 1/2 oz '),
+(17834, 350, NULL, '1 dash '),
+(17834, 359, NULL, 'Juice of 1/4 '),
+(17834, 106, NULL, '1 '),
+(178340, 2, NULL, '30 ml'),
+(178340, 83, NULL, '30 ml'),
+(178340, 352, NULL, '90 ml'),
+(178340, 354, NULL, 'Garnish with'),
+(178341, 2, NULL, '1 shot'),
+(178341, 352, NULL, 'Top'),
+(178341, 293, NULL, 'Top'),
+(178341, 608, NULL, '25 ml'),
+(178341, 455, NULL, 'Top'),
+(178341, 549, NULL, 'Garnish with'),
+(178341, 354, NULL, 'Garnish with'),
+(178342, 2, NULL, '2 oz'),
+(178342, 455, NULL, '5 oz'),
+(178342, 312, NULL, '1/4'),
+(178343, 52, NULL, '4 oz'),
+(178343, 492, NULL, '4 oz'),
+(178343, 308, NULL, '1 tblsp'),
+(178343, 266, NULL, 'Dash'),
+(178343, 529, NULL, 'Dash'),
+(178343, 460, NULL, 'Dash'),
+(178344, 1, NULL, '2 oz'),
+(178344, 260, NULL, '1 tsp'),
+(178344, 609, NULL, '3'),
+(178344, 610, NULL, '1 Sprig'),
+(178344, 20, NULL, '2 dashes'),
+(178344, 497, NULL, 'Top'),
+(178345, 600, NULL, '50 ml'),
+(178345, 260, NULL, '15 ml'),
+(178345, 122, NULL, '1'),
+(178345, 299, NULL, '1'),
+(178345, 126, NULL, '2'),
+(178346, 81, NULL, '60 ml'),
+(178346, 312, NULL, '1'),
+(178346, 552, NULL, '3 cl'),
+(178347, 4, NULL, '1 2/3 oz'),
+(178347, 83, NULL, '1/4 oz'),
+(178347, 308, NULL, '3/4 oz'),
+(178347, 352, NULL, '1/2 oz'),
+(178347, 608, NULL, '1/2 oz'),
+(178347, 439, NULL, 'Dash'),
+(178348, 4, NULL, '2 shots'),
+(178348, 242, NULL, 'Top'),
+(178348, 308, NULL, 'Juice of 1'),
+(178348, 12, NULL, '1 tsp'),
+(178348, 386, NULL, 'Dash'),
+(178349, 1, NULL, '1 oz'),
+(178349, 613, NULL, '1 oz'),
+(178349, 614, NULL, '1 oz'),
+(178349, 612, NULL, '1 tsp'),
+(178349, 20, NULL, 'Dash'),
+(178349, 354, NULL, 'Garnish with'),
+(17835, 179, NULL, '1 1/2 oz '),
+(17835, 378, NULL, '2 oz '),
+(17835, 352, NULL, '3 oz '),
+(178350, 179, NULL, '1 shot'),
+(178350, 83, NULL, '1 shot'),
+(178350, 163, NULL, '1/2 shot'),
+(178350, 393, NULL, 'Top'),
+(178350, 308, NULL, 'Top'),
+(178352, 615, NULL, '750 ml'),
+(178352, 476, NULL, '1/2 cup'),
+(178352, 470, NULL, '8 oz'),
+(178352, 293, NULL, '2-3 oz'),
+(178353, 312, NULL, 'Chopped'),
+(178353, 29, NULL, '1 shot'),
+(178353, 141, NULL, '1 shot'),
+(178353, 230, NULL, 'Top'),
+(178354, 2, NULL, '1 shot'),
+(178354, 133, NULL, '1 shot'),
+(178354, 552, NULL, '25 ml'),
+(178354, 308, NULL, '30 ml'),
+(178354, 60, NULL, 'Garnish with'),
+(178355, 2, NULL, '2 oz'),
+(178355, 293, NULL, '0.75 oz'),
+(178355, 475, NULL, '0.75 oz'),
+(178355, 60, NULL, 'Ground'),
+(178355, 455, NULL, 'Top'),
+(178355, 337, NULL, 'Garnish with'),
+(178356, 419, NULL, '50 ml'),
+(178356, 155, NULL, '25 ml'),
+(178356, 300, NULL, '25 ml'),
+(178356, 67, NULL, '10 ml'),
+(178356, 475, NULL, '10 ml'),
+(178356, 308, NULL, 'Dash'),
+(178356, 337, NULL, 'Sprig'),
+(178357, 1, NULL, '3 cl'),
+(178357, 374, NULL, '3 cl'),
+(178357, 372, NULL, '1 cl'),
+(178357, 312, NULL, '1 cl'),
+(178357, 542, NULL, '1 shot'),
+(178358, 312, NULL, '3'),
+(178358, 319, NULL, '1 Fresh'),
+(178358, 337, NULL, 'Sprig'),
+(178358, 523, NULL, '200 ml'),
+(178358, 270, NULL, 'cubes'),
+(178358, 455, NULL, 'Top'),
+(178359, 286, NULL, '1/2'),
+(178359, 475, NULL, '1 tsp'),
+(178359, 1, NULL, '1 1/2 oz'),
+(17836, 305, NULL, '1 1/2 oz '),
+(17836, 498, NULL, '1 1/2 tsp '),
+(17836, 308, NULL, '1 tblsp '),
+(17836, 476, NULL, '1 tsp '),
+(17836, 192, NULL, '1 '),
+(17836, 337, NULL, '1 '),
+(178360, 552, NULL, '2 tsp'),
+(178360, 1, NULL, '1 shot'),
+(178360, 455, NULL, '1/3 cup'),
+(178360, 217, NULL, 'Top'),
+(178362, 466, NULL, '1 cup'),
+(178362, 308, NULL, '1/2 shot'),
+(178362, 1, NULL, '1 1/2 shot'),
+(178363, 1, NULL, '5 cl'),
+(178363, 293, NULL, '7 cl'),
+(178363, 294, NULL, '1 Slice'),
+(178363, 270, NULL, 'cubes'),
+(178364, 1, NULL, '4 cl'),
+(178364, 497, NULL, '10 cl'),
+(178364, 294, NULL, '1 Slice'),
+(178365, 2, NULL, '4 cl'),
+(178365, 497, NULL, '10 cl'),
+(178365, 294, NULL, '1 Slice'),
+(178365, 270, NULL, 'cubes'),
+(178366, 2, NULL, '6 cl'),
+(178366, 293, NULL, '8 cl'),
+(178366, 294, NULL, '1 Slice'),
+(178366, 270, NULL, 'cubes'),
+(178367, 2, NULL, '4.5 cL'),
+(178367, 293, NULL, '3 cl'),
+(178367, 475, NULL, '3 cl'),
+(178367, 161, NULL, '6 cl'),
+(178367, 192, NULL, '1'),
+(178367, 502, NULL, '2 drop'),
+(178367, 455, NULL, '2 cl'),
+(178368, 179, NULL, '4.5 cL'),
+(178368, 352, NULL, '3 cl'),
+(178368, 393, NULL, '3.5 cl'),
+(178368, 250, NULL, '1 cl'),
+(178368, 475, NULL, '1 cl'),
+(178368, 20, NULL, '4 drops'),
+(178369, 141, NULL, '4 cl'),
+(178369, 229, NULL, '100 ml'),
+(178369, 20, NULL, '3 drops'),
+(178369, 294, NULL, '1'),
+(17837, 179, NULL, '2 oz '),
+(17837, 293, NULL, '1 oz '),
+(17837, 250, NULL, '1 tsp '),
+(178370, 427, NULL, '3 cl'),
+(178370, 362, NULL, '1 cl'),
+(178370, 513, NULL, 'Full Glass'),
+(178371, 523, NULL, '2 oz'),
+(178371, 475, NULL, '1 oz'),
+(178371, 308, NULL, '1 oz'),
+(178371, 20, NULL, '2 dashes'),
+(178371, 542, NULL, '2 oz'),
+(17838, 482, NULL, '3/4 oz '),
+(17838, 449, NULL, '1 1/2 oz dry '),
+(17838, 350, NULL, '1 dash '),
+(17839, 473, NULL, '2 oz '),
+(17839, 352, NULL, '2 oz '),
+(17839, 155, NULL, '2 oz '),
+(17839, 127, NULL, NULL),
+(17840, 5, NULL, '1 1/2 oz '),
+(17840, 482, NULL, '1 oz '),
+(17840, 189, NULL, '1 oz '),
+(17840, 350, NULL, '2 dashes ');
+
+CREATE OR REPLACE VIEW `medidas` AS
+	SELECT tiene.coctel "id", ingredientes.id "ingrediente", ingredientes.nombre, ingredientes.nombre_en, tiene.medida, tiene.medida_en FROM tiene, ingredientes
+		WHERE tiene.ingrediente = ingredientes.id;
+
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Feb 06, 2025 at 07:30 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `elixir_multimedia`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cocteles`
+--
+
+CREATE TABLE `cocteles` (
+	`id` int(11) NOT NULL,
+	`nombre` varchar(255) NOT NULL,
+	`miniatura` varchar(2048) NOT NULL,
+	`categoria` varchar(100) NOT NULL,
+	`tipo` varchar(16) NOT NULL,
+	`vaso` varchar(100) NOT NULL,
+	`instrucciones` varchar(1024) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cocteles`
+--
+
+INSERT INTO `cocteles` (`id`, `nombre`, `miniatura`, `categoria`, `tipo`, `vaso`, `instrucciones`) VALUES
+(11000, 'Mojito', 'https://www.thecocktaildb.com/images/media/drink/metwgh1606770327.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mezcle las hojas de menta con el azúcar y el zumo de lima. Añada un chorrito de soda y llene el vaso con hielo picado. Verter el ron y completar con soda. Decorar y servir con pajita.'),
+(11001, 'Old Fashioned', 'https://www.thecocktaildb.com/images/media/drink/vrwquq1478252802.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Ponga el terrón de azúcar en un vaso old fashioned y úntelo con el amargo, añada un chorrito de agua. Mezcle hasta que se disuelva.\r\nLlene el vaso con cubitos de hielo y añada whisky.\r\n\r\nDecorar con un twist de naranja y una cereza de cóctel.'),
+(11002, 'Long Island Tea', 'https://www.thecocktaildb.com/images/media/drink/nkwr4c1606770558.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Mezcle todos los ingredientes (excepto el refresco de cola) y viértalos sobre hielo en un vaso highball. Añada el chorrito de cola para darle color. Decore con una rodaja de limón y sirva.'),
+(11003, 'Negroni', 'https://www.thecocktaildb.com/images/media/drink/qgdu971561574065.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Remover en un vaso con hielo, decorar y servir.'),
+(11004, 'Whiskey Sour', 'https://www.thecocktaildb.com/images/media/drink/hbkfsh1589574990.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Agitar con hielo. Colar en un vaso frío, decorar y servir. Si se sirve con hielo, colar los ingredientes en un vaso old-fashioned lleno de hielo.'),
+(11005, 'Dry Martini', 'https://www.thecocktaildb.com/images/media/drink/6ck9yi1589574317.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Derecho: Vierta todos los ingredientes en un vaso mezclador con cubitos de hielo. Remover bien. Colar en una copa de martini fría. Exprima el aceite de la cáscara de limón sobre la bebida, o decore con aceitunas.'),
+(11006, 'Daiquiri', 'https://www.thecocktaildb.com/images/media/drink/mrz9091589574515.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en una coctelera con cubitos de hielo. Agitar bien. Colar en una copa de cóctel fría.'),
+(11007, 'Margarita', 'https://www.thecocktaildb.com/images/media/drink/5noda61589575158.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Frota el borde del vaso con la rodaja de lima para que la sal se adhiera a él. Procure humedecer sólo el borde exterior y espolvorear la sal sobre él. La sal debe presentarse en los labios del imbibidor y nunca mezclarse en el cóctel. Agite los demás ingredientes con hielo y viértalos con cuidado en el vaso.'),
+(11008, 'Manhattan', 'https://www.thecocktaildb.com/images/media/drink/yk70e31606771240.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Se remueve con hielo, se cuela en un vaso frío, se adorna y se sirve.'),
+(11009, 'Moscow Mule', 'https://www.thecocktaildb.com/images/media/drink/3pylqc1504370988.jpg', 'Punch / Party Drink', 'Alcoholico', 'Copper Mug', 'Mezcle el vodka y la cerveza de jengibre en un vaso highball lleno de hielo. Añada el zumo de lima. Remover suavemente. Decorar.'),
+(11010, 'After Dinner Cocktail', 'https://www.thecocktaildb.com/images/media/drink/vtytxq1483387578.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes (excepto el gajo de lima) con hielo y colar en una copa de cóctel. Añadir el gajo de lima y servir.'),
+(11011, 'After Supper Cocktail', 'https://www.thecocktaildb.com/images/media/drink/quyxwu1483387610.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11012, 'Alabama Slammer', 'https://www.thecocktaildb.com/images/media/drink/jntghf1606771886.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Verter todos los ingredientes (excepto el zumo de limón) sobre hielo en un vaso highball. Remover, añadir un chorrito de zumo de limón y servir.'),
+(11013, 'Alaska Cocktail', 'https://www.thecocktaildb.com/images/media/drink/wsyryt1483387720.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes con hielo, colar el contenido en una copa de cóctel. Añadir una rodaja de limón y servir.'),
+(11014, 'Alexander', 'https://www.thecocktaildb.com/images/media/drink/0clus51606772388.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agite todos los ingredientes con hielo y cuele el contenido en una copa de cóctel. Espolvorear nuez moscada por encima y servir.'),
+(11016, 'Brandy Alexander', 'https://www.thecocktaildb.com/images/media/drink/mlyk1i1606772340.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey Glass', 'Agite todos los ingredientes (excepto la nuez moscada) con hielo y cuele el contenido en una copa de cóctel. Espolvorear nuez moscada por encima y servir.'),
+(11019, 'Alfie Cocktail', 'https://www.thecocktaildb.com/images/media/drink/ypxsqy1483387829.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Mezclar y agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11020, 'Algonquin', 'https://www.thecocktaildb.com/images/media/drink/uwryxx1483387873.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Mezclar y agitar todos los ingredientes con hielo, colar el contenido en una copa de cóctel y servir.'),
+(11021, 'Allegheny', 'https://www.thecocktaildb.com/images/media/drink/uwvyts1483387934.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes (excepto la piel de limón) con hielo y colar en una copa de cóctel. Añadir el twist de piel de limón y servir.'),
+(11022, 'Allies Cocktail', 'https://www.thecocktaildb.com/images/media/drink/qvprvp1483388104.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes con hielo, colar el contenido en una copa de cóctel y servir.'),
+(11023, 'Almeria', 'https://www.thecocktaildb.com/images/media/drink/rwsyyu1483388181.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en una copa de cóctel.'),
+(11024, 'Almond Joy', 'https://www.thecocktaildb.com/images/media/drink/xutuqs1483388296.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11025, 'Amaretto And Cream', 'https://www.thecocktaildb.com/images/media/drink/dj8n0r1504375018.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar bien con hielo picado, colar el contenido en una copa de cóctel y servir.'),
+(11026, 'Amaretto Mist', 'https://www.thecocktaildb.com/images/media/drink/utpxxq1483388370.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el amaretto en un vaso old-fashioned sobre hielo picado. Añada el gajo de lima y sirva. (Si lo prefiere, puede sustituir la lima por un gajo de limón).'),
+(11027, 'Amaretto Rose', 'https://www.thecocktaildb.com/images/media/drink/3jm41q1493069578.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Vierta el amaretto y el zumo de lima sobre hielo en un vaso Collins. Rellene con club soda y sirva.'),
+(11028, 'Amaretto Stinger', 'https://www.thecocktaildb.com/images/media/drink/vvop4w1493069934.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar bien los ingredientes con hielo picado, colar en una copa de cóctel y servir.'),
+(11029, 'Amaretto Tea', 'https://www.thecocktaildb.com/images/media/drink/b7qzo21493070167.jpg', 'Ordinary Drink', 'Alcoholico', 'Pousse cafe glass', 'Vierta el té caliente en un vaso de pousse-café, utilizando una cuchara en el vaso para evitar que se agriete. Añadir amaretto, pero sin remover. Cubrir con nata montada fría y servir.'),
+(11034, 'Angel Face', 'https://www.thecocktaildb.com/images/media/drink/vaukir1606772580.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo y colar el contenido en una copa de cóctel.'),
+(11046, 'Applecar', 'https://www.thecocktaildb.com/images/media/drink/sbffau1504389764.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11050, 'Apricot Lady', 'https://www.thecocktaildb.com/images/media/drink/7ityp11582579598.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el ron, el brandy de albaricoque, el triple sec, el zumo de limón y la clara de huevo. Agitar bien. Colar en un vaso old fashioned casi lleno de cubitos de hielo. Decorar con la rodaja de naranja.'),
+(11052, 'Archbishop', 'https://www.thecocktaildb.com/images/media/drink/4g6xds1582579703.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned casi lleno de cubitos de hielo, mezcle todos los ingredientes. Remover bien.'),
+(11053, 'Arise My Love', 'https://www.thecocktaildb.com/images/media/drink/wyrrwv1441207432.jpg', 'Ordinary Drink', 'Alcoholico', 'Champagne flute', 'Ponga la crema de menta en una copa de champán. Rellenar con champán frío y servir.'),
+(11054, 'Arthur Tompkins', 'https://www.thecocktaildb.com/images/media/drink/7onfhz1493067921.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle la ginebra, el Grand Marnier y el zumo de limón. Agitar bien. Colar en un vaso sour y decorar con el twist de limón.'),
+(11055, 'Artillery', 'https://www.thecocktaildb.com/images/media/drink/g1vnbe1493067747.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11060, 'Balmoral', 'https://www.thecocktaildb.com/images/media/drink/vysuyq1441206297.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Remover bien. Colar en una copa de cóctel.'),
+(11064, 'Banana Daiquiri', 'https://www.thecocktaildb.com/images/media/drink/k1xatq1504389300.jpg', 'Ordinary Drink', 'Alcoholico', 'Champagne flute', 'Vierta todos los ingredientes en una coctelera con cubitos de hielo. Agitar bien. Colar en una copa de cóctel fría.'),
+(11084, 'Bermuda Highball', 'https://www.thecocktaildb.com/images/media/drink/qrvtww1441206528.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el brandy, la ginebra y el vermut seco en un vaso highball sobre cubitos de hielo. Rellenar con agua carbonatada y remover. Añadir el toque de limón y servir. (Si lo prefiere, puede sustituir el agua con gas por ginger ale).'),
+(11102, 'Black Russian', 'https://www.thecocktaildb.com/images/media/drink/8oxlqf1606772765.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta los ingredientes en un vaso old fashioned lleno de cubitos de hielo. Remover suavemente.'),
+(11106, 'Blackthorn', 'https://www.thecocktaildb.com/images/media/drink/dgj92f1616098672.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover la ginebra de endrinas y el vermut con hielo y colar en una copa de cóctel. Añadir el twist de piel de limón y servir.'),
+(11112, 'Bloody Maria', 'https://www.thecocktaildb.com/images/media/drink/yz0j6z1504389461.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Agitar todos los ingredientes (excepto la rodaja de limón) con hielo picado y colar en un vaso old-fashioned sobre cubitos de hielo. Añadir la rodaja de limón y servir.'),
+(11113, 'Bloody Mary', 'https://www.thecocktaildb.com/images/media/drink/t6caa21582485702.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Remover suavemente y verter todos los ingredientes en un vaso highball. Decorar.'),
+(11117, 'Blue Lagoon', 'https://www.thecocktaildb.com/images/media/drink/5wm4zo1582579154.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el vodka y el curaçao sobre hielo en un vaso alto. Rellenar con limonada, cubrir con la cereza y servir.'),
+(11118, 'Blue Margarita', 'https://www.thecocktaildb.com/images/media/drink/bry4qh1582751040.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Frote el borde de la copa de cóctel con zumo de lima. Sumerja el borde en sal gruesa. Agite el tequila, el curaçao azul y el zumo de lima con hielo, cuele en el vaso con el borde salado y sirva.'),
+(11119, 'Blue Mountain', 'https://www.thecocktaildb.com/images/media/drink/bih7ln1582485506.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en un vaso old-fashioned casi lleno de cubitos de hielo.'),
+(11120, 'Bluebird', 'https://www.thecocktaildb.com/images/media/drink/5jhyd01582579843.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con hielo picado, mezcle la ginebra, el triple sec, el Curaçao y el amargo. Remover bien. Colar en una copa de cóctel y decorar con el twist de limón y la cereza.'),
+(11121, 'Bobby Burns Cocktail', 'https://www.thecocktaildb.com/images/media/drink/km6se51484411608.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes (excepto la piel de limón) con hielo y colar en una copa de cóctel. Añadir el twist de piel de limón y servir.'),
+(11124, 'Boomerang', 'https://www.thecocktaildb.com/images/media/drink/3m6yz81504389551.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle la ginebra, el vermut, el amargo y el licor de marrasquino. Remover bien. Colar en una copa de cóctel y decorar con la cereza.'),
+(11128, 'Boston Sidecar', 'https://www.thecocktaildb.com/images/media/drink/qzs5d11504365962.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11129, 'Boston Sour', 'https://www.thecocktaildb.com/images/media/drink/kxlgbi1504366100.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'Agitar el zumo de limón, el azúcar en polvo, el whisky mezclado y la clara de huevo con hielo picado y colar en un vaso de whisky sour. Añadir la rodaja de limón, coronar con la cereza y servir.'),
+(11145, 'Classic Old-Fashioned', 'https://www.thecocktaildb.com/images/media/drink/w8cxqv1582485254.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned, mezclar el amargo y el agua con el terrón de azúcar, utilizando el dorso de una cucharilla. Llene casi por completo el vaso con cubitos de hielo y añada el bourbon. Decorar con la rodaja de naranja y la cereza. Servir con un bastoncillo.'),
+(11146, 'Bourbon Sling', 'https://www.thecocktaildb.com/images/media/drink/3s36ql1504366260.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el azúcar, el agua, el zumo de limón y el bourbon. Agitar bien. Colar bien. Colar en un vaso highball. Decorar con el twist de limón.'),
+(11147, 'Bourbon Sour', 'https://www.thecocktaildb.com/images/media/drink/dms3io1504366318.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el bourbon, el zumo de limón y el azúcar. Agitar bien. Colar en un vaso de whisky sour, decorar con la rodaja de naranja y la cereza.'),
+(11149, 'Boxcar', 'https://www.thecocktaildb.com/images/media/drink/pwgtpa1504366376.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en un vaso sour.'),
+(11157, 'Brandy Cobbler', 'https://www.thecocktaildb.com/images/media/drink/5xgu591582580586.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned, disuelva el azúcar en la soda. Añada hielo picado hasta que el vaso esté casi lleno. Añada el brandy. Remover bien. Decorar con la cereza y las rodajas de naranja y limón.'),
+(11164, 'Brandy Flip', 'https://www.thecocktaildb.com/images/media/drink/6ty09d1504366461.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el brandy, el huevo, el azúcar y la nata. Agitar bien. Colar en un vaso sour y decorar con nuez moscada.'),
+(11170, 'Brandy Sour', 'https://www.thecocktaildb.com/images/media/drink/b1bxgq1582484872.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'Agitar el brandy, el zumo de limón y el azúcar glas con hielo y colar en un vaso de whisky sour. Decorar con la rodaja de limón, coronar con la cereza y servir.'),
+(11202, 'Caipirinha', 'https://www.thecocktaildb.com/images/media/drink/jgvn7p1582484435.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Poner la lima y el azúcar en un vaso old fashioned y mezclar (triturar los dos ingredientes con un machacador o una cuchara de madera). Llene el vaso con hielo y añada la cachaça.'),
+(11205, 'California Lemonade', 'https://www.thecocktaildb.com/images/media/drink/q5z4841582484168.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en un vaso collins sobre hielo picado. Rellenar con agua carbonatada y remover. Decorar con rodajas de naranja y limón. Añadir la cereza y servir con una pajita.'),
+(11222, 'Casa Blanca', 'https://www.thecocktaildb.com/images/media/drink/usspxq1441553762.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11224, 'Casino Royale', 'https://www.thecocktaildb.com/images/media/drink/3qpv121504366699.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en un vaso sour.'),
+(11227, 'Champagne Cocktail', 'https://www.thecocktaildb.com/images/media/drink/t5pv461606773026.jpg', 'Ordinary Drink', 'Alcoholico', 'Champagne flute', 'Añada una pizca de amargo de Angostura al terrón de azúcar y viértalo en una copa de champán. Añada el coñac y, a continuación, vierta suavemente el champán frío. Decorar con una rodaja de naranja y una cereza al marrasquino.'),
+(11239, 'Cherry Rum', 'https://www.thecocktaildb.com/images/media/drink/twsuvr1441554424.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11242, 'Chicago Fizz', 'https://www.thecocktaildb.com/images/media/drink/qwvwqr1441207763.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en un vaso highball sobre dos cubitos de hielo. Rellenar con agua carbonatada, remover y servir.'),
+(11243, 'Chocolate Black Russian', 'https://www.thecocktaildb.com/images/media/drink/yyvywx1472720879.jpg', 'Ordinary Drink', 'Alcoholico', 'Champagne flute', 'Mezcle todos los ingredientes en una batidora eléctrica y bátalos a baja velocidad durante poco tiempo. Viértalo en una copa de champán fría y sírvalo.'),
+(11251, 'City Slicker', 'https://www.thecocktaildb.com/images/media/drink/dazdlg1504366949.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en una copa de cóctel.'),
+(11255, 'Clove Cocktail', 'https://www.thecocktaildb.com/images/media/drink/qxvtst1461867579.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11288, 'Cuba Libre', 'https://www.thecocktaildb.com/images/media/drink/wmkbfj1606853905.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Poner todos los ingredientes en un vaso Collins lleno de hielo. Decorar con una rodaja de lima.'),
+(11320, 'Dragonfly', 'https://www.thecocktaildb.com/images/media/drink/uc63bh1582483589.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'En un vaso highball casi lleno de cubitos de hielo, mezcle la ginebra y el ginger ale. Remover bien. Decorar con la rodaja de lima.'),
+(11324, 'Dry Rob Roy', 'https://www.thecocktaildb.com/images/media/drink/typuyq1439456976.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle el whisky y el vermut. Remover bien. Colar en una copa de cóctel. Decorar con el twist de limón.'),
+(11326, 'Dubonnet Cocktail', 'https://www.thecocktaildb.com/images/media/drink/pfz3hz1582483111.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes (excepto la piel de limón) con hielo y colar en una copa de cóctel. Añadir el twist de piel de limón y servir.'),
+(11338, 'English Highball', 'https://www.thecocktaildb.com/images/media/drink/dhvr7d1504519752.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el brandy, la ginebra y el vermut dulce en un vaso highball sobre cubitos de hielo. Rellenar con agua carbonatada. Añadir el twist de piel de limón, remover y servir. (Si se prefiere, se puede sustituir el agua con gas por ginger ale).'),
+(11339, 'English Rose Cocktail', 'https://www.thecocktaildb.com/images/media/drink/yxwrpp1441208697.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Frotar el borde de la copa de cóctel con zumo de limón y mojar el borde de la copa en azúcar en polvo. Agitar todos los ingredientes (excepto la cereza) con hielo y colar en un vaso con borde de azúcar. Cubrir con la cereza y servir.'),
+(11368, 'Flying Dutchman', 'https://www.thecocktaildb.com/images/media/drink/mwko4q1582482903.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned casi lleno de cubitos de hielo, mezcle la ginebra y el triple sec. Remuévalo bien.'),
+(11369, 'Flying Scotchman', 'https://www.thecocktaildb.com/images/media/drink/q53l911582482518.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11375, 'Foxy Lady', 'https://www.thecocktaildb.com/images/media/drink/r9cz3q1504519844.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel fría y servir.'),
+(11390, 'Frozen Mint Daiquiri', 'https://www.thecocktaildb.com/images/media/drink/jrhn1q1504884469.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezcle todos los ingredientes con 1 taza de hielo picado en una batidora eléctrica. Bata a velocidad baja durante poco tiempo. Verter en un vaso old-fashioned y servir.'),
+(11391, 'Frozen Pineapple Daiquiri', 'https://www.thecocktaildb.com/images/media/drink/k3aecd1582481679.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail Glass', 'Mezcle todos los ingredientes con 1 taza de hielo picado en una batidora eléctrica. Bata a velocidad baja durante un breve espacio de tiempo. Verter en una copa de cóctel y servir.'),
+(11396, 'Gentleman\'s Club', 'https://www.thecocktaildb.com/images/media/drink/k2r7wv1582481454.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned casi lleno de cubitos de hielo, mezcle todos los ingredientes. Remover bien.'),
+(11403, 'Gin And Tonic', 'https://www.thecocktaildb.com/images/media/drink/k0508k1668422436.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta la ginebra y el agua tónica en un vaso highball casi lleno de cubitos de hielo. Remover bien. Decorar con la rodaja de lima.'),
+(11407, 'Gin Cooler', 'https://www.thecocktaildb.com/images/media/drink/678xt11582481163.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Mezcle el azúcar en polvo y 2 onzas de agua carbonatada en un vaso Collins. Llene el vaso con hielo y añada la ginebra. Rellene con agua carbonatada y remueva. Añada la piel de limón y la espiral de naranja de modo que el extremo de la espiral de naranja cuelgue sobre el borde del vaso.'),
+(11408, 'Gin Daisy', 'https://www.thecocktaildb.com/images/media/drink/z6e22f1582581155.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle la ginebra, el zumo de limón, el azúcar y la granadina. Agitar bien. Verter en un vaso old fashioned y decorar con la cereza y la rodaja de naranja.'),
+(11410, 'Gin Fizz', 'https://www.thecocktaildb.com/images/media/drink/drtihp1606768397.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agite todos los ingredientes con cubitos de hielo, excepto el agua de soda. Verter en un vaso. Añadir agua con gas.'),
+(11415, 'Gin Sling', 'https://www.thecocktaildb.com/images/media/drink/8cl9sm1582581761.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Disolver el azúcar en polvo en la mezcla de agua y zumo de limón. Añadir la ginebra. Verter en un vaso old-fashioned sobre cubitos de hielo y remover. Añadir el twist de piel de naranja y servir.'),
+(11416, 'Gin Smash', 'https://www.thecocktaildb.com/images/media/drink/iprva61606768774.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezcle el azúcar con el agua carbonatada y las ramitas de menta en un vaso old-fashioned. Añada la ginebra y 1 cubito de hielo. Remover, añadir la rodaja de naranja y la cereza, y servir.'),
+(11418, 'Gin Squirt', 'https://www.thecocktaildb.com/images/media/drink/xrbhz61504883702.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Remover la ginebra, la granadina y el azúcar glas con hielo y colar en un vaso highball sobre cubitos de hielo. Rellenar con agua carbonatada y remover. Decorar con los trozos de piña y las fresas y servir.'),
+(11419, 'Gin Swizzle', 'https://www.thecocktaildb.com/images/media/drink/sybce31504884026.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el zumo de lima, el azúcar, la ginebra y el amargo. Agitar bien. Llene casi por completo un vaso colling con cubitos de hielo. Agitar hasta que el vaso esté escarchado. Cuele la mezcla de la coctelera en el vaso y añada la soda.'),
+(11420, 'Gin Toddy', 'https://www.thecocktaildb.com/images/media/drink/jxstwf1582582101.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezcle azúcar en polvo y agua en un vaso old-fashioned. Añada la ginebra y un cubito de hielo. Remover, añadir el twist de piel de limón y servir.'),
+(11423, 'Godfather', 'https://www.thecocktaildb.com/images/media/drink/e5zgao1582582378.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta todos los ingredientes directamente en un vaso old fashioned lleno de cubitos de hielo. Remover suavemente.'),
+(11424, 'Godmother', 'https://www.thecocktaildb.com/images/media/drink/quksqg1582582597.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el vodka y el amaretto en un vaso old-fashioned con hielo y sírvalo.'),
+(11433, 'Grass Skirt', 'https://www.thecocktaildb.com/images/media/drink/qyvprp1473891585.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle la ginebra, el triple sec, el zumo de piña y la granadina. Agitar bien. Verter en un vaso old fashioned y decorar con la rodaja de piña.'),
+(11462, 'Harvey Wallbanger', 'https://www.thecocktaildb.com/images/media/drink/7os4gs1606854357.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Mezcle el vodka y el zumo de naranja con hielo en el vaso y, a continuación, deje flotar el Galliano por encima. Decorar y servir.'),
+(11470, 'Havana Cocktail', 'https://www.thecocktaildb.com/images/media/drink/59splc1504882899.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en una copa de cóctel.'),
+(11472, 'Hawaiian Cocktail', 'https://www.thecocktaildb.com/images/media/drink/ujoh9x1504882987.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11476, 'Highland Fling Cocktail', 'https://www.thecocktaildb.com/images/media/drink/0bkwca1492975553.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes (excepto la aceituna) con hielo y colar en una copa de cóctel. Añada la aceituna y sirva.'),
+(11524, 'Imperial Fizz', 'https://www.thecocktaildb.com/images/media/drink/zj1usl1504884548.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en un vaso highball sobre dos cubitos de hielo. Rellenar con agua carbonatada, remover y servir.'),
+(11528, 'Irish Spring', 'https://www.thecocktaildb.com/images/media/drink/sot8v41504884783.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Verter todos los ingredientes (excepto la rodaja de naranja y la cereza) en un vaso collins sobre cubitos de hielo. Decorar con la rodaja de naranja, añadir la cereza por encima y servir.'),
+(11542, 'Jack Rose Cocktail', 'https://www.thecocktaildb.com/images/media/drink/uuqqrv1439907068.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11558, 'Japanese Fizz', 'https://www.thecocktaildb.com/images/media/drink/37vzv11504884831.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en un vaso highball sobre dos cubitos de hielo. Rellenar con agua carbonatada, remover y servir.'),
+(11566, 'Jewel Of The Nile', 'https://www.thecocktaildb.com/images/media/drink/hx4nrb1504884947.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Remover bien. Colar en una copa de cóctel.'),
+(11580, 'John Collins', 'https://www.thecocktaildb.com/images/media/drink/0t4bv71606854479.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Vierta todos los ingredientes directamente en un vaso highball lleno de hielo. Remover suavemente. Decorar. Añada un chorrito de amargo de Angostura.'),
+(11600, 'Kamikaze', 'https://www.thecocktaildb.com/images/media/drink/d7ff7u1606855412.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes con hielo. Cuele en un vaso, decore y sirva.'),
+(11604, 'Kentucky Colonel', 'https://www.thecocktaildb.com/images/media/drink/utqwpu1478820348.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, combinar el courbon y el Benedictine. Agitar y colar en una copa de cóctel. Decorar con el twist de limón.'),
+(11634, 'Lady Love Fizz', 'https://www.thecocktaildb.com/images/media/drink/20d63k1504885263.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en una copa de cóctel sobre dos cubitos de hielo. Rellenar con agua carbonatada, remover y servir.'),
+(11658, 'Loch Lomond', 'https://www.thecocktaildb.com/images/media/drink/rpvtpr1468923881.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle el whisky, el Drambuie y el vermut. Remover bien. Colar en una copa de cóctel. Decorar con el twist de limón.'),
+(11662, 'London Town', 'https://www.thecocktaildb.com/images/media/drink/rpsrqv1468923507.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Remover bien. Colar en una copa de cóctel.'),
+(11664, 'Lone Tree Cocktail', 'https://www.thecocktaildb.com/images/media/drink/tsxpty1468923417.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(11666, 'Lone Tree Cooler', 'https://www.thecocktaildb.com/images/media/drink/wsyqry1479298485.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Remover el azúcar en polvo y 2 onzas de agua carbonatada en un vaso collins. Llene el vaso con hielo, añada la ginebra y el vermut y remueva. Rellene con agua carbonatada y vuelva a remover. Añadir el twist de piel de limón y la espiral de naranja de modo que el extremo cuelgue sobre el borde del vaso.'),
+(11670, 'Lord And Lady', 'https://www.thecocktaildb.com/images/media/drink/quwrys1468923219.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el ron y la Tía María en un vaso old-fashioned casi lleno de cubitos de hielo. Remuévalo bien.'),
+(11690, 'Mai Tai', 'https://www.thecocktaildb.com/images/media/drink/twyrrp1439907470.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes con hielo. Colar en un vaso. Decorar y servir con pajita.'),
+(11720, 'Martinez Cocktail', 'https://www.thecocktaildb.com/images/media/drink/wwxwvr1439906452.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes (excepto la cereza) con hielo y colar en una copa de cóctel. Cubrir con la cereza y servir.'),
+(11728, 'Martini', 'https://www.thecocktaildb.com/images/media/drink/71t8581504353095.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Derecho: Vierta todos los ingredientes en un vaso mezclador con cubitos de hielo. Remover bien. Colar en una copa de martini fría. Exprima el aceite de la cáscara de limón sobre la bebida, o decore con aceitunas.'),
+(11766, 'Midnight Cowboy', 'https://www.thecocktaildb.com/images/media/drink/vsxxwy1441208133.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en una copa de cóctel.'),
+(11786, 'Mississippi Planters Punch', 'https://www.thecocktaildb.com/images/media/drink/urpyqs1439907531.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto el agua carbonatada) con hielo y colar en un vaso collins sobre cubitos de hielo. Rellenar con agua carbonatada, remover y servir.'),
+(11798, 'Monkey Wrench', 'https://www.thecocktaildb.com/images/media/drink/bw2noj1582473243.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta todos los ingredientes en un vaso old-fashioned casi lleno de cubitos de hielo. Remuévalo bien.'),
+(11870, 'Orange Oasis', 'https://www.thecocktaildb.com/images/media/drink/su1olx1582473812.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agitar el brandy, la ginebra y el zumo de naranja con hielo y colar en un vaso highball sobre cubitos de hielo. Rellenar con ginger ale, remover y servir.'),
+(11872, 'Orgasm', 'https://www.thecocktaildb.com/images/media/drink/vr6kle1504886114.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agite todos los ingredientes con hielo, cuele en una copa de cóctel fría y sirva.'),
+(11989, 'Queen Charlotte', 'https://www.thecocktaildb.com/images/media/drink/vqruyt1478963249.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Verter el vino tinto y la granadina en un vaso collins sobre cubitos de hielo. Rellenar con refresco de lima-limón, remover y servir.'),
+(12055, 'Royal Fizz', 'https://www.thecocktaildb.com/images/media/drink/wrh44j1504390609.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto la cola) con hielo y colar en un vaso Collins frío. Rellenar con cola y servir.'),
+(12067, 'Rum Cobbler', 'https://www.thecocktaildb.com/images/media/drink/5vh9ld1504390683.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'En un vaso old-fashioned, disuelva el azúcar en la soda. Añada hielo picado hasta que el vaso esté casi lleno. Añada el ron. Remover bien. Decorar con la cereza y las rodajas de naranja y limón.'),
+(12071, 'Rum Cooler', 'https://www.thecocktaildb.com/images/media/drink/2hgwsb1504888674.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Vierta el ron y la soda en un vaso collins casi lleno de cubitos de hielo. Remover bien y decorar con la rodaja de limón.'),
+(12087, 'Rum Milk Punch', 'https://www.thecocktaildb.com/images/media/drink/w64lqm1504888810.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto la nuez moscada) con hielo y colar en un vaso Collins. Espolvorear nuez moscada por encima y servir.'),
+(12089, 'Rum Old-fashioned', 'https://www.thecocktaildb.com/images/media/drink/otn2011504820649.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezcle el azúcar en polvo, el agua y el amargo en un vaso old-fashioned. Cuando el azúcar se haya disuelto, añada cubitos de hielo y ron ligero. Añadir el twist de piel de lima, dejar flotar el ron de 151 grados por encima y servir.'),
+(12097, 'Rum Toddy', 'https://www.thecocktaildb.com/images/media/drink/athdk71504886286.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Disuelva el azúcar en polvo en agua en un vaso old-fashioned. Añada el ron y un cubito de hielo y remueva. Añada el toque de piel de limón y sirva.'),
+(12101, 'Rusty Nail', 'https://www.thecocktaildb.com/images/media/drink/yqsvtw1478252982.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el whisky y el Drambuie en un vaso old-fashioned casi lleno de cubitos de hielo. Remover bien. Decorar con el twist de limón.'),
+(12127, 'Sazerac', 'https://www.thecocktaildb.com/images/media/drink/vvpxwy1439907208.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Enjuaga un vaso old-fashioned frío con la absenta, añade hielo picado y resérvalo. Remover el resto de ingredientes con hielo y reservar. Deseche el hielo y el exceso de absenta del vaso preparado y cuele la bebida en el vaso. Añada la piel de limón para adornar.'),
+(12130, 'Scooter', 'https://www.thecocktaildb.com/images/media/drink/twuptu1483388307.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar bien todos los ingredientes con hielo picado, colar en una copa de cóctel y servir.'),
+(12138, 'Scotch Cobbler', 'https://www.thecocktaildb.com/images/media/drink/1q7coh1504736227.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el whisky, el brandy y el curaçao sobre hielo en un vaso old-fashioned. Añada la rodaja de naranja, cubra con la ramita de menta y sirva.'),
+(12188, 'Sherry Eggnog', 'https://www.thecocktaildb.com/images/media/drink/xwrpsv1478820541.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar el jerez, el azúcar glas y el huevo con hielo y colar en un vaso Collins. Rellenar con leche y remover. Espolvorear nuez moscada por encima y servir.'),
+(12308, 'Stone Sour', 'https://www.thecocktaildb.com/images/media/drink/vruvtp1472719895.jpg', 'Ordinary Drink', 'Alcoholico', 'Whiskey sour glass', 'Vierte la sambuca en un vaso de chupito y luego vierte la crema irlandesa por encima para que los dos líquidos no se mezclen.'),
+(12362, 'Tequila Fizz', 'https://www.thecocktaildb.com/images/media/drink/2bcase1504889637.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto el ginger ale) con hielo y colar en un vaso collins sobre cubitos de hielo. Rellenar con ginger ale, remover y servir.'),
+(12402, 'Tom Collins', 'https://www.thecocktaildb.com/images/media/drink/7cll921606854636.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle la ginebra, el zumo de limón y el azúcar. Agitar bien. Colar en un vaso collins también lleno de cubitos de hielo. Añadir la soda. Remover y decorar con la cereza y la rodaja de naranja.'),
+(12436, 'Van Vleet', 'https://www.thecocktaildb.com/images/media/drink/fgq2bl1492975771.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Agitar todos los ingredientes con hielo, colar en un vaso old-fashioned sobre cubitos de hielo y servir.'),
+(12444, 'Vesuvio', 'https://www.thecocktaildb.com/images/media/drink/26cq601492976203.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Agitar todos los ingredientes con hielo, colar en un vaso old-fashioned sobre cubitos de hielo y servir.'),
+(12446, 'Veteran', 'https://www.thecocktaildb.com/images/media/drink/iwml9t1492976255.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el ron y el licor de cereza en un vaso old-fashioned casi lleno de cubitos de hielo. Remuévalo bien.'),
+(12452, 'Victory Collins', 'https://www.thecocktaildb.com/images/media/drink/lx0lvs1492976619.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Agitar todos los ingredientes (excepto la rodaja de naranja) con hielo y colar en un vaso collins sobre cubitos de hielo. Añadir la rodaja de naranja y servir.'),
+(12518, 'Whisky Mac', 'https://www.thecocktaildb.com/images/media/drink/yvvwys1461867858.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Vierta ambos ingredientes en una copa de vino sin hielo.'),
+(12528, 'White Russian', 'https://www.thecocktaildb.com/images/media/drink/vsrupw1472405732.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta el vodka y el licor de café sobre cubitos de hielo en un vaso old-fashioned. Rellenar con nata ligera y servir.'),
+(12560, 'Afterglow', 'https://www.thecocktaildb.com/images/media/drink/vuquyv1468876052.jpg', 'Cocktail', 'No Alcoholico', 'Highball Glass', 'Mezclar. Servir con hielo.'),
+(12562, 'Alice Cocktail', 'https://www.thecocktaildb.com/images/media/drink/qyqtpv1468876144.jpg', 'Cocktail', 'No Alcoholico', 'Cocktail glass', 'Agitar bien y colar en una copa de cóctel grande.'),
+(12572, 'Bora Bora', 'https://www.thecocktaildb.com/images/media/drink/xwuqvw1473201811.jpg', 'Cocktail', 'No Alcoholico', 'Highball glass', 'Preparar en una batidora o coctelera, servir en un vaso highball con hielo. Decorar con 1 rodaja de piña y una cereza.'),
+(12618, 'Orangeade', 'https://www.thecocktaildb.com/images/media/drink/ytsxxw1441167732.jpg', 'Cocktail', 'No Alcoholico', 'Highball glass', 'Ponga unos cubitos de hielo en un vaso grande, añada zumo de limón, zumo de naranja, jarabe de azúcar y remueva bien. Añada agua con gas fría y sírvalo con una pajita.'),
+(12630, 'Rail Splitter', 'https://www.thecocktaildb.com/images/media/drink/stsuqq1441207660.jpg', 'Cocktail', 'No Alcoholico', 'Highball glass', 'Mezcle el jarabe de azúcar con el zumo de limón en un vaso alto. Rellenar con ginger ale.'),
+(12656, 'Banana Strawberry Shake', 'https://www.thecocktaildb.com/images/media/drink/vqquwx1472720634.jpg', 'Shake', 'No Alcoholico', 'Highball Glass', 'Mézclelo todo en una batidora hasta obtener una mezcla homogénea.'),
+(12658, 'Banana Strawberry Shake Daiquiri', 'https://www.thecocktaildb.com/images/media/drink/uvypss1472720581.jpg', 'Shake', 'No Alcoholico', 'Cocktail Glass', 'Mézclelo todo en una batidora hasta obtener una mezcla homogénea.'),
+(12670, 'Fruit Cooler', 'https://www.thecocktaildb.com/images/media/drink/i3tfn31484430499.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Mezcle las fresas con el azúcar y déjelas reposar toda la noche en el frigorífico. Corte el limón y reserve dos rodajas. Exprima el resto. Mezcle el zumo de limón, las fresas, el zumo de manzana y el agua con gas. Añadir rodajas de limón (decorar, de verdad). En los vasos, poner cubitos de hielo y una rodaja de manzana. Verter la bebida y servir.'),
+(12672, 'Fruit Flip-Flop', 'https://www.thecocktaildb.com/images/media/drink/nfdx6p1484430633.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Ponga todos los ingredientes en la jarra de la batidora, tápela y bátala a velocidad media hasta que estén bien mezclados. Verter en un vaso alto, 2 medianos o 3 pequeños y beber.'),
+(12674, 'Fruit Shake', 'https://www.thecocktaildb.com/images/media/drink/q0fg2m1484430704.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Mezclar hasta que quede suave.'),
+(12688, 'Just a Moonmint', 'https://www.thecocktaildb.com/images/media/drink/znald61487604035.jpg', 'Shake', 'No Alcoholico', 'Highball Glass', 'Ponga todos los ingredientes en la jarra de la batidora, tápela y bátala a velocidad media hasta que estén bien mezclados. Verter en un vaso alto, 2 medianos o 3 pequeños y beber.'),
+(12690, 'Lassi - A South Indian Drink', 'https://www.thecocktaildb.com/images/media/drink/iq6scx1487603980.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Triturar en la batidora durante 3 segundos. El lassi es una de las cosas más fáciles de hacer, y hay muchas formas de prepararlo. Básicamente, es suero de leche (yogur batido con agua), y puedes elegir casi cualquier consistencia que te guste, desde la más fina a la más espesa. Sírvalo frío.'),
+(12692, 'Lassi Khara', 'https://www.thecocktaildb.com/images/media/drink/m1suzm1487603970.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Mezclar (frappe) en la batidora hasta que esté espumoso. Añada las hojas de curry arrancadas y sírvalo frío.'),
+(12694, 'Lassi Raita', 'https://www.thecocktaildb.com/images/media/drink/s4x0qj1487603933.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Mezclar el yogur y los cubitos de hielo, hasta que el yogur se vuelva más líquido. Añadir azúcar al gusto. El limón es opcional, pero le da un sabor ligeramente ácido. Una pizca de sal. La raita también es buena para el verano. En lugar de una ensalada tradicional, se puede preparar raita.'),
+(12696, 'Lassi - Sweet', 'https://www.thecocktaildb.com/images/media/drink/9jeifz1487603885.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'Poner todos los ingredientes en una batidora y batir hasta que esté bien espumoso. Sírvalo frío.'),
+(12698, 'Lassi - Mango', 'https://www.thecocktaildb.com/images/media/drink/1bw6sd1487603816.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'Póngalo todo en una batidora y viértalo sobre hielo picado. También puedes utilizar otras frutas como fresas y plátanos.'),
+(12702, 'Lemouroudji', 'https://www.thecocktaildb.com/images/media/drink/eirmo71487603745.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Exprimir los limones. Pelar y rallar el jengibre. Coloca el jengibre rallado y una pizca de pimienta de cayena en un trozo de estopilla y haz un nudo. Déjalo en remojo en el agua. Pasados unos 15 minutos, añada el azúcar y el zumo de limón. Enfríe y sirva.'),
+(12704, 'Limeade', 'https://www.thecocktaildb.com/images/media/drink/5jdp5r1487603680.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'En un vaso grande, ponga el zumo de lima y el azúcar, y remueva bien. Añada agua de Seltz fría hasta llenar. Ponga las cáscaras de lima en el vaso. Beber. Repite la operación hasta que se acaben las cáscaras de lima o el agua de seltz.'),
+(12706, 'Imperial Cocktail', 'https://www.thecocktaildb.com/images/media/drink/bcsj2e1487603625.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar con hielo y colar en copa de cóctel.'),
+(12708, 'Banana Cantaloupe Smoothie', 'https://www.thecocktaildb.com/images/media/drink/uqxqsy1468876703.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Exprimir el melón, verter el zumo en la licuadora, añadir el plátano y licuar.'),
+(12710, 'Apple Berry Smoothie', 'https://www.thecocktaildb.com/images/media/drink/xwqvur1468876473.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Echar todo en una batidora y licuar.'),
+(12712, 'Grape lemon pineapple Smoothie', 'https://www.thecocktaildb.com/images/media/drink/54z5h71487603583.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'Echar todo en una batidora y licuar.'),
+(12714, 'Kiwi Papaya Smoothie', 'https://www.thecocktaildb.com/images/media/drink/jogv4w1487603571.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Echar todo en una batidora y licuar.'),
+(12716, 'Mango Orange Smoothie', 'https://www.thecocktaildb.com/images/media/drink/vdp2do1487603520.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Echar todo en una batidora y licuar.'),
+(12718, 'Pineapple Gingerale Smoothie', 'https://www.thecocktaildb.com/images/media/drink/eg9i1d1487603469.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Echar todo en una batidora y licuar.'),
+(12720, 'Kill the cold Smoothie', 'https://www.thecocktaildb.com/images/media/drink/7j1z2e1487603414.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'Haz zumo de jengibre y limón y añádelo al agua caliente. Puede añadir cardomomo.'),
+(12726, 'Tomato Tang', 'https://www.thecocktaildb.com/images/media/drink/869qr81487603278.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball glass', 'Coloque todos los ingredientes en la jarra de la licuadora, cubra y bata a velocidad media hasta que estén bien mezclados. Vierta un vaso alto, 2 medianos o 3 pequeños y bébalo.'),
+(12728, 'Yoghurt Cooler', 'https://www.thecocktaildb.com/images/media/drink/trttrv1441254466.jpg', 'Other / Unknown', 'No Alcoholico', 'Highball Glass', 'Coloque todos los ingredientes en la jarra de la licuadora, cubra y bata a velocidad media hasta que estén bien mezclados. Vierta un vaso alto, 2 medianos o 3 pequeños y bébalo. Nota: Utilice mucho hielo en este caso. ¡Excelente para los días calurosos! Para agregar hielo: Retire el centro de la tapa mientras la licuadora está encendida; deje caer 3 o 4 cubitos de hielo y licue hasta que estén completamente triturados.'),
+(12730, 'Castillian Hot Chocolate', 'https://www.thecocktaildb.com/images/media/drink/3nbu4a1487603196.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Transfiera el cacao y el azúcar a una cacerola mediana. Disuelva la maicena en el agua y agregue el cacao y el azúcar hasta obtener una pasta suave. Comience a calentar la mezcla, revolviéndola con un batidor y vierta poco a poco la leche. Continúe revolviendo con el batidor mientras lleva el líquido a fuego lento. Deje que el chocolate hierva a fuego lento durante unos 10 minutos, revolviendo con frecuencia, hasta que esté espeso, brillante y completamente suave. Sirva muy caliente en una taza de café. Sirve seis.');
+INSERT INTO `cocteles` (`id`, `nombre`, `miniatura`, `categoria`, `tipo`, `vaso`, `instrucciones`) VALUES
+(12732, 'Chocolate Beverage', 'https://www.thecocktaildb.com/images/media/drink/jbqrhv1487603186.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Hervir la leche a baño maría durante cinco minutos. Retirar del fuego y agregar el chocolate mezclado con la canela, poco a poco, batiendo con molinillo o batidora de huevos después de cada adición. Cuando el chocolate esté bien mezclado, calentar hasta el punto de ebullición. Colóquelo sobre el fondo del baño maría y agregue los huevos, batiendo constantemente, hasta que estén bien mezclados y la mezcla esté espumosa. Servir en taza de café. Sirve ocho.'),
+(12734, 'Chocolate Drink', 'https://www.thecocktaildb.com/images/media/drink/q7w4xu1487603180.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Derretir la barra en una pequeña cantidad de agua hirviendo. Agrega la leche. Cocine a fuego lento, batiendo suavemente (supongo que con un batidor) hasta que esté bien caliente. ¡No dejes que hierva! Servir en taza de café.'),
+(12736, 'Drinking Chocolate', 'https://www.thecocktaildb.com/images/media/drink/u6jrdf1487603173.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Calentar la nata y la leche con la canela y la vaina de vainilla muy lentamente durante 15-20 minutos. (Si no tiene frijoles, agregue 1-2 cucharaditas de vainilla después de calentar). Retire el frijol y la canela. Agrega el chocolate. Mezclar hasta que se derrita por completo. Sirva cubierto con un poco de crema batida fresca muy densa. Sirve 1 o 2 porciones dependiendo de qué tan glotón seas. Para un chocolate más rico, use 4 oz de leche, 4 oz de crema, 4 oz de chocolate. Servir en taza de café.'),
+(12738, 'Hot Chocolate to Die for', 'https://www.thecocktaildb.com/images/media/drink/0lrmjp1487603166.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Derretir el chocolate, la mantequilla y la vainilla al baño maría. Cuando todo esté suave, agrega la crema.'),
+(12744, 'Microwave Hot Cocoa', 'https://www.thecocktaildb.com/images/media/drink/8y4x5f1487603151.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Combine el azúcar, el cacao, la sal y el agua caliente en una taza medidora microresistente de 1 cuarto (o taza de café). Cocine en el microondas a potencia ALTA (100%) durante 1 a 1 1/2 minutos o hasta que hierva. Agregue la leche, revuelva y cocine en el microondas durante 1 1/2 a 2 minutos más o hasta que esté caliente. Agregue la vainilla y mezcle bien.'),
+(12746, 'Nuked Hot Chocolate', 'https://www.thecocktaildb.com/images/media/drink/xcu6nb1487603142.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Mezcle con un poco de leche (aproximadamente 1 oz) en una taza de café. Taza nuclear durante unos 30-50 segundos. Revuelve hasta que el cacao calentado se disuelva. Llene la taza con leche. Nuke durante 1-2 minutos, dependiendo de la potencia y las preferencias en cuanto a las piezas bucales quemadas.'),
+(12748, 'Orange Scented Hot Chocolate', 'https://www.thecocktaildb.com/images/media/drink/hdzwrh1487603131.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Combine todos los ingredientes en una cacerola mediana y pesada. Revuelve a fuego lento hasta que el chocolate se derrita. Aumente el fuego y deje que hierva, revolviendo con frecuencia. Retirar del fuego y batir hasta que esté espumoso. Regresar al fuego y dejar hervir nuevamente. Retirar del fuego, batir hasta que esté espumoso. Repita calentar y batir una vez más. Deseche la cáscara de naranja. (Se puede preparar con 2 horas de anticipación. Dejar reposar a temperatura ambiente. Antes de servir, dejar hervir, retirar del fuego y batir hasta que esté espumoso). Vierta el chocolate caliente en tazas de café. Rinde 2 porciones.'),
+(12750, 'Spanish chocolate', 'https://www.thecocktaildb.com/images/media/drink/pra8vt1487603054.jpg', 'Cocoa', 'No Alcoholico', 'Coffee mug', 'Revuelve la leche con el chocolate y la canela a fuego lento hasta que el chocolate se disuelva. Agrega los huevos y bate la mezcla hasta que espese, cuidando que no hierva. Servir en taza de café.'),
+(12752, 'Lemon Shot', 'https://www.thecocktaildb.com/images/media/drink/mx31hv1487602979.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Mezcle Galliano y Absolut Citron en un vaso de chupito, coloque una rodaja de limón espolvoreada con azúcar sobre el vaso y vierta ron sobre la rodaja y el vaso. Enciende el ron con un encendedor y deja quemar por un segundo. Dispara rápido y chupa limón. Si se hace correctamente, sabrá a un trago de limonada dulce.'),
+(12754, 'Sex on the Beach', 'https://www.thecocktaildb.com/images/media/drink/fi67641668420787.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Coloque todos los ingredientes en un vaso alto lleno de hielo. Adorne con una rodaja de naranja.'),
+(12756, 'Autodafé', 'https://www.thecocktaildb.com/images/media/drink/7dkf0i1487602928.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Mezclar y rellenar con agua con gas. Bebido por finlandeses en un día soleado en cualquier época del año y día.'),
+(12758, 'Gagliardo', 'https://www.thecocktaildb.com/images/media/drink/lyloe91487602877.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar bien y servir en copa de cóctel. Este es un cóctel casero de American/Internet Bar del Pozzo, Pavia, Italia.'),
+(12760, 'Surf City Lifesaver', 'https://www.thecocktaildb.com/images/media/drink/2rzfer1487602699.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Mucho hielo y refrescos en un vaso alto con una cereza y una sonrisa.'),
+(12762, 'Grizzly Bear', 'https://www.thecocktaildb.com/images/media/drink/k6v97f1487602550.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Servido con hielo. Suena desagradable, pero sabe muy bien.'),
+(12764, 'Karsk', 'https://www.thecocktaildb.com/images/media/drink/808mxk1487602471.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Se pone una moneda de cobre en una taza de café y se llena con café hasta que ya no se vea la moneda, después se añade alcohol hasta que se vea la moneda. Especialidad noruega.'),
+(12766, 'Happy Skipper', 'https://www.thecocktaildb.com/images/media/drink/42w2g41487602448.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el ron Captain Morgan\'s Spiced sobre hielo, llene el vaso hasta arriba con Ginger Ale. Adorne con lima. Sabe como un refresco de crema. Llamado así por la referencia a Gilligan\'s Island (\"The Captain\" *in* \"Ginger\" is a Happy Skipper!)'),
+(12768, 'Frappé', 'https://www.thecocktaildb.com/images/media/drink/vqwryq1441245927.jpg', 'Coffee / Tea', 'No Alcoholico', 'Highball Glass', 'Mezclar. Licuar a máxima velocidad durante 1 minuto. Verter en un vaso y beber con pajita. Notas: Esto funciona mejor si todo está frío (si haces café fresco, mézclalo con la leche y déjalo reposar en la nevera durante 1/2 hora. Si no está espumoso, añade más leche, o incluso un poco más de leche en polvo. La espuma se va convirtiendo poco a poco en líquido en el fondo del vaso, por lo que se puede beber durante media hora, sin que deje de aparecer café helado en el fondo. Muy refrescante.'),
+(12770, 'Iced Coffee', 'https://www.thecocktaildb.com/images/media/drink/ytprxy1454513855.jpg', 'Coffee / Tea', 'No Alcoholico', 'Coffee mug', 'Mezclar hasta que el café y el azúcar se disuelvan. Agrega la leche. Agite bien. Usar una licuadora o una batidora produce una bebida muy espumosa. Servir en taza de café.'),
+(12772, 'Iced Coffee Fillip', 'https://www.thecocktaildb.com/images/media/drink/sxtxrp1454514223.jpg', 'Coffee / Tea', 'Alcoholico', 'Coffee mug', 'Mezclar en una taza de café y enfriar antes de servir.'),
+(12774, 'Masala Chai', 'https://www.thecocktaildb.com/images/media/drink/uyrpww1441246384.jpg', 'Coffee / Tea', 'No Alcoholico', 'Coffee Mug', 'Pon a hervir 2 tazas de agua. Agrega todos los ingredientes y vuelve a hervir durante unos 15 segundos. Dejar reposar por un minuto. Calienta la leche en una olla. Filtra el té en tazas. Agrega la leche y el azúcar. Eso es todo.'),
+(12776, 'Melya', 'https://www.thecocktaildb.com/images/media/drink/xwtptq1441247579.jpg', 'Coffee / Tea', 'No Alcoholico', 'Coffee mug', 'Prepara café expreso. En una taza de café, coloca 1 cucharadita de cacao en polvo sin azúcar, luego cubre una cucharadita con miel y rocíala en la taza. Revuelve mientras se prepara el café, esta es la parte divertida. El cacao parece cubrir la miel sin mezclarse, por lo que se obtiene una masa polvorienta y pegajosa que parece que nunca se mezclará. Entonces, de repente, ¡listo! Parece salsa de chocolate amargo. Vierta el espresso caliente sobre la miel, revolviendo para que se disuelva. Servir con crema.'),
+(12780, 'Spiking coffee', 'https://www.thecocktaildb.com/images/media/drink/isql6y1487602375.jpg', 'Coffee / Tea', 'No Alcoholico', 'Coffee mug', 'Por cierto, una pizca de canela es una buena adición al café, pero el verdadero paraíso es una semilla de cardamomo. Eso sí, lo sirves en una taza de café.'),
+(12782, 'Thai Coffee', 'https://www.thecocktaildb.com/images/media/drink/wquwxs1441247025.jpg', 'Coffee / Tea', 'No Alcoholico', 'Highball glass', 'Coloca el café y las especias en el cono de filtro de tu cafetera. Prepare el café como de costumbre y déjelo enfriar. En un vaso alto, disuelve 1 o 2 cucharaditas de azúcar en una onza de café (es más fácil de disolver que si lo pones directamente sobre hielo). Agregue 5-6 cubitos de hielo y vierta el café hasta aproximadamente 1 pulgada de la parte superior del vaso. Coloca una cuchara sobre el café y vierte lentamente la crema para batir en la cuchara. Esto hará que la crema flote sobre el café en lugar de dispersarse inmediatamente.'),
+(12784, 'Thai Iced Coffee', 'https://www.thecocktaildb.com/images/media/drink/rqpypv1441245650.jpg', 'Coffee / Tea', 'No Alcoholico', 'Highball glass', 'Prepare una taza de café con una buena concentración europea. En el café molido añadir 2 o 3 vainas de cardamomo recién molidas. Endulce mientras esté caliente y luego enfríe rápidamente. Sirva en un vaso alto con hielo y crema. Para obtener el efecto de capas, coloque una cuchara encima del café y vierta la leche con cuidado en la cuchara para que flote sobre la superficie del café.'),
+(12786, 'Thai Iced Tea', 'https://www.thecocktaildb.com/images/media/drink/trvwpu1441245568.jpg', 'Coffee / Tea', 'No Alcoholico', 'Highball glass', 'Combine el té tailandés (es decir, el polvo), el agua hirviendo y la leche condensada azucarada, revuelva hasta que se mezclen. Vierta en 2 vasos altos llenos de cubitos de hielo. Adorne con hojas de menta. Rinde 2 porciones.'),
+(12790, 'Absinthe #2', 'https://www.thecocktaildb.com/images/media/drink/uxxtrt1472667197.jpg', 'Homemade Liqueur', 'Alcoholico', 'Jar', 'Mezclar y dejar reposar unos días. Colar la mezcla a través de un filtro de café. Para servir, mezcle 1 parte de absenta con 4 partes de agua, agregue hielo y disfrútelo.'),
+(12792, 'Amaretto Liqueur', 'https://www.thecocktaildb.com/images/media/drink/swqxuv1472719649.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Mezclar el azúcar y 3/4 de taza de agua en un cazo pequeño. Llevar a ebullición, removiendo constantemente. Reducir el fuego y cocer a fuego lento hasta que se disuelva todo el azúcar. Retirar del fuego y dejar enfriar. En un recipiente de envejecimiento, mezcle las mitades de albaricoque, el extracto de almendra, el alcohol de grano con 1/2 taza de agua y el brandy. Incorporar la mezcla de jarabe de azúcar enfriada. Tapar y dejar envejecer durante 2 días. Retirar las mitades de albaricoque. (Guardar las mitades de albaricoque, se pueden utilizar para cocinar). Añadir colorante alimentario y glicerina. Remover, volver a tapar y seguir envejeciendo de 1 a 2 meses. Volver a embotellar al gusto. El licor está listo para servir, pero seguirá mejorando con el envejecimiento.'),
+(12794, 'Angelica Liqueur', 'https://www.thecocktaildb.com/images/media/drink/yuurps1472667672.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Mezclar todas las hierbas, frutos secos y especias con el vodka en un recipiente de envejecimiento de 1 litro o más. Tapar herméticamente y agitar a diario durante 2 semanas. Colar a través de una tela de muselina fina o un filtro de café, desechando los sólidos. Limpiar el recipiente de envejecimiento. Volver a poner el líquido en el recipiente. Poner el azúcar y el agua en un cazo y remover a fuego medio. Cuando el azúcar se haya disuelto por completo, apartar y dejar enfriar. Una vez frío, mezclar con el colorante alimentario y añadir al licor líquido. Tapar y dejar envejecer en un lugar fresco y oscuro durante un mes.'),
+(12796, 'Caribbean Orange Liqueur', 'https://www.thecocktaildb.com/images/media/drink/qwxuwy1472667570.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Picar muy fina la corteza de color brillante de las naranjas (sin blanco). Secar la piel en papel absorbente para eliminar el exceso de aceite. Poner la piel en un tarro de 4 tazas con tapa de rosca. Añadir 2 tazas de vodka. Cerrar el tarro. Guárdelo en un lugar fresco y oscuro durante 2 días o hasta que el vodka haya absorbido el sabor. Retire la cáscara y añada el vodka restante. Cierre el tarro y añada la taza de vodka restante. Cierre el tarro y guárdelo en un lugar fresco y oscuro durante al menos 1 mes para que envejezca.'),
+(12798, 'Coffee Liqueur', 'https://www.thecocktaildb.com/images/media/drink/ryvtsu1441253851.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Mezclar el café, el azúcar y el agua. Cocer a fuego lento durante 1 hora y dejar enfriar. Añadir la vainilla y el vodka. Envejecer en un tarro cerrado de 2 a 3 semanas.'),
+(12800, 'Coffee-Vodka', 'https://www.thecocktaildb.com/images/media/drink/qvrrvu1472667494.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Hervir el agua y el azúcar hasta que se disuelvan. Apague el fuego. Añadir lentamente el café instantáneo seco y seguir removiendo. Añadir una vaina de vainilla picada al vodka y, a continuación, mezclar el jarabe de azúcar enfriado y la solución de café con el vodka. Tapar bien y agitar enérgicamente todos los días durante 3 semanas. Colar y filtrar. También es mejor dejar enfriar completamente la mezcla de azúcar para que el vodka no se evapore al añadirlo. Si desea un licor más suave, puede añadir una cucharadita de glicerina al producto final.'),
+(12802, 'Cranberry Cordial', 'https://www.thecocktaildb.com/images/media/drink/qtspsx1472667392.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Poner los arándanos picados en un tarro de 2 litros con tapa hermética. Añada el azúcar y el ron. Ajuste bien la tapa y coloque el tarro en un lugar fresco y oscuro. Invierta el tarro y agítelo todos los días durante seis semanas. Cuela el cordial en botellas y ciérralas con tapones de corcho.'),
+(12808, 'Creme de Menthe', 'https://www.thecocktaildb.com/images/media/drink/yxswtp1441253918.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Llevar el azúcar y el agua a ebullición y cocer a fuego lento durante 10 minutos. Dejar enfriar. Añadir el resto de ingredientes y remover. Tapar y dejar madurar durante 1 mes.'),
+(12854, 'Scottish Highland Liqueur', 'https://www.thecocktaildb.com/images/media/drink/upqvvp1441253441.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Mezclar todos los ingredientes en un recipiente de envejecimiento. Tápelo bien y agítelo suavemente varias veces durante las primeras 24 horas. Transcurridas 24 horas, retirar la ralladura de limón. Tapar de nuevo y dejar reposar en un lugar fresco y oscuro durante 2 semanas, agitando suavemente cada dos días. Colar con un colador de alambre para eliminar la raíz de angélica y el hinojo. Vuelva a ponerlo en el recipiente de envejecimiento, tápelo y déjelo reposar en un lugar fresco y oscuro durante 6 meses. Sifonar o verter el licor claro en una botella estéril. Los posos turbios pueden guardarse para cocinar.'),
+(12856, 'Tia-Maria', 'https://www.thecocktaildb.com/images/media/drink/sih81u1504367097.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Hervir el agua, el azúcar y el café durante 10 minutos y dejar enfriar. Añadir el ron y la vainilla. Métalo en una botella limpia y déjelo reposar durante 1 semana antes de usarlo.'),
+(12862, 'Aloha Fruit punch', 'https://www.thecocktaildb.com/images/media/drink/wsyvrt1468876267.jpg', 'Punch / Party Drink', 'No Alcoholico', 'Collins Glass', 'Añada 1/4 de taza de agua a la raíz de jengibre. Hervir 3 minutos. Colar. Añada el líquido a los zumos de guayaba, limón y piña. Hacer un almíbar con el azúcar y el agua restante. Dejar enfriar. Mezclar con los jugos y la piña. Enfriar bien.'),
+(12870, 'Artillery Punch', 'https://www.thecocktaildb.com/images/media/drink/9a4vqb1493067692.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Mezclar todos los ingredientes en una ponchera grande con un bloque de hielo. Si resulta demasiado seco, puede añadirse jarabe de azúcar. Decorar con trocitos de piel de limón.'),
+(12876, 'Berry Deadly', 'https://www.thecocktaildb.com/images/media/drink/zk74k21593351065.jpg', 'Punch / Party Drink', 'Alcoholico', 'Collins Glass', 'Añadir todos los ingredientes a un bol grande. Remover suavemente. Sírvalo frío.'),
+(12890, 'Cranberry Punch', 'https://www.thecocktaildb.com/images/media/drink/mzgaqu1504389248.jpg', 'Punch / Party Drink', 'No Alcoholico', 'Punch Bowl', 'Mezclar los cuatro primeros ingredientes. Remover hasta que se disuelva el azúcar y enfriar. A continuación, añada ginger ale justo antes de servir. Añada un anillo de hielo para mantener el ponche frío.'),
+(12954, 'Holloween Punch', 'https://www.thecocktaildb.com/images/media/drink/lfeoe41504888925.jpg', 'Punch / Party Drink', 'No Alcoholico', 'Punch bowl', 'Coge un montón de zumo de uva y un montón de bebidas gaseosas (club soda, ginger ale, lima, lo que sea). Mézclalos en una ponchera. Coge sorbete de naranja y sorbete de lima. Saca cucharadas y ponlas a flotar en el ponche, deja que se derritan un poco para que se extienda una película desagradable por toda la parte superior del ponche, pero sigue habiendo \"burbujas\" en forma de cucharadas de sorbete. Tiene un aspecto horrible, pero sabe muy bien.'),
+(12988, 'Mulled Wine', 'https://www.thecocktaildb.com/images/media/drink/iuwi6h1504735724.jpg', 'Punch / Party Drink', 'Alcoholico', 'Collins Glass', 'Cocer a fuego lento 3 tazas de agua con, azúcar, clavo, canela en rama y piel de limón en una olla de acero inoxidable durante 10 minutos. Añadir el vino y calentar a \"temperatura de café\" (NO HERVIR) y, a continuación, añadir el brandy.'),
+(13020, 'Sangria', 'https://www.thecocktaildb.com/images/media/drink/xrvxpp1441249280.jpg', 'Punch / Party Drink', 'Alcoholico', 'Pitcher', 'Mézclelo todo en una jarra y refrigérelo. Añada clavo y canela en rama al gusto. Servir en copas de vino.'),
+(13024, 'Sweet Sangria', 'https://www.thecocktaildb.com/images/media/drink/uqqvsp1468924228.jpg', 'Punch / Party Drink', 'Alcoholico', 'Pitcher', 'Disolver el azúcar en agua caliente y enfriar. Pelar los cítricos y partirlos en gajos. Mezcle el vino, el jarabe de azúcar, la fruta y la Fresca en una jarra y métala en el frigorífico durante unas horas. Servir en vasos altos con pajita.'),
+(13026, 'Sangria The  Best', 'https://www.thecocktaildb.com/images/media/drink/vysywu1468924264.jpg', 'Punch / Party Drink', 'Alcoholico', 'Pitcher', 'Mezcle el vino, el azúcar y la fruta, y deje reposar en el frigorífico entre 18 y 24 horas. La mezcla tendrá una consistencia algo almibarada. Antes de servir, añada el brandy y reduzca la mezcla con agua de soda hasta que tenga una consistencia más fina y parecida al vino. Sírvalo en una jarra y en copas de vino.'),
+(13032, 'Spiced Peach Punch', 'https://www.thecocktaildb.com/images/media/drink/qxvypq1468924331.jpg', 'Punch / Party Drink', 'No Alcoholico', 'Collins Glass', 'Mezclar el néctar de melocotón, el zumo de naranja y el azúcar moreno en un cazo grande. Atar la canela y los clavos en una bolsita de estopilla. Calentar lentamente, sin dejar de remover, hasta que se disuelva el azúcar. Cocer a fuego lento durante 10 minutos. Añadir el zumo de lima. Servir en tazas calientes.'),
+(13036, 'Strawberry Lemonade', 'https://www.thecocktaildb.com/images/media/drink/spvvxp1468924425.jpg', 'Punch / Party Drink', 'No Alcoholico', 'Collins Glass', 'Póngalo todo en la batidora y mézclelo hasta obtener una mezcla homogénea. Sírvalo con hielo.'),
+(13058, 'Wine Punch', 'https://www.thecocktaildb.com/images/media/drink/txustu1473344310.jpg', 'Punch / Party Drink', 'Alcoholico', 'Collins Glass', 'Mezcle todos los ingredientes y viértalos sobre un bloque de hielo.'),
+(13072, 'Popped cherry', 'https://www.thecocktaildb.com/images/media/drink/sxvrwv1473344825.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Servido sobre hielo en un vaso alto con una cereza reventada (puede añadir más cerezas reventadas si le apetece).'),
+(13086, 'Atomic Lokade', 'https://www.thecocktaildb.com/images/media/drink/n3zfrh1493067412.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'En una coctelera, mezcla la limonada, el vodka, el Curaçao azul y el triple sec. Agitar con hielo y colar en un vaso. Añadir azúcar al gusto.'),
+(13162, 'Afternoon', 'https://www.thecocktaildb.com/images/media/drink/vyrurp1472667777.jpg', 'Coffee / Tea', 'Alcoholico', 'Collins Glass', 'Servir en un vaso adecuado, sin hielo. Póngale nata por encima si lo desea. Se sirve directamente.'),
+(13190, 'Kool-Aid Shot', 'https://www.thecocktaildb.com/images/media/drink/fegm621503564966.jpg', 'Shot', 'Alcoholico', 'Old-fashioned glass', 'Verter en un vaso grande con hielo y remover. Añada un poco de zumo de arándanos al gusto.'),
+(13192, 'National Aquarium', 'https://www.thecocktaildb.com/images/media/drink/dlw0om1503565021.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Vierta todos los ingredientes en una coctelera con hielo. Agitar bien. Servir con hielo.'),
+(13196, 'Long vodka', 'https://www.thecocktaildb.com/images/media/drink/9179i01503565212.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agite un vaso alto con cubitos de hielo y Angostura, cubriendo el interior del vaso. Vierta el vodka, añada una rodaja de lima y exprima el zumo restante, mezcle con la tónica, remueva y ya tiene un Long Vodka.'),
+(13200, 'Owen\'s Grandmother\'s Revenge', 'https://www.thecocktaildb.com/images/media/drink/0wt4uo1503565321.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Añada los ingredientes y mézclelos en la batidora.'),
+(13202, 'Flaming Dr. Pepper', 'https://www.thecocktaildb.com/images/media/drink/d30z931503565384.jpg', 'Shot', 'Alcoholico', 'Collins Glass', 'Añadir Amaretto, Bacardi y vodka. Mezclar el Dr. Pepper y la cerveza'),
+(13204, 'New York Lemonade', 'https://www.thecocktaildb.com/images/media/drink/b3n0ge1503565473.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Servir en una copa de cóctel fría. Limón y azúcar en el borde. Remover y colar.'),
+(13206, 'Caipirissima', 'https://www.thecocktaildb.com/images/media/drink/yd47111503565515.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Igual que la Caipirinha pero en vez de cachaca se le añade RON BLANCO. ¡¡¡¡¡¡¡¡Es genial!!!!!!!!'),
+(13214, 'Pisco Sour', 'https://www.thecocktaildb.com/images/media/drink/tsssur1439907622.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agite vigorosamente y cuele el contenido en una coctelera con cubitos de hielo, luego viértalo en un vaso y decore con amargo.'),
+(13222, 'Big Red', 'https://www.thecocktaildb.com/images/media/drink/yqwuwu1441248116.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Vierta los ingredientes en un vaso de chupito de 1 onza.'),
+(13332, 'B-53', 'https://www.thecocktaildb.com/images/media/drink/rwqxrv1461866023.jpg', 'Shot', 'Alcoholico', 'Collins Glass', 'Ponga el Kahlua, el Sambucca y el Grand Marnier en un vaso de chupito en ese orden. Mejor que el B-52'),
+(13423, 'Atlantic Sun', 'https://www.thecocktaildb.com/images/media/drink/doyxqb1493067556.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Agite todos los ingredientes y añada soda. Decorar con una rodaja de naranja.'),
+(13499, 'Oreo Mudslide', 'https://www.thecocktaildb.com/images/media/drink/tpwwut1468925017.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezcle bien en una batidora el vodka, el Kahlua, el Bailey\'s, el helado y las Oreo. Verter en un vaso grande escarchado. Decorar con nata montada y una cereza.'),
+(13501, 'ABC', 'https://www.thecocktaildb.com/images/media/drink/tqpvqp1472668328.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Coloque todos los ingredientes en un vaso de chupito.'),
+(13535, 'Pink Panty Pulldowns', 'https://www.thecocktaildb.com/images/media/drink/squsuy1468926657.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Agitar bien'),
+(13539, 'Ice Pick', 'https://www.thecocktaildb.com/images/media/drink/ypsrqp1469091726.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Ponga el vodka en un vaso y llénelo con té helado. Añada limón al gusto.'),
+(13581, '410 Gone', 'https://www.thecocktaildb.com/images/media/drink/xtuyqv1472669026.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', ''),
+(13675, 'Flander\'s Flake-Out', 'https://www.thecocktaildb.com/images/media/drink/sqvqrx1461866705.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Golpéalos a ambos.'),
+(13683, 'Apple Slammer', 'https://www.thecocktaildb.com/images/media/drink/09yd5f1493069852.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Viértalo en un vaso y preséntelo al consumidor, se espera que cubra la parte superior del vaso con la palma de la mano, levante el vaso, lo golpee en la barra y lo trague rápidamente.'),
+(13731, 'Amaretto Sour', 'https://www.thecocktaildb.com/images/media/drink/xnzc541493070211.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Agitar y colar. Decorar con una cereza y una rodaja de naranja.'),
+(13751, 'Cuba Libra', 'https://www.thecocktaildb.com/images/media/drink/ck6d0p1504388696.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Llene el vaso alto con cubitos de hielo. Añada ron. Frote el borde cortado de la lima en el borde del vaso y, a continuación, exprima el zumo en el vaso. Rellenar con Coca-Cola. Decóralo con una rodaja de lima. ¡Que aproveche!'),
+(13807, 'After Five', 'https://www.thecocktaildb.com/images/media/drink/sk3lr91493068595.jpg', 'Shot', 'Alcoholico', 'Shot glass', '1. Vierta el licor Kahlúa hasta la mitad en un vaso de chupito. 2. Usando una cuchara (invertida), vierta lentamente el Schnapps de menta hasta que el vaso esté lleno aproximadamente 3/4. Hecho correctamente, el Schnapps fluirá debajo del Kahlúa formando una capa transparente. 3. Nuevamente usando una cuchara, pero esta vez con el lado derecho hacia arriba, cubra lentamente el vaso con una capa de Bailey\'s. Tenga cuidado de colocar la cuchara justo encima de la capa de Kahlúa y levántela a medida que se llena el vaso. Hecho correctamente, esto proporcionará una capa de Baileys flotando sobre Kahlúa. 4. Agregue todo a la vez para algo como una pasta de menta, ¡¡¡CON GRAN ÉXITO!!! NOTA: Mejor si todos los ingredientes están refrigerados.'),
+(13825, 'Midnight Manx', 'https://www.thecocktaildb.com/images/media/drink/uqqurp1441208231.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Llenar una batidora con hielo y añadir Baileys, Kahlua, Goldshlager y nata. Agitar durante 5 segundos y colar en un vaso doble con hielo. Añade el café frío, remueve y ¡disfruta!'),
+(13847, 'Jackhammer', 'https://www.thecocktaildb.com/images/media/drink/9von5j1504388896.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Servir sobre hielo. ¡Advertencia, mortal!'),
+(13861, 'Nutty Irishman', 'https://www.thecocktaildb.com/images/media/drink/xspupx1441248014.jpg', 'Shake', 'Alcoholico', 'Highball Glass', 'Servir con hielo'),
+(13899, '3 Wise Men', 'https://www.thecocktaildb.com/images/media/drink/wxqpyw1468877677.jpg', 'Shot', 'Alcoholico', 'Collins glass', 'mételos en un vaso... y dáselo en la cabeza.'),
+(13936, 'Miami Vice', 'https://www.thecocktaildb.com/images/media/drink/qvuyqw1441208955.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Primero: Mezclar la piña colada con 2,5 onzas de ron con hielo (reservar). Segundo: Mezclar el daiquiri con 2,5 onzas de ron y hielo. Tercero: Mientras está congelado, añada la mezcla de piña colada y luego la de daiquiri en el vaso (asegurándose de que no se mezclen).'),
+(13938, 'AT&T', 'https://www.thecocktaildb.com/images/media/drink/rhhwmp1493067619.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball Glass', 'Vierta el vodka y la ginebra sobre el hielo, añada la tónica y remueva'),
+(13940, '69 Special', 'https://www.thecocktaildb.com/images/media/drink/vqyxqx1472669095.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Vierta 2 oz. de ginebra. Añada 4 oz. de 7-up. Añada zumo de limón para darle sabor. Si es débil, rellene el vaso con más 7-Up.'),
+(14029, '57 Chevy with a White License Plate', 'https://www.thecocktaildb.com/images/media/drink/qyyvtu1468878544.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', '1. Llenar un vaso con hielo 2.Añadir crema de cacao blanco y vodka 3.Remover'),
+(14053, 'Mother\'s Milk', 'https://www.thecocktaildb.com/images/media/drink/7stuuh1504885399.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Agitar sobre hielo, colar. Para dos porciones.'),
+(14065, 'Zippy\'s Revenge', 'https://www.thecocktaildb.com/images/media/drink/1sqm7n1485620312.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Mezclar Kool-Aid al gusto y añadir el ron y el ammaretto. agitar bien para disolver el azúcar en el Kool-Aid... servir frío'),
+(14071, 'Belgian Blue', 'https://www.thecocktaildb.com/images/media/drink/jylbrq1582580066.jpg', 'Soft Drink', 'Alcoholico', 'Highball glass', 'Basta con verter todos los ingredientes en el vaso y remover...'),
+(14087, 'Red Snapper', 'https://www.thecocktaildb.com/images/media/drink/7p607y1504735343.jpg', 'Shot', 'Alcoholico', 'Old-fashioned glass', 'Un disparo cada uno, agitar y disparar'),
+(14107, 'Absolut Summertime', 'https://www.thecocktaildb.com/images/media/drink/trpxxs1472669662.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Añada todos los ingredientes excepto el limón a una coctelera llena de hielo. Tapar y agitar enérgicamente. Cuele el contenido en un vaso Collins lleno de hielo. Decorar con limón.'),
+(14133, 'Cosmopolitan Martini', 'https://www.thecocktaildb.com/images/media/drink/upxxpq1439907580.jpg', 'Cocktail', 'Alcoholico', 'Cocktail Glass', 'Vierta todos los ingredientes en un vaso mezclador lleno hasta la mitad con hielo, agite y cuele en una copa de Martini fría.'),
+(14272, 'Addison Special', 'https://www.thecocktaildb.com/images/media/drink/4vo5651493068493.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Mezcle los ingredientes en el orden indicado en una coctelera. Llenar hasta la mitad con hielo y agitar bien. Colar en un vaso con hielo y decorar con una cereza y un gajo de naranja.'),
+(14282, 'California Root Beer', 'https://www.thecocktaildb.com/images/media/drink/rsxuyr1472719526.jpg', 'Soft Drink', 'Alcoholico', 'Highball glass', 'Poner Kahlua y Galliano en un vaso highball y rellenar con soda'),
+(14306, 'Amaretto Stone Sour', 'https://www.thecocktaildb.com/images/media/drink/xwryyx1472719921.jpg', 'Other / Unknown', 'Alcoholico', 'Collins Glass', 'Agitar y servir con hielo'),
+(14356, 'Blind Russian', 'https://www.thecocktaildb.com/images/media/drink/wxuqvr1472720408.jpg', 'Shake', 'Alcoholico', 'Collins glass', 'Llenar el vaso con hielo. Añadir todos los licores. Añadir leche. Agitar.'),
+(14360, 'Absolut Sex', 'https://www.thecocktaildb.com/images/media/drink/xtrvtx1472668436.jpg', 'Shot', 'Alcoholico', 'Old-fashioned glass', 'Agitar Absolut Kurant, Midori y zumo de arándanos en una coctelera con hielo: Colar en un vaso con hielo: Salpicar con 7 de Absolut Sex.'),
+(14364, 'Aztec Punch', 'https://www.thecocktaildb.com/images/media/drink/uqwuyp1454514591.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Mezcle todos los ingredientes en una jarra. Mézclelos bien y viértalos en cualquier recipiente disponible, ¡cuanto más grande mejor! Esta bebida es muy potente, así que no te pases.'),
+(14366, 'Lemon Drop', 'https://www.thecocktaildb.com/images/media/drink/mtpxgk1504373297.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar y colar en una copa de cóctel fría con borde de azúcar.'),
+(14372, 'Absolut limousine', 'https://www.thecocktaildb.com/images/media/drink/ssqpyw1472719844.jpg', 'Other / Unknown', 'Alcoholico', 'Collins Glass', 'Vierta Absolut en un vaso. Añada zumo de lima. Añadir hielo y rodajas de lima.'),
+(14374, 'Absolut Evergreen', 'https://www.thecocktaildb.com/images/media/drink/wrxrxp1472812609.jpg', 'Other / Unknown', 'Alcoholico', 'Collins Glass', 'Mezclar, verter sobre hielo y completar con Bitter Lemon.'),
+(14482, 'Darkwood Sling', 'https://www.thecocktaildb.com/images/media/drink/sxxsyq1472719303.jpg', 'Soft Drink', 'Alcoholico', 'Cocktail glass', 'Se pueden utilizar muchos licores de cereza buenos, pero yo prefiero el Heering. Añada una parte del licor. A continuación, añada una parte de soda. Para un sour sling utiliza Tónica (la mayoría de la gente prefiere la bebida sin Tónica). Después se llena el vaso con zumo de naranja y cubitos de hielo.'),
+(14510, 'Bailey\'s Dream Shake', 'https://www.thecocktaildb.com/images/media/drink/qxrvqw1472718959.jpg', 'Soft Drink', 'Alcoholico', 'Collins glass', 'Mezcle los ingredientes durante 30 segundos. ¡Definitivamente refrescante para un día caluroso de verano !'),
+(14560, 'A.D.M. (After Dinner Mint)', 'https://www.thecocktaildb.com/images/media/drink/ruxuvp1472669600.jpg', 'Cocktail', 'Alcoholico', 'Irish coffee cup', 'agitar enérgicamente'),
+(14564, 'A Splash of Nash', 'https://www.thecocktaildb.com/images/media/drink/rsvtrr1472668201.jpg', 'Shot', 'Alcoholico', 'Highball glass', 'Vierta el chupito con los licores de plátano y melón en un vaso hi-ball de 9 oz que contenga agua con gas y zumo de arándanos. Beber de un trago.'),
+(14578, 'Amaretto Sunrise', 'https://www.thecocktaildb.com/images/media/drink/akcpsh1493070267.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezcle el amaretto y el zumo de naranja. Viértalo en un vaso y añada la granadina hasta que vea el amanecer.'),
+(14584, 'Arizona Stingers', 'https://www.thecocktaildb.com/images/media/drink/y7w0721493068255.jpg', 'Cocktail', 'Alcoholico', 'Hurricane glass', 'Ponga cubitos de hielo en el vaso huracán. Añade los 2 chupitos de Vodka Absolute (Nota: ¡Puedes añadir tantos chupitos de Absolute como quieras!) Llena el resto del vaso con el Icetea Arizona con limón. Remover para mezclar con una cuchara. ¡¡¡¡¡¡¡Bebe y disfruta!!!!!!!'),
+(14594, 'Zizi Coin-coin', 'https://www.thecocktaildb.com/images/media/drink/0fbo2t1485620752.jpg', 'Punch / Party Drink', 'Alcoholico', 'Margarita/Coupette glass', 'Vierta 5 cl de Cointreau sobre hielo, añada 2 cl de zumo de limón (o lima) fresco, remueva suavemente y, por último, añada rodajas de limón/lima en el vaso.'),
+(14598, '50/50', 'https://www.thecocktaildb.com/images/media/drink/wwpyvr1461919316.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Llenar el vaso con hielo picado. Añada el vodka. Añada un chorrito de grand-marnier. Rellenar con O.J.'),
+(14608, 'Cream Soda', 'https://www.thecocktaildb.com/images/media/drink/yqstxr1479209367.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Vierta 1 onza de ron especiado en un vaso highball con hielo. Rellenar con Ginger Ale.'),
+(14610, 'ACID', 'https://www.thecocktaildb.com/images/media/drink/xuxpxt1479209317.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Vierta primero el Bacardi 151, seguido del Wild Turkey 101 y sirva con Coca-Cola o Dr Pepper.'),
+(14622, 'Arctic Fish', 'https://www.thecocktaildb.com/images/media/drink/ttsvwy1472668781.jpg', 'Punch / Party Drink', 'Alcoholico', 'Beer pilsner', 'Llenar el vaso con hielo y pescado, añadir el vodka, el refresco de uva y el zumo de naranja. ¡¡¡¡¡NO AGITAR!!!!! Servir bien frío.'),
+(14642, 'Grim Reaper', 'https://www.thecocktaildb.com/images/media/drink/kztu161504883192.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezclar Kahlua y 151 en el vaso. Añada hielo rápidamente y vierta granadina sobre el hielo para darle un tinte rojo.'),
+(14752, 'Kiwi Lemon', 'https://www.thecocktaildb.com/images/media/drink/tpupvr1478251697.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Mezclar en un vaso highball. Remover. Decorar con una rodaja de kiwi.'),
+(14842, 'Midnight Mint', 'https://www.thecocktaildb.com/images/media/drink/svuvrq1441208310.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Si se dispone de ella, poner el borde de la copa de cóctel (Martini) con sirope de azúcar y luego sumergirlo en copos o polvo de chocolate. Añada los ingredientes a la coctelera con hielo. Agitar bien y colar en una copa de cóctel.'),
+(14978, 'Rum Punch', 'https://www.thecocktaildb.com/images/media/drink/wyrsxu1441554538.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Mezclar todos los ingredientes en una ponchera y servir.'),
+(15024, 'Absolutely Cranberry Smash', 'https://www.thecocktaildb.com/images/media/drink/vqwstv1472811884.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Mezcle los ingredientes. Servir con hielo.'),
+(15026, 'Kiss me Quick', 'https://www.thecocktaildb.com/images/media/drink/m7iaxu1504885119.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'mezclar en el vaso'),
+(15082, 'Royal Flush', 'https://www.thecocktaildb.com/images/media/drink/7rnm8u1504888527.jpg', 'Shot', 'Alcoholico', 'Old-fashioned glass', 'Vierta todos los ingredientes en un vaso con hielo. Colar en un vaso.'),
+(15092, 'Pysch Vitamin Light', 'https://www.thecocktaildb.com/images/media/drink/xsqsxw1441553580.jpg', 'Ordinary Drink', 'No Alcoholico', 'Collins Glass', 'Agitar con hielo.'),
+(15106, 'Apello', 'https://www.thecocktaildb.com/images/media/drink/uptxtv1468876415.jpg', 'Other / Unknown', 'No Alcoholico', 'Collins Glass', 'Revuelva. Grnish con cereza al marrasquino.'),
+(15182, 'After sex', 'https://www.thecocktaildb.com/images/media/drink/xrl66i1493068702.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el vodka y la nata sobre unos cubitos de hielo en un vaso alto y llénelo de zumo. para que esté más lleno, cubra el vaso con granadina y azúcar.'),
+(15194, 'Amaretto Shake', 'https://www.thecocktaildb.com/images/media/drink/xk79al1493069655.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezclar todos los ingredientes en una batidora y batir a alta velocidad hasta obtener una mezcla homogénea. Sírvalo en un vaso frío adornado con virutas de chocolate amargo.'),
+(15200, 'A Day at the Beach', 'https://www.thecocktaildb.com/images/media/drink/trptts1454514474.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Agitar el ron, el Amaretto y el zumo de naranja en una coctelera con hielo. Colar sobre hielo en un vaso highball. Añadir granadina y decorar con una rodaja de piña y una fresa.'),
+(15224, 'Malibu Twister', 'https://www.thecocktaildb.com/images/media/drink/2dwae41504885321.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Añada el ron y el licor y, a continuación, añada el zumo de arándanos y remueva.'),
+(15266, 'Avalon', 'https://www.thecocktaildb.com/images/media/drink/3k9qic1493068931.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Llene un vaso alto con hielo. Añadir el Finlandia Vodka, los zumos de limón y manzana, el Pisang Ambon y completar con limonada. Remover ligeramente y decorar con una piel de pepino en espiral y una cereza roja. El pepino aporta sabor y un aspecto atractivo. Esta bebida, creada por Timo Haimi, obtuvo el primer premio en el Concurso de Tragos Largos con Vodka Finlandia de 1991.'),
+(15288, '252', 'https://www.thecocktaildb.com/images/media/drink/rtpxqw1468877562.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Agrega ambos ingredientes al vaso de chupito, dispara y emborrachate rápidamente.'),
+(15300, '3-Mile Long Island Iced Tea', 'https://www.thecocktaildb.com/images/media/drink/rrtssw1472668972.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Llene un vaso de 14 onzas con hielo y alcohol. Llene 2/3 del vaso con cola y el resto con agridulce. Añadir un chorrito de amargo y una rodaja de limón.'),
+(15328, 'Zorro', 'https://www.thecocktaildb.com/images/media/drink/kvvd4z1485621283.jpg', 'Coffee / Tea', 'Alcoholico', 'Coffee Mug', 'agrega todo y vierte el café negro y agrega la crema batida encima.'),
+(15330, 'Orange Crush', 'https://www.thecocktaildb.com/images/media/drink/zvoics1504885926.jpg', 'Shot', 'Alcoholico', 'Shot glass', '\nAgregue todos los ingredientes al vaso. Vierta como trago.'),
+(15346, '155 Belmont', 'https://www.thecocktaildb.com/images/media/drink/yqvvqs1475667388.jpg', 'Cocktail', 'Alcoholico', 'White wine glass', 'Mezclar con hielo. Sírvalo en una copa de vino. Decorar con zanahoria.'),
+(15403, 'Vodka Russian', 'https://www.thecocktaildb.com/images/media/drink/rpttur1454515129.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mézclalo como una bebida normal .'),
+(15409, 'Danbooka', 'https://www.thecocktaildb.com/images/media/drink/vurrxr1441246074.jpg', 'Coffee / Tea', 'Alcoholico', 'Coffee Mug', 'viértalo y mézclelo.'),
+(15423, '110 in the shade', 'https://www.thecocktaildb.com/images/media/drink/xxyywq1454511117.jpg', 'Beer', 'Alcoholico', 'Beer Glass', '\nLanza el tirador en el vidrio. llenar con cerveza'),
+(15427, 'Grand Blue', 'https://www.thecocktaildb.com/images/media/drink/vsrsqu1472761749.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Servir en un vaso old fashioned.'),
+(15511, 'Baby Eskimo', 'https://www.thecocktaildb.com/images/media/drink/wywrtw1472720227.jpg', 'Shake', 'Alcoholico', 'Collins Glass', 'Dejar el helado fuera unos 10 minutos. Añadir los ingredientes en orden, remover con un palillo (un cuchillo de mantequilla o una cuchara también sirven). Consumir inmediatamente y a menudo. Agradable y ligero, ideal para después de una bebida fuerte.'),
+(15515, 'Tennesee Mud', 'https://www.thecocktaildb.com/images/media/drink/txruqv1441245770.jpg', 'Coffee / Tea', 'Alcoholico', 'Coffee Mug', 'Agitar, colar, levantar, copa de cóctel.'),
+(15521, 'Swedish Coffee', 'https://www.thecocktaildb.com/images/media/drink/ywtrvt1441246783.jpg', 'Coffee / Tea', 'Alcoholico', 'Coffee Mug', 'Vierta el café en una taza de café normal. Agrega el aquavit. Agrega azúcar al gusto. Revuelva y que tenga una buena tarde (mañana)'),
+(15567, 'Adam Sunrise', 'https://www.thecocktaildb.com/images/media/drink/vtuyvu1472812112.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Llene la licuadora con hielo. Llene la mitad con vodka Bartons. Ponga 10 cucharaditas de azúcar, añada 1/2 lata de concentrado de limonada y llene hasta arriba con agua. Licuar durante 60 segundos.'),
+(15597, 'Absolut Stress #2', 'https://www.thecocktaildb.com/images/media/drink/xuyqrw1472811825.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezclar bien. Decorar con naranja y cereza. Disfrute'),
+(15639, 'Texas Sling', 'https://www.thecocktaildb.com/images/media/drink/ypl13s1504890158.jpg', 'Shake', 'Alcoholico', 'Wine Glass', 'Licue con hielo hasta que quede suave. Sirva en una copa tulipán y cubra con crema batida.'),
+(15675, 'A midsummernight dream', 'https://www.thecocktaildb.com/images/media/drink/ysqvqp1461867292.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezcla las fresas en una batidora Vierte junto con el vodka, el kirch y el licor de fresa sobre hielo en una coctelera. Agitar bien y verter en un vaso alto. Rellenar con el agua rusa'),
+(15691, 'Zoksel', 'https://www.thecocktaildb.com/images/media/drink/ft8ed01485620930.jpg', 'Soft Drink', 'Alcoholico', 'Beer pilsner', 'No hay instrucciones de mezcla específicas, simplemente mezcla cada ingrediente en un vaso. El limón va con él.\n'),
+(15761, 'Quick-sand', 'https://www.thecocktaildb.com/images/media/drink/vprxqv1478963533.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Basta con añadir el zumo de naranja, vertiendo bastante rápido para mezclar la sambucca con el zumo de naranja. ¡El zumo DEBE tener pulpa de fruta!'),
+(15801, 'Zimadori Zinger', 'https://www.thecocktaildb.com/images/media/drink/bw8gzx1485619920.jpg', 'Punch / Party Drink', 'Alcoholico', 'Collins glass', 'Vierta Zima en un vaso Collins sobre hielo y, a continuación, vierta el chupito de Midori. No revuelva. Adorne con una cereza.'),
+(15841, 'Mojito Extra', 'https://www.thecocktaildb.com/images/media/drink/vwxrsw1478251483.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Ponga menta con zumo de limón en un vaso, machaque la menta con una cuchara, hielo, ron y rellene con club soda. Añada Angostura.'),
+(15849, 'Apricot punch', 'https://www.thecocktaildb.com/images/media/drink/tuxxtp1472668667.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Vierta todos los ingredientes en una ponchera grande. Añada hielo y 4 naranjas peladas y partidas.'),
+(15941, 'Americano', 'https://www.thecocktaildb.com/images/media/drink/709s6m1613655124.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Vierta el Campari y el vermut sobre hielo en un vaso, añada un chorrito de soda y decore con media rodaja de naranja.'),
+(15951, 'Black Forest Shake', 'https://www.thecocktaildb.com/images/media/drink/xxtxsu1472720505.jpg', 'Shake', 'Alcoholico', 'Collins Glass', 'En una batidora, ponga cubitos de hielo, sirope de chocolate, licor de cerezas, vodka y leche. Bata muy bien.'),
+(16031, 'Radler', 'https://www.thecocktaildb.com/images/media/drink/xz8igv1504888995.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierte la cerveza en una jarra grande y añade lentamente la 7-up (o Sprite).'),
+(16041, 'Mudslinger', 'https://www.thecocktaildb.com/images/media/drink/hepk6h1504885554.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Añada todo el contenido a una jarra grande o ponchera. Remuévalo bien.'),
+(16082, 'Almond Chocolate Coffee', 'https://www.thecocktaildb.com/images/media/drink/jls02c1493069441.jpg', 'Ordinary Drink', 'Alcoholico', 'Coffee mug', 'Verter por orden en una taza de café. Cubrir con nata montada y virutas de chocolate.'),
+(16100, 'Amaretto Stone Sour Alternative', 'https://www.thecocktaildb.com/images/media/drink/wutxqr1472720012.jpg', 'Other / Unknown', 'Alcoholico', 'Highball glass', 'Agite la mezcla agria, el tequila y el amaretto con hielo. Colar en un vaso highball. Añadir un chorrito de zumo de naranja. Decorar con una rodaja de naranja y una cereza.'),
+(16108, '9 1/2 Weeks', 'https://www.thecocktaildb.com/images/media/drink/xvwusr1472669302.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Mezclar todos los ingredientes en una batidora de vaso. Enfríe y cuele en una copa de cóctel. Decorar con rodajas de fresa.'),
+(16134, 'Absolutly Screwed Up', 'https://www.thecocktaildb.com/images/media/drink/yvxrwv1472669728.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Agítalo, sabe mejor así, pero puedes removerlo si quieres. 6 de esos y usted será desperdiciado por el resto de la noche.'),
+(16176, 'Bellini Martini', 'https://www.thecocktaildb.com/images/media/drink/3h9wv51504389379.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Añada cubitos de hielo a la coctelera.\r\nAñada el vodka.\r\nAñadir aguardiente de melocotón.\r\nAñadir néctar de melocotón.\r\nAgitar.\r\nColar en un vaso.\r\nAñadir cáscara de limón.'),
+(16178, 'Jitterbug', 'https://www.thecocktaildb.com/images/media/drink/wwqvrq1441245318.jpg', 'Cocktail', 'Alcoholico', 'Cocktail Glass', 'Moje el vaso, sumerja el borde en azúcar. A continuación, añada hielo. Luego añada todo lo demás. Así de sencillo.'),
+(16202, 'Amaretto Sweet & Sour', 'https://www.thecocktaildb.com/images/media/drink/vswwus1472668546.jpg', 'Punch / Party Drink', 'Alcoholico', 'Margarita/Coupette glass', 'Llene la batidora con 3/4 de hielo. Añada la mezcla agridulce en la parte superior del hielo. Añada aproximadamente 1 pulgada de zumo de piña, 1/2 pulgada de licor de melón y de 1/2 a 1/4 pulgada de amaretto. A continuación, bata la mezcla hasta que adquiera la consistencia de una margarita o quede más fina.'),
+(16250, 'Rum Runner', 'https://www.thecocktaildb.com/images/media/drink/vqws6t1504888857.jpg', 'Punch / Party Drink', 'Alcoholico', 'Cocktail glass', 'Mezcle todos los ingredientes en un vaso y añada hielo.'),
+(16271, 'The Evil Blue Thing', 'https://www.thecocktaildb.com/images/media/drink/ojnpz71504793059.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Vierte los ingredientes en un vaso y añade una ballena azul. La ballena azul no es realmente necesaria, pero hace que la bebida sea más \"divertida\".'),
+(16275, 'Jack\'s Vanilla Coke', 'https://www.thecocktaildb.com/images/media/drink/kjnt7z1504793319.jpg', 'Other / Unknown', 'Alcoholico', 'Old-fashioned glass', 'Después de verter los ingredientes y añadir de 3 a 5 cubitos de hielo, según el gusto. Remueve la bebida con un agitador para que la vainilla se despegue del fondo.'),
+(16289, 'Apple Grande', 'https://www.thecocktaildb.com/images/media/drink/wqrptx1472668622.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch Bowl', '¡¡Enfría ambos ingredientes!! ¡Mezclar en un vaso y disfrutar!'),
+(16295, 'Bleeding Surgeon', 'https://www.thecocktaildb.com/images/media/drink/usuvvr1472719118.jpg', 'Soft Drink', 'Alcoholico', 'Collins glass', 'Vierta el chupito de ron sobre la rodaja de naranja. Llene el espacio restante del vaso hasta la mitad con oleada o bebida similar. Terminar el vaso con zumo de arándanos. Tenga cuidado, la espuma caliente puede derramarse sobre el vaso.'),
+(16311, 'Applejack', 'https://www.thecocktaildb.com/images/media/drink/sutyqp1479209062.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Añadir todos los ingredientes en el vaso mezclador, enfriar y colar en una copa de cóctel'),
+(16333, 'Adam Bomb', 'https://www.thecocktaildb.com/images/media/drink/tpxurs1454513016.jpg', 'Punch / Party Drink', 'Alcoholico', 'Margarita/Coupette glass', 'Añada hielo a la batidora (o al vaso si lo prefiere con hielo), a continuación la fruta y el zumo de fruta, según prefiera, y después añada el ron, el vodka, el tequila y el triple sec.');
+INSERT INTO `cocteles` (`id`, `nombre`, `miniatura`, `categoria`, `tipo`, `vaso`, `instrucciones`) VALUES
+(16354, 'Arizona Antifreeze', 'https://www.thecocktaildb.com/images/media/drink/dbtylp1493067262.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Vierte todos los ingredientes en el vaso y tómate el trago en un solo golpe!!!!'),
+(16405, 'A Piece of Ass', 'https://www.thecocktaildb.com/images/media/drink/tqxyxx1472719737.jpg', 'Other / Unknown', 'Alcoholico', 'Highball glass', 'Poner hielo en el vaso. Vierta los chupitos. Rellenar con Sour Mix.'),
+(16419, 'Avalanche', 'https://www.thecocktaildb.com/images/media/drink/uppqty1472720165.jpg', 'Shake', 'Alcoholico', 'Highball glass', 'Mezclar en un vaso highball con hielo y agitar bien.'),
+(16485, 'Flaming Lamborghini', 'https://www.thecocktaildb.com/images/media/drink/yywpss1461866587.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Verter la Sambuca y el Kahlua en la copa de cóctel y dar al bebedor una pajita. Vierta el Baileys y el Blue Curacao en dos vasos de chupito de sepsrate a cada lado de la copa de cóctel. Encienda la cocción en la copa de cóctel y empiece a beber con la pajita (esta bebida debe beberse de un trago), cuando llegue al fondo de la copa apague el fuego vertiendo el Baileys y el Blue Curacao en la copa de cóctel y siga bebiendo hasta que se acabe.'),
+(16943, 'A Gilligan\'s Island', 'https://www.thecocktaildb.com/images/media/drink/wysqut1461867176.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', '¡Sacudido, no agitado!'),
+(16958, 'Apple Pie with A Crust', 'https://www.thecocktaildb.com/images/media/drink/qspqxt1472720078.jpg', 'Other / Unknown', 'Alcoholico', 'Collins Glass', 'Basta con mezclar los dos líquidos y espolvorear la canela. Servir frío o caliente.'),
+(16984, 'Radioactive Long Island Iced Tea', 'https://www.thecocktaildb.com/images/media/drink/rdvqmh1503563512.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Vierta todos los ingredientes sobre hielo en un vaso muy alto. Beber con precaución.'),
+(16986, 'Bible Belt', 'https://www.thecocktaildb.com/images/media/drink/6bec6v1503563675.jpg', 'Other / Unknown', 'Alcoholico', 'Highball glass', 'Mezcle todos los ingredientes y viértalos sobre hielo.'),
+(16987, 'Irish Curdling Cow', 'https://www.thecocktaildb.com/images/media/drink/yrhutv1503563730.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Vierta la crema irlandesa, el vodka y el bourbon en un vaso. Añade un poco de hielo y mezcla con el zumo de naranja.'),
+(16991, 'Downshift', 'https://www.thecocktaildb.com/images/media/drink/y36z8c1503563911.jpg', 'Punch / Party Drink', 'Alcoholico', 'Hurricane glass', 'Empieza con el Sprite. A continuación, el tequila. A continuación, añada Minute Maid Fruit Punch y deje flotar la 151. Rocas opcionales.'),
+(16992, 'Pink Penocha', 'https://www.thecocktaildb.com/images/media/drink/6vigjx1503564007.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'mezclar todos los ingredientes en un bol mantener en hielo remover con frecuencia'),
+(16995, 'Orange Whip', 'https://www.thecocktaildb.com/images/media/drink/ttyrxr1454514759.jpg', 'Other / Unknown', 'Alcoholico', 'Collins Glass', 'Vierta los ingredientes sobre el hielo y remueva.'),
+(17002, 'Gideon\'s Green Dinosaur', 'https://www.thecocktaildb.com/images/media/drink/p5r0tr1503564636.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Añadir todos los ingredientes en un vaso Collins con hielo y remover.'),
+(17005, 'A True Amaretto Sour', 'https://www.thecocktaildb.com/images/media/drink/rptuxy1472669372.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Frotar el borde de un vaso old fashioned con limón y sumergirlo repetidamente en azúcar granulada hasta que tenga un buen borde \"escarchado\". Agitar un jigger de Amaretto con el zumo de 1/2 limón. Cuele en el vaso y añada hielo. Decorar con una cereza Marachino.'),
+(17015, 'Irish Russian', 'https://www.thecocktaildb.com/images/media/drink/swqurw1454512730.jpg', 'Beer', 'Alcoholico', 'Highball glass', 'Añadir los ingredientes en el orden indicado en la receta. Hay que tener cuidado al añadir la Guinness para evitar un exceso de espuma. No añada hielo.'),
+(17020, 'Auburn Headbanger', 'https://www.thecocktaildb.com/images/media/drink/vw7iv91493067320.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Mezclar en un vaso con hielo. Colar y verter en el vaso. Siéntate antes de beber. ¡DISFRUTAR!'),
+(17044, 'Homemade Kahlua', 'https://www.thecocktaildb.com/images/media/drink/uwtsst1441254025.jpg', 'Homemade Liqueur', 'Alcoholico', 'Collins Glass', 'Disolver el azúcar en 2 tazas de agua hirviendo y añadir el jarabe de maíz. Disuelva el café instantáneo en el agua restante. Vierta el jarabe y el café en una jarra de un galón. Dejar enfriar. Añada el vodka y la vainilla cuando esté frío. Para obtener el mejor resultado, deja que la mezcla \"madure\" durante 4-5 semanas.'),
+(17066, 'Army special', 'https://www.thecocktaildb.com/images/media/drink/55muhh1493068062.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Vierta el vodka, la ginebra y el cordial de lima en un vaso y rellene con hielo picado. Esperar a que el hielo se derrita ligeramente y beber sin pajita.'),
+(17074, 'Arizona Twister', 'https://www.thecocktaildb.com/images/media/drink/ido1j01493068134.jpg', 'Cocktail', 'Alcoholico', 'Hurricane glass', 'Mezcla los chupitos de ron, vodka y tequila. Añada chorritos de los tres zumos, sobre todo de piña. Completar con granadina. El hielo picado debe estar ya en el vaso. Completa el vaso con un gajo de piña.'),
+(17094, 'Alice in Wonderland', 'https://www.thecocktaildb.com/images/media/drink/g12lj41493069391.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Basta con mezclar los tres ingredientes uno a uno'),
+(17105, '501 Blue', 'https://www.thecocktaildb.com/images/media/drink/ywxwqs1461867097.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Mezcle cantidades iguales en un vaso con hielo.'),
+(17108, 'Coke and Drops', 'https://www.thecocktaildb.com/images/media/drink/yrtxxp1472719367.jpg', 'Soft Drink', 'No Alcoholico', 'Cocktail glass', 'Coge un vaso, vierte la Coca-Cola en el vaso, luego echa 7 gotas de zumo de limón. Adorne con una rodaja de limón en el borde del vaso.'),
+(17118, 'Arctic Mouthwash', 'https://www.thecocktaildb.com/images/media/drink/wqstwv1478963735.jpg', 'Punch / Party Drink', 'Alcoholico', 'Cocktail glass', 'Mezcle todos los ingredientes en una batidora a máxima potencia hasta que el hielo esté bien picado. Debe quedar una consistencia granizada. Verter inmediatamente y servir.'),
+(17120, 'Brain Fart', 'https://www.thecocktaildb.com/images/media/drink/rz5aun1504389701.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Mezclar todos los ingredientes. Lenta y suavemente. Funciona mejor si se añade hielo a la ponchera y los refrescos están muy fríos.'),
+(17135, 'Citrus Coke', 'https://www.thecocktaildb.com/images/media/drink/uyrvut1479473214.jpg', 'Soft Drink', 'Alcoholico', 'Highball Glass', 'Vierte la mitad de la coca-cola en un vaso. Añade Bacardi y completa con el resto de la Coca-Cola. Remueve y ¡a beber!'),
+(17141, 'Smut', 'https://www.thecocktaildb.com/images/media/drink/rx8k8e1504365812.jpg', 'Punch / Party Drink', 'Alcoholico', 'Beer mug', 'Mézclalo todo y sírvelo bien frío.'),
+(17167, 'Raspberry Cooler', 'https://www.thecocktaildb.com/images/media/drink/suqyyx1441254346.jpg', 'Other / Unknown', 'Alcoholico', 'Highball glass', 'Vierta el vodka de frambuesa y la soda en un vaso highball casi lleno de cubitos de hielo. Remuévalo bien.'),
+(17168, 'Amaretto Sunset', 'https://www.thecocktaildb.com/images/media/drink/apictz1493069760.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins Glass', 'Agitar rápidamente los ingredientes en la coctelera, sólo 5 batidos. Colar sin hielo, servir en vaso inmediatamente con una rodaja de naranja.'),
+(17174, 'Cherry Electric Lemonade', 'https://www.thecocktaildb.com/images/media/drink/tquyyt1451299548.jpg', 'Cocktail', 'Alcoholico', 'Pint glass', 'Remuévelo enérgicamente y viértelo en un vaso grande con hielo. Ahora bébelo con una pajita y remueve de vez en cuando.'),
+(17177, 'Dark Caipirinha', 'https://www.thecocktaildb.com/images/media/drink/uwstrx1472406058.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mezcle el azúcar con los gajos de lima en un vaso old-fashioned.\r\nLlene el vaso con cubitos de hielo.\r\nVierta la cachaca en el vaso.\r\nRemuévalo bien.'),
+(17180, 'Aviation', 'https://www.thecocktaildb.com/images/media/drink/trbplb1606855233.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Añada todos los ingredientes en una coctelera llena de hielo. Agitar bien y colar en una copa de cóctel. Decorar con una cereza.'),
+(17181, 'Dirty Martini', 'https://www.thecocktaildb.com/images/media/drink/vcyvpq1485083300.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Vierta el vodka, el vermut seco y la salmuera de aceitunas en una coctelera con un puñado de hielo y agite bien.\r\nFrotar el borde de una copa de martini con la rodaja de limón.\r\nCuele el contenido de la coctelera en la copa y añada la aceituna.\r\nUn martini sucio contiene un chorrito de salmuera de aceituna o zumo de aceituna y suele adornarse con una aceituna.'),
+(17182, 'Duchamp\'s Punch', 'https://www.thecocktaildb.com/images/media/drink/g51naw1485084685.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Agitar todos los ingredientes.\r\nCuele dos veces en un vaso old fashioned doble con un cubito de hielo grande.\r\nDecorar con un par de ramitas de lavanda.'),
+(17183, 'Bacardi Cocktail', 'https://www.thecocktaildb.com/images/media/drink/n433t21504348259.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar con hielo. Colar en un vaso y servir.'),
+(17184, 'Between The Sheets', 'https://www.thecocktaildb.com/images/media/drink/of1rj41504348346.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en una coctelera con cubitos de hielo, agite y cuele en una copa de cóctel fría.'),
+(17185, 'Casino', 'https://www.thecocktaildb.com/images/media/drink/1mvjxg1504348579.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en una coctelera con cubitos de hielo. Agitar bien. Colar en una copa de cóctel fría. Decorar con un twist de limón y una cereza al marrasquino. Servir sin pajita.'),
+(17186, 'Clover Club', 'https://www.thecocktaildb.com/images/media/drink/t0aja61504348715.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar los ingredientes en seco para emulsionar, añadir hielo, agitar y servir directamente.'),
+(17187, 'Derby', 'https://www.thecocktaildb.com/images/media/drink/52weey1606772672.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en un vaso mezclador con hielo. Remover. Colar en una copa de cóctel. Decorar la copa con una ramita de menta fresca.'),
+(17188, 'Mary Pickford', 'https://www.thecocktaildb.com/images/media/drink/f9erqb1504350557.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar y colar en una copa de cóctel grande fría'),
+(17189, 'Monkey Gland', 'https://www.thecocktaildb.com/images/media/drink/94psp81504350690.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar bien con cubitos de hielo en una coctelera, colar en una copa de cóctel fría.'),
+(17191, 'Planter\'s Punch', 'https://www.thecocktaildb.com/images/media/drink/fdk8a31606854815.jpg', 'Punch / Party Drink', 'Alcoholico', 'Collins glass', 'Vierta todos los ingredientes, excepto el amargo, en una coctelera llena de hielo. Agitar bien. Verter en un vaso grande, lleno de hielo. Añada el amargo de Angostura \"por encima\". Decorar con cereza de cóctel y piña.'),
+(17195, 'Bellini', 'https://www.thecocktaildb.com/images/media/drink/eaag491504367543.jpg', 'Ordinary Drink', 'Alcoholico', 'Champagne Flute', 'Vierta el puré de melocotón en una copa fría y añada el vino espumoso. Remover suavemente.'),
+(17196, 'Cosmopolitan', 'https://www.thecocktaildb.com/images/media/drink/kpsajh1504368362.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Añada todos los ingredientes en una coctelera llena de hielo. Agite bien y cuele dos veces en una copa de cóctel grande. Decorar con una rueda de lima.'),
+(17197, 'French 75', 'https://www.thecocktaildb.com/images/media/drink/hrxfbl1606773109.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Mezcle la ginebra, el azúcar y el zumo de limón en una coctelera llena de hielo. Agitar enérgicamente y colar en una copa de champán fría. Completar con champán. Remover suavemente.'),
+(17198, 'French Connection', 'https://www.thecocktaildb.com/images/media/drink/zaqa381504368758.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Vierta todos los ingredientes directamente en un vaso old fashioned lleno de cubitos de hielo. Remover suavemente.'),
+(17199, 'Golden dream', 'https://www.thecocktaildb.com/images/media/drink/qrot6j1504369425.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar con hielo picado. Colar en un vaso y servir.'),
+(17200, 'Grasshopper', 'https://www.thecocktaildb.com/images/media/drink/aqm9el1504369613.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta los ingredientes en una coctelera con hielo. Agitar enérgicamente y colar en una copa de cóctel fría.'),
+(17201, 'Hemingway Special', 'https://www.thecocktaildb.com/images/media/drink/jfcvps1504369888.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en una coctelera con hielo. Agitar.'),
+(17202, 'Horse\'s Neck', 'https://www.thecocktaildb.com/images/media/drink/006k4e1504370092.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el brandy y el ginger ale directamente en un vaso highball con cubitos de hielo. Remover suavemente. Decorar con ralladura de limón. Si lo desea, añada unos chorritos de amargo de angostura.'),
+(17204, 'Long Island Iced Tea', 'https://www.thecocktaildb.com/images/media/drink/wx7hsg1504370510.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Mezcle todo el contenido en un vaso highball y siéntelo suavemente. Añada un chorrito de Coca-Cola para dar color y decore con un twist de limón o lima.'),
+(17206, 'Mint Julep', 'https://www.thecocktaildb.com/images/media/drink/squyyq1439907312.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'En un vaso highball, mezclar suavemente la menta, el azúcar y el agua. Llenar el vaso con hielo picado, añadir Bourbon y remover bien hasta que el vaso esté bien escarchado. Decorar con una ramita de menta.'),
+(17207, 'Pina Colada', 'https://www.thecocktaildb.com/images/media/drink/upgsue1668419912.jpg', 'Ordinary Drink', 'Alcoholico', 'Collins glass', 'Mezclar con hielo picado en la batidora hasta obtener una mezcla homogénea. Verter en un vaso frío, decorar y servir.'),
+(17209, 'Barracuda', 'https://www.thecocktaildb.com/images/media/drink/jwmr1x1504372337.jpg', 'Ordinary Drink', 'Alcoholico', 'Margarita glass', 'Agitar los ingredientes con hielo. Colar en un vaso y completar con vino espumoso.'),
+(17210, 'Bramble', 'https://www.thecocktaildb.com/images/media/drink/twtbh51630406392.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-Fashioned glass', 'Llenar el vaso con hielo picado. Echar por encima la ginebra, el zumo de limón y el sirope simple. Remover y, a continuación, verter el licor de mora en forma circular para crear un efecto marmolado. Decorar con dos moras y una rodaja de limón.'),
+(17211, 'Dark and Stormy', 'https://www.thecocktaildb.com/images/media/drink/t1tn0s1504374905.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'En un vaso highball lleno de hielo, añadir 6 cl de ron oscuro y completar con cerveza de jengibre. Decorar con una rodaja de lima.'),
+(17212, 'Espresso Martini', 'https://www.thecocktaildb.com/images/media/drink/n0sx531504372951.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Vierte los ingredientes en una coctelera llena de hielo, agita enérgicamente y cuela en una copa de martini fría'),
+(17213, 'French Martini', 'https://www.thecocktaildb.com/images/media/drink/clth721504373134.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en una coctelera con cubitos de hielo. Agitar bien y colar en una copa de cóctel fría. Exprima el aceite de la cáscara de limón sobre la bebida.'),
+(17215, 'Spritz', 'https://www.thecocktaildb.com/images/media/drink/j9evx11504373665.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-Fashioned glass', 'Servir en un vaso con hielo, decorar y servir.'),
+(17216, 'Tommy\'s Margarita', 'https://www.thecocktaildb.com/images/media/drink/loezxn1504373874.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-Fashioned glass', 'Agitar y colar en una copa de cóctel fría.'),
+(17217, 'Vampiro', 'https://www.thecocktaildb.com/images/media/drink/yfhn371504374246.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-Fashioned glass', 'Los vampiros pueden prepararse en un vaso alto o en un vaso old fashioned. En primer lugar, los camareros pueden \"poner el borde\" del vaso con sal Kosher, lo que se hace colocando una capa de sal Kosher sobre una tabla de cortar, humedeciendo el borde del vaso con zumo de lima o agua y colocando el borde del vaso boca abajo sobre la sal Kosher, de modo que la sal se pegue al borde humedecido. El segundo paso es llenar la mitad del vaso con hielo y añadir uno o dos vasos llenos de tequila de alta calidad. El siguiente paso es añadir los elementos aromatizantes. Para ello, se exprime una lima fresca en el vaso, se añaden unos granos de sal, se añade gaseosa con sabor a cítricos hasta que el vaso esté 4/5 lleno y, a continuación, se añade Viuda de Sánchez picante (o zumo de naranja, zumo de lima y pico de gallo). El último paso es remover los ingredientes para que se mezclen bien los sabores.'),
+(17218, 'Vesper', 'https://www.thecocktaildb.com/images/media/drink/mtdxpa1504374514.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agite sobre hielo hasta que esté bien frío, luego cuele en una copa honda y decore con una rodaja fina de cáscara de limón.'),
+(17219, 'Yellow Bird', 'https://www.thecocktaildb.com/images/media/drink/2t9r6w1504374811.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', '\nAgitar y colar en una copa de cóctel fría.'),
+(17220, 'Butter Baby', 'https://www.thecocktaildb.com/images/media/drink/1xhjk91504783763.jpg', 'Shake', 'Alcoholico', 'Beer mug', 'Mezclar en una licuadora. Sirva en una jarra de cerveza fría con arándanos frescos y caramelo como cobertura.'),
+(17221, 'Boozy Snickers Milkshake', 'https://www.thecocktaildb.com/images/media/drink/861tzm1504784164.jpg', 'Shake', 'Alcoholico', 'Mason jar', 'Coloque las barras de snickers en una bolsa de plástico y enróllelas con un rodillo hasta que queden trituradas. Agregue los trozos de snickers triturados, el helado, la leche, la salsa de caramelo, la salsa de chocolate y el licor de chocolate a una licuadora. Licue hasta que el batido esté espeso y espumoso. Vierta en vasos y cubra con licor de chocolate y crema batida.'),
+(17222, 'A1', 'https://www.thecocktaildb.com/images/media/drink/2x8thr1504816928.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Verter todos los ingredientes en una coctelera, mezclar y servir con hielo en una copa fría.'),
+(17223, 'Abbey Martini', 'https://www.thecocktaildb.com/images/media/drink/2mcozt1504817403.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Ponga todos los ingredientes en una coctelera, mézclelos y cuele el contenido en una copa de cóctel fría.'),
+(17224, 'Absolutely Fabulous', 'https://www.thecocktaildb.com/images/media/drink/abcpwr1504817734.jpg', 'Cocktail', 'Alcoholico', 'Champagne flute', 'Mezcle el vodka y el zumo de arándanos en una coctelera y cuélelo en un vaso. Completar con Champagne.'),
+(17225, 'Ace', 'https://www.thecocktaildb.com/images/media/drink/l3cd7f1504818306.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Agitar todos los ingredientes en una coctelera con hielo y colar en un vaso frío.'),
+(17226, 'Adam & Eve', 'https://www.thecocktaildb.com/images/media/drink/vfeumw1504819077.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agite todos los ingredientes y cuélelos en un vaso frío.'),
+(17227, 'Addington', 'https://www.thecocktaildb.com/images/media/drink/ib0b7g1504818925.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Mezcle ambos vermuts en una coctelera y cuélelos en un vaso frío. Completar con un chorrito de soda.'),
+(17228, 'Addison', 'https://www.thecocktaildb.com/images/media/drink/yzva7x1504820300.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Agite todos los ingredientes y cuélelos en un vaso frío.'),
+(17229, 'Adios Amigos Cocktail', 'https://www.thecocktaildb.com/images/media/drink/8nk2mp1504819893.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Agite todos los ingredientes y cuélelos en un vaso frío.'),
+(17230, 'Gin Rickey', 'https://www.thecocktaildb.com/images/media/drink/s00d6f1504883945.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llene hasta la mitad un vaso alto con hielo. Mezcle la ginebra y la granadina y viértalo sobre el hielo. Añada el zumo de lima o limón y complete con soda. Decore el vaso con rodajas de lima y/o limón.'),
+(17233, 'Salted Toffee Martini', 'https://www.thecocktaildb.com/images/media/drink/3s6mlr1509551211.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agrega hielo, ginebra toffee, licor de chocolate y Amaretto a una coctelera y agita vigorosamente. \nVierta el almíbar de chocolate en un platillo y sumerja la parte superior de una copa de martini en la salsa. Ralla un poco de chocolate con sal marina de Willie en otro platillo y sumerge el vaso revestido, de modo que las hojuelas se adhieran a la salsa, ¡creando un borde de chocolate!\nVierte el contenido de la coctelera en tu vaso de chocolate y espolvorea con más chocolate rallado. ¡Disfrútalo!'),
+(17239, 'Hunter\'s Moon', 'https://www.thecocktaildb.com/images/media/drink/t0iugg1509556712.jpg', 'Cocktail', 'Alcoholico', 'Balloon Glass', 'Ponga el Bombay Sapphire, el Martini Bianco, el sirope de azúcar y las moras en una coctelera con mucho hielo y agite enérgicamente antes de verter en una copa globo, completar con limonada y decorar con un gajo de naranja.'),
+(17241, 'Zombie', 'https://www.thecocktaildb.com/images/media/drink/2en3jk1509557725.jpg', 'Cocktail', 'Alcoholico', 'Hurricane glass', 'Licue a alta velocidad durante no más de 5 segundos.\n\nVierta en un vaso, agregue cubitos de hielo para llenar y luego agregue la guarnición.\n\n*Mezcla de Donn: hierva 3 ramas de canela trituradas, 1 taza de azúcar y 1 taza de agua, revolviendo hasta que el azúcar se disuelva.\n\nCocine a fuego lento durante 2 minutos, luego retírelo del fuego y déjelo reposar durante al menos 2 horas antes de colarlo en una botella de vidrio limpia.\n\nLuego agregue 1 parte de almíbar y 2 partes de jugo de pomelo fresco.'),
+(17242, 'Bombay Cassis', 'https://www.thecocktaildb.com/images/media/drink/h1e0e51510136907.jpg', 'Cocktail', 'Alcoholico', 'Balloon Glass', 'Añada el Bombay Sapphire, la Crème de Cassis y el zumo de lima a una copa de balón y agite bien para mezclar.\r\nLlene el vaso con cubitos de hielo de buena calidad.\r\nCompletar con Fever-Tree Ginger Beer fría y recién abierta.\r\nRemover suavemente para mezclar, añadir una rodaja de lima y terminar con una rodaja de jengibre fresco.'),
+(17245, 'Rosemary Blue', 'https://www.thecocktaildb.com/images/media/drink/qwc5f91512406543.jpg', 'Cocktail', 'Alcoholico', 'Balloon Glass', '1) Agregue Bombay Sapphire, Blue Curacao, una ramita de romero y una rodaja de limón suavemente exprimida a una copa tipo globo. Agite bien para combinar.\n2) Llénelo con cubitos de hielo y cubra con el agua tónica ligera Fever-Tree.\n3) Incorporar suavemente con una cuchara de bar para mezclar.'),
+(17246, 'Empellón Cocina\'s Fat-Washed Mezcal', 'https://www.thecocktaildb.com/images/media/drink/osgvxt1513595509.jpg', 'Cocktail', 'Alcoholico', 'Beer Glass', 'Para que tu grasa de cerdo sea tan deliciosa como la suya, aquí tienes su adobo y qué hacer con él (también necesitarás un costillar):\r\n\r\n4 chiles anchos, 8 chiles guajillos y 4 chiles chipotles, más 4 dientes de ajo asado, media taza de vinagre de sidra, un cuarto de cucharadita de orégano mexicano, 1 cucharadita de pimienta negra molida, un clavo entero, un cuarto de cucharadita de canela molida y media cucharadita de comino molido.\r\n\r\nTostar los chiles secos y remojarlos en agua durante al menos una hora hasta que se rehidraten. Escurrir y desechar el líquido de remojo. Mezclar los chiles remojados con el resto de ingredientes y hacer un puré hasta que quede suave.\r\n\r\nAhumar en frío un costillar de cerdo en una sartén grande con astillas de madera en un lado y carbón en el otro. Coloca otra sartén más pequeña con costillas de cerdo encima de la sartén con carbón y virutas de madera. Encienda el carbón con cuidado de no prender las astillas. Cubra ambas cacerolas con papel de aluminio y deje que se ahumen d'),
+(17247, 'The Last Word', 'https://www.thecocktaildb.com/images/media/drink/91oule1513702624.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar con hielo y colar en una copa de cóctel.'),
+(17248, 'French Negroni', 'https://www.thecocktaildb.com/images/media/drink/x8lhp41513703167.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Añada hielo a una coctelera y vierta todos los ingredientes.\r\nCon una cuchara de bar, agitar de 40 a 45 revoluciones o hasta que esté bien frío.\r\nCuele en una copa de martini o sobre hielo en un vaso con hielo. Decorar con un twist de naranja.'),
+(17249, 'Pegu Club', 'https://www.thecocktaildb.com/images/media/drink/jfkemm1513703902.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar, colar, levantar, copa de cóctel.'),
+(17250, 'Corpse Reviver', 'https://www.thecocktaildb.com/images/media/drink/gifgao1513704334.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agitar, colar, derecho, copa de cóctel enjuagada con absenta\r\n'),
+(17251, 'Boulevardier', 'https://www.thecocktaildb.com/images/media/drink/km84qi1513705868.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Remover con hielo, colar, decorar y servir.'),
+(17252, 'Greyhound', 'https://www.thecocktaildb.com/images/media/drink/g5upn41513706732.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Añada el vodka a un vaso Collins lleno de hielo.\r\nAñada zumo de pomelo y remueva.\r\n\r\n'),
+(17253, 'Paloma', 'https://www.thecocktaildb.com/images/media/drink/samm5j1513706393.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Remover y servir con hielo.'),
+(17254, 'Bijou', 'https://www.thecocktaildb.com/images/media/drink/rysb3r1513706985.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Remover en un vaso mezclador con hielo y colar\r\n'),
+(17255, 'Gimlet', 'https://www.thecocktaildb.com/images/media/drink/3xgldt1513707271.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Añada todos los ingredientes a una coctelera y llénela de hielo.\r\n\r\nAgitar y colar en una copa de cóctel fría o en un vaso Old Fashioned lleno de hielo fresco.\r\n\r\nDecorar con una rueda de lima.'),
+(17256, 'Martinez 2', 'https://www.thecocktaildb.com/images/media/drink/fs6kiq1513708455.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Añada todos los ingredientes a un vaso mezclador y llénelo de hielo.\r\n\r\nRemover hasta que se enfríe y colar en una copa coupé fría.'),
+(17266, 'Oatmeal Cookie', 'https://www.thecocktaildb.com/images/media/drink/bsvmlg1515792693.jpg', 'Cocktail', 'Alcoholico', 'Mason jar', 'Simplemente mézclalo todo junto.\nEstá destinado a ser un trago, pero funciona bien como una bebida adecuada para adultos con mucho hielo.\n\nSabe a galleta de avena.'),
+(17267, 'Bahama Mama', 'https://www.thecocktaildb.com/images/media/drink/tyb4a41515793339.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Añada 2 partes de club soda o más o menos al gusto.\r\n\r\nMézclelo todo y viértalo sobre un montón de hielo. Bébelo con una pajita.'),
+(17268, 'Blue Hurricane', 'https://www.thecocktaildb.com/images/media/drink/nwx02s1515795822.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Si cada parte es de 1/2 onza, utilice unas 2,5 tazas de hielo.\r\n\r\nMézclalo todo.\r\nBébelo con una pajita grande, si tienes.\r\n\r\n'),
+(17824, 'The Laverstoke', 'https://www.thecocktaildb.com/images/media/drink/6xfj5t1517748412.jpg', 'Cocktail', 'Alcoholico', 'Balloon Glass', '1) Exprima dos rodajas de lima en un vaso globo y luego agregue el cordial, Bombay Sapphire y MARTINI Rosso Vermouth y revuelva para mezclar.\n\n2) Llene completamente el vaso con cubitos de hielo y revuelva para que se enfríe.\n\n3) Cubra con Fever-Tree Ginger Ale y revuelva suavemente nuevamente para combinar.\n\n4) Adorne con una rodaja de jengibre partida y una ramita de menta despierta.'),
+(17825, 'Brigadier', 'https://www.thecocktaildb.com/images/media/drink/nl89tf1518947401.jpg', 'Cocktail', 'Alcoholico', 'Coupe Glass', 'Mezclar los ingredientes en una taza caliente y remover.'),
+(17826, 'The Jimmy Conway', 'https://www.thecocktaildb.com/images/media/drink/wbcvyo1535794478.jpg', 'Cocktail', 'Alcoholico', 'Whiskey sour glass', 'Llena el vaso con hielo\nVierta El irlandés y Disaronno\nRellenar hasta arriba con jugo de arándano\nAdorne con una rodaja de limón… ¡A disfrutar!'),
+(17827, 'Old Pal', 'https://www.thecocktaildb.com/images/media/drink/x03td31521761009.jpg', 'Cocktail', 'Alcoholico', 'Nick and Nora Glass', 'Copa de cóctel fría. Agregue los ingredientes a un vaso mezclador y llénelo 2/3 de su capacidad con hielo. Revuelva unos 20 segundos. Vaciar la copa de cóctel y colar en la copa. Adorne con una rodaja de piel de limón.'),
+(17828, 'Tipperary', 'https://www.thecocktaildb.com/images/media/drink/b522ek1521761610.jpg', 'Cocktail', 'Alcoholico', 'Nick and Nora Glass', 'Revuelva sobre hielo. Colar en vaso frío. Corta una franja amplia de cáscara de naranja y exprime los aceites de naranja sobre la bebida. Deseche la rodaja de naranja.'),
+(17829, 'Penicillin', 'https://www.thecocktaildb.com/images/media/drink/hc9b1a1521853096.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Agitar con hielo la mezcla de whisky, zumo de limón, sirope de miel y sirope de jengibre. Colar sobre hielo grande en un vaso con hielo frío. Dejar flotar el whisky ahumado por encima (asegúrese de utilizar un whisky ahumado como un Islay single malt). Decorar con jengibre confitado.'),
+(17830, 'Corn n Oil', 'https://www.thecocktaildb.com/images/media/drink/pk6dwi1592767243.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Volver a cortar la media lima por la mitad. Añada la lima, el falernum y el amargo a un vaso con hielo. Mezcle. Añadir el ron. (Se recomienda ron añejo de Barbados, como Plantation 5 años). Añadir hielo y remover. Dejar flotar el ron blackstrap por encima. Servir con pajita.'),
+(178306, 'Slippery Nipple', 'https://www.thecocktaildb.com/images/media/drink/l9tgru1551439725.jpg', 'Shot', 'Alcoholico', 'Shot glass', 'Vierta la Sambuca en un vaso de chupito, luego vierta la crema irlandesa encima para que los dos líquidos no se mezclen.'),
+(178307, 'Tequila Slammer', 'https://www.thecocktaildb.com/images/media/drink/43uhr51551451311.jpg', 'Shot', 'Alcoholico', 'Hurricane glass', 'Mezclar con cuidado para evitar que se libere el CO2 disuelto.'),
+(178308, 'Spritz Veneziano', 'https://www.thecocktaildb.com/images/media/drink/51ezka1551456113.jpg', 'Cocktail', 'Alcoholico', 'Wine Glass', 'Vierta en un vaso sobre hielo, decore y sirva.'),
+(178309, 'Espresso Rumtini', 'https://www.thecocktaildb.com/images/media/drink/acvf171561574403.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Mezclar todo en una copa de cóctel. Decorar con un poco de chocolate en polvo y granos de café.'),
+(17831, 'A Furlong Too Late', 'https://www.thecocktaildb.com/images/media/drink/ssxvww1472669166.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el ron y la cerveza de jengibre en un vaso highball casi lleno de cubitos de hielo. Remover bien. Decorar con el twist de limón.'),
+(178310, 'Brooklyn', 'https://www.thecocktaildb.com/images/media/drink/ojsezf1582477277.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Mezclar los ingredientes con hielo y remover hasta que estén bien fríos. Cuele en una copa de cóctel fría.'),
+(178311, 'Broadside', 'https://www.thecocktaildb.com/images/media/drink/l2o6xu1582476870.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llene el vaso hasta la mitad con cubitos de hielo. Machaque el ajenjo y añádalo al hielo. Vierta el ron, el whisky y las mantequillas, ¡y sírvalo!'),
+(178312, 'Bloody Punch', 'https://www.thecocktaildb.com/images/media/drink/5yhd3n1571687385.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Coloque las fresas descongeladas en un bol grande. Machácalas con un tenedor para que no queden trozos grandes.\r\n\r\nPaso\r\n2\r\n\r\n \r\nEn una ponchera o jarra, mezcla el puré de fresas, la pulpa de lima y la soda. Mezcle bien.\r\n\r\nPaso\r\n3\r\n\r\n \r\nAñade los arándanos y las pasas. Flotarán y parecerán bichos en el ponche.'),
+(178313, 'Halloween Punch', 'https://www.thecocktaildb.com/images/media/drink/7hcgyj1571687671.jpg', 'Punch / Party Drink', 'Alcoholico', 'Punch bowl', 'Poner en un cazo grande el zumo de cereza, la piel de naranja, la guindilla, la canela en rama, el clavo y el jengibre. Cocer a fuego lento durante 5 minutos y apagar el fuego. Déjelo enfriar y póngalo a enfriar durante al menos 4 horas, o hasta 2 días; cuanto más tiempo lo deje, más intensos serán los sabores. Si se sirve a niños pequeños, retire la guindilla al cabo de unas horas.\r\n\r\nCuando esté listo para servir, vierta el zumo en una jarra. Sírvalo en botellas o vasos de cristal y coloque una pajita en cada uno. Si va a añadir vodka, hágalo en este momento. Cuelga un colmillo dulce de cada vaso.'),
+(178314, 'Gin Basil Smash', 'https://www.thecocktaildb.com/images/media/drink/jqh2141572807327.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mezcle hojas de albahaca (~ 10) con sirope de azúcar en una coctelera. Añadir ginebra y zumo de limón.\r\nFiltrar y servir en un vaso con hielo.'),
+(178315, 'Munich Mule', 'https://www.thecocktaildb.com/images/media/drink/rj55pl1582476101.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llenar el vaso con hielo\r\nVierta la ginebra y el zumo de lima\r\nLlenar el vaso con Ginger Beer\r\nDecorar con pepino y rodaja de lima'),
+(178316, 'Honey Bee', 'https://www.thecocktaildb.com/images/media/drink/vu8l7t1582475673.jpg', 'Cocktail', 'Alcoholico', 'Margarita glass', 'Agitar los ingredientes con hielo picado\r\n'),
+(178317, 'Bee\'s Knees', 'https://www.thecocktaildb.com/images/media/drink/tx8ne41582475326.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Agitar los ingredientes con hielo picado\r\nDecorar con piel de naranja\r\n'),
+(178318, '747 Drink', 'https://www.thecocktaildb.com/images/media/drink/i9suxb1582474926.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llene un vaso Collins con hielo.\r\nVierta el vodka, el cordial de lima y el zumo de arándanos.\r\nRellene con Sprite.\r\nDecorar con una rueda de lima o unos arándanos.'),
+(178319, 'Aquamarine', 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg', 'Cocktail', 'Alcoholico', 'Martini Glass', 'Agitar bien en una coctelera con hielo.\r\nColar en una copa de martini.'),
+(17832, 'A Night In Old Mandalay', 'https://www.thecocktaildb.com/images/media/drink/vyrvxt1461919380.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle el ron ligero, el ron añejo, el zumo de naranja y el zumo de limón. Agitar bien. Colar en un vaso highball casi lleno de cubitos de hielo. Añadir el ginger ale. Decorar con el twist de limón.'),
+(178320, 'Banana Cream Pi', 'https://www.thecocktaildb.com/images/media/drink/m5p67n1582474609.jpg', 'Cocktail', 'Alcoholico', 'Wine Glass', 'Servir con hielo.'),
+(178321, 'Amaretto fizz', 'https://www.thecocktaildb.com/images/media/drink/92h3jz1582474310.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Mezcle Amaretto, zumo de naranja y vino espumoso en una jarra. Si lo desea, añada una tira de ralladura de naranja a cada vaso.'),
+(178322, 'Spice 75', 'https://www.thecocktaildb.com/images/media/drink/0108c41576797064.jpg', 'Cocktail', 'Alcoholico', 'Wine Glass', 'Caliente suavemente 60 g de azúcar en polvo dorado en una cacerola con 30 ml de agua y 1 cucharada de pimienta de Jamaica. Cocine a fuego lento hasta que el azúcar se disuelva, luego deje enfriar la mezcla. Colar por un colador forrado con un filtro de café (o una doble capa de papel de cocina).\n\nVierta 60 ml del almíbar especiado en una coctelera junto con 200 ml de ron y 90 ml de zumo de lima. Agitar con hielo y colar entre seis vasos flauta. Complete con 600 ml de champán y decore cada uno con un toque de naranja.'),
+(178323, 'Passion Fruit Martini', 'https://www.thecocktaildb.com/images/media/drink/6trfve1582473527.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Vierta todos los ingredientes en un vaso y revuelva. Adorne con medio trozo de maracuyá.'),
+(178325, 'Aperol Spritz', 'https://www.thecocktaildb.com/images/media/drink/iloasq1587661955.jpg', 'Cocktail', 'Alcoholico', 'Wine Glass', 'Pon un par de cubitos de hielo en 2 vasos y añade una medida de 50 ml de Aperol en cada uno. Reparta el prosecco entre los vasos y, si lo desea, rellene con soda.'),
+(178326, 'White Wine Sangria', 'https://www.thecocktaildb.com/images/media/drink/hnuod91587851576.jpg', 'Punch / Party Drink', 'Alcoholico', 'Pitcher', 'Picar el Limón, la Lima y las demás frutas en trozos grandes. Llenar la jarra con el vino blanco y mezclar con el Brandy de Manzana. Añada agua con gas al gusto.'),
+(178327, 'Pineapple Paloma', 'https://www.thecocktaildb.com/images/media/drink/pg8iw31593351601.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Frote el borde de cada vaso con una rodaja de lima y sumérjalo en sal.\r\nAñade hielo, tequila, zumo de pomelo, zumo de lima y completa con soda de piña.\r\nRemover rápidamente.\r\nDecorar con piña fresca o lima.'),
+(178328, 'Funk and Soul', 'https://www.thecocktaildb.com/images/media/drink/qtv83q1596015790.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Mezcle todos los ingredientes y cuélelos en un vaso Collins. Utilice ron jamaicano siempre que sea posible para obtener un sabor más auténtico.'),
+(178329, 'Captain Kidd\'s Punch', 'https://www.thecocktaildb.com/images/media/drink/d83spj1596017390.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Mezclar todos los ingredientes en una coctelera y colar en un vaso Collins. Utilice ron oscuro caribeño para un sabor más dulce.'),
+(17833, 'A. J.', 'https://www.thecocktaildb.com/images/media/drink/l74qo91582480316.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar los ingredientes con hielo, colar en una copa de cóctel y servir.'),
+(178330, 'The Philosopher', 'https://www.thecocktaildb.com/images/media/drink/sp8hkp1596017787.jpg', 'Cocktail', 'Alcoholico', 'Margarita glass', 'Agrega todos los licores en una coctelera (es mejor usar ginebra Hendricks), así como el amargo de naranja y el jugo de limón. Colar en una copa Margarita y cubrir con Prosecco.'),
+(178331, 'Bounty Hunter', 'https://www.thecocktaildb.com/images/media/drink/t8bgxl1596018175.jpg', 'Cocktail', 'Alcoholico', 'Margarita glass', 'Añada los licores en una coctelera, así como el zumo de piña, y cuélelo en una copa Margarita. Añada Prosecco y decore con arándanos.'),
+(178332, 'Smashed Watermelon Margarita', 'https://www.thecocktaildb.com/images/media/drink/dztcv51598717861.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'En un tarro de cristal, mezcla la sandía y 5 hojas de menta hasta obtener un puré y cuélalo. A continuación, añade el zumo de pomelo, el zumo de media lima y el tequila, así como un poco de hielo. Tapar el tarro y agitar. Viértalo en un vaso y añada más hielo. Decorar con menta fresca y una rodajita de sandía.'),
+(178333, 'Raspberry Julep', 'https://www.thecocktaildb.com/images/media/drink/hyztmx1598719265.jpg', 'Cocktail', 'Alcoholico', 'Cordial glass', 'Triture suavemente las hojas de menta y el almíbar de frambuesa en el fondo de la taza. Agrega hielo picado y Bourbon a la taza y luego revuelve. Cubra con más hielo y decore con una ramita de menta.'),
+(178334, 'Death in the Afternoon', 'https://www.thecocktaildb.com/images/media/drink/y7s3rh1598719574.jpg', 'Cocktail', 'Alcoholico', 'Margarita glass', 'Tan fácil como te apetezca, vierte la absenta en una copa helada y completa con champán. Debe beberse a media tarde para obtener un efecto óptimo.'),
+(178335, 'Lazy Coconut Paloma', 'https://www.thecocktaildb.com/images/media/drink/rytuex1598719770.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mezclar el licor de coco (preferiblemente tequila) con el zumo de pomelo y completar con agua de soda. Decorar con una rodaja grande de pomelo en el interior del vaso.'),
+(178336, 'Blueberry Mojito', 'https://www.thecocktaildb.com/images/media/drink/07iep51598719977.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mezcla los arándanos con los demás ingredientes y sírvelo en un vaso highball. Decorar con menta y media rodaja de lima.'),
+(178337, 'Autumn Garibaldi', 'https://www.thecocktaildb.com/images/media/drink/ne7re71604179012.jpg', 'Cocktail', 'Alcoholico', 'Cordial glass', 'Vierta todos los ingredientes en un vaso con hielo y remuévalos con una cuchara de bar. Decorar con unas rodajas de naranja.'),
+(178338, 'Pure Passion', 'https://www.thecocktaildb.com/images/media/drink/4tymma1604179273.jpg', 'Cocktail', 'Alcoholico', 'Whiskey sour glass', 'Mezcle todos los ingredientes con una coctelera y sirva con hielo picado con menta y harina comestible si está disponible.'),
+(178339, 'The Strange Weaver', 'https://www.thecocktaildb.com/images/media/drink/opxjzh1604179528.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Mezclar los ingredientes lentamente en un vaso con hielo, decorar con una rodaja de naranja'),
+(17834, 'Abbey Cocktail', 'https://www.thecocktaildb.com/images/media/drink/mr30ob1582479875.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Agitar todos los ingredientes (excepto la cereza) con hielo y colar en una copa de cóctel. Cubrir con la cereza y servir.'),
+(178340, 'Garibaldi Negroni', 'https://www.thecocktaildb.com/images/media/drink/kb4bjg1604179771.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Mézclalo todo en una coctelera y adórnalo con una rodaja de naranja. ¡Llene su dosis de vitamina C y cóctel al mismo tiempo!'),
+(178341, 'Orange Rosemary Collins', 'https://www.thecocktaildb.com/images/media/drink/mokcas1604179977.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Añada las bebidas espirituosas en el fondo del vaso y complete a partes iguales con las bebidas mezcladas. Adorne con rodajas de naranja en el interior del vaso y un poco de romero en la parte superior.'),
+(178342, 'Gin and Soda', 'https://www.thecocktaildb.com/images/media/drink/nzlyc81605905755.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Vierta la ginebra y el agua de soda en un vaso highball casi lleno de cubitos de hielo.\r\nRemover bien.\r\nAdorne con la rodaja de lima.'),
+(178343, 'Michelada', 'https://www.thecocktaildb.com/images/media/drink/u736bd1605907086.jpg', 'Cocktail', 'Alcoholico', 'Pint glass', 'Mezcle la cerveza con zumo de tomate, zumo de lima recién exprimido y salsa Worcestershire, salsa teriyaki, salsa de soja o salsa picante.\r\nSe sirve en un vaso frío con borde de sal.\r\n'),
+(178344, 'Figgy Thyme', 'https://www.thecocktaildb.com/images/media/drink/pbw4e51606766578.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'En una bolsa lewis, tritura un poco de hielo como un baller/maníaco (@glacioice). Vierte tu preciado hielo en un vaso Collins. En una coctelera, mezcla los higos y el tomillo. Añade el vodka de miel, el zumo de limón y un cubito de hielo grande (@glacioice). Agitar hasta que esté bien frío y colar en el vaso. Añadir agua tónica y, por último, 2 chorritos de amargo de angostura. Decorar con rodajas de higo y tomillo.'),
+(178345, 'Hot Toddy', 'https://www.thecocktaildb.com/images/media/drink/ggx0lv1613942306.jpg', 'Cocktail', 'Alcoholico', 'Irish coffee cup', 'PASO 1\r\nBata el whisky y la miel y repártalos en 2 vasos refractarios. Añada la mitad de la rama de canela a cada uno y, a continuación, añada 200 ml de agua hirviendo.\r\n\r\nPASO 2\r\nAñada un chorrito de zumo de limón a cada vaso, pruébelo y añada el zumo que prefiera. Termine cada uno con una rodaja de limón, salpicada con un clavo, y sirva inmediatamente.'),
+(178346, 'Elderflower Caipirinha', 'https://www.thecocktaildb.com/images/media/drink/dif7a31614006331.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Coge el vaso y machaca la lima en él. Llene el vaso con hielo picado y añada la cachaca. Remueve bien y añade más hielo picado. Decóralo con lima y ¡a disfrutar!'),
+(178347, 'Winter Rita', 'https://www.thecocktaildb.com/images/media/drink/fwpd0v1614006733.jpg', 'Beer', 'Alcoholico', 'Highball Glass', 'Borde de sal. Combine todos los ingredientes, agite con hielo y cuele sobre hielo fresco.⠀'),
+(178348, 'Winter Paloma', 'https://www.thecocktaildb.com/images/media/drink/u5f0pz1614007748.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'La Paloma favorita de todos recibe un delicioso cambio de imagen indio. Tequila reposado infundido con \"Timur Pepper\", que tiene notas cítricas y de pomelo y se cultiva en las estribaciones del Himalaya. También produce una ligera sensación de entumecimiento y hormigueo en el labio cuando se consume. También hemos condimentado el zumo de pomelo fresco con la cálida mezcla de especias del Himalaya. La combinación de todos estos elementos interesantes nos ha permitido mejorar su experiencia al beber Paloma.'),
+(178349, 'Snowday', 'https://www.thecocktaildb.com/images/media/drink/4n1ipk1614009624.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Remover todos los ingredientes con hielo. Colar en un vaso con hielo fresco. Exprima la piel de naranja sobre la bebida y decore.'),
+(17835, 'Abilene', 'https://www.thecocktaildb.com/images/media/drink/smb2oe1582479072.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta todos los ingredientes en un vaso highball casi lleno de cubitos de hielo. Remover bien.'),
+(178350, 'The Galah', 'https://www.thecocktaildb.com/images/media/drink/sy7y6r1614775067.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', 'Mezclar las porciones alcohólicas y cubrir con el zumo de piña y lima.'),
+(178352, 'Frosé', 'https://www.thecocktaildb.com/images/media/drink/b4cadp1619695347.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Paso 1\r\nVierta el rosado en un molde de 13x9\" y congélelo hasta que esté casi sólido (no se solidificará completamente debido al alcohol), al menos 6 horas.\r\n\r\nPaso 2\r\nMientras tanto, ponga a hervir el azúcar y ½ taza de agua en un cazo mediano; cocine, removiendo constantemente, hasta que el azúcar se disuelva, unos 3 minutos. Añada las fresas, retire del fuego y deje reposar 30 minutos para que el sirope adquiera el sabor a fresa. Páselo por un colador de malla fina a un bol pequeño (no presione los sólidos); cúbralo y refrigérelo hasta que se enfríe, unos 30 minutos.\r\n\r\nPaso 3\r\nPasar el rosado a una batidora. Añadir el zumo de limón, 3½ onzas de sirope de fresa y 1 taza de hielo picado y triturar hasta obtener una mezcla homogénea. Pasar la jarra de la batidora al congelador y congelar hasta que el frosé esté espeso (para que tenga consistencia de batido), entre 25 y 35 minutos.\r\n\r\nPaso 4\r\nVolver a batir hasta que el frosé esté espumoso. Repartir en vasos.\r\n\r\nPaso 5\r\nPrepáralo: El rosado se puede congelar '),
+(178353, 'Apple Highball', 'https://www.thecocktaildb.com/images/media/drink/66mt9b1619695719.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Ponga hielo en un vaso highball. Frote una rodaja de lima fresca alrededor del borde y colóquela en el vaso. Añade un chupito de aguardiente de manzana, otro de Courvoisier y completa con ginger ale.'),
+(178354, 'Pink Moon', 'https://www.thecocktaildb.com/images/media/drink/lnjoc81619696191.jpg', 'Cocktail', 'Alcoholico', 'Whiskey Glass', 'Agitar lentamente en una coctelera con hielo, colar en un vaso cuadrado de whisky. Cubrir con hielo fresco. Añadir las moras para adornar. Añada flores y una hoja verde para darle un toque especial.'),
+(178355, 'Mountain Bramble', 'https://www.thecocktaildb.com/images/media/drink/stwiva1619704025.jpg', 'Cocktail', 'Alcoholico', 'Old-fashioned glass', 'Machacar las moras en un vaso tumbler. Mezclar la ginebra, el zumo de limón y el jarabe de azúcar en una coctelera y colar sobre hielo picado. Añadir agua con gas y decorar con más moras y un poco de menta.'),
+(178356, 'Butterfly Effect', 'https://www.thecocktaildb.com/images/media/drink/ht3hnk1619704289.jpg', 'Cocktail', 'Alcoholico', 'Hurricane glass', 'Coge tu lata boston, llénala de cubitos de hielo e introduce todos los ingredientes menos la limonada.\r\nAhora es el momento de batir lo que te dio tu madre hasta que todos los ingredientes se mezclen a la perfección.\r\nPon unos cubitos de hielo en el vaso huracán, bátelos para enfriarlo todo y cuela el cóctel de frambuesa y vodka en el vaso.\r\nAñade limonada y una ramita de menta para decorar.\r\nPuedes seguir bebiendo en este punto o ir a intentar coger unas cuantas mariposas para terminar, la decisión es tuya.'),
+(178357, 'Pornstar Martini', 'https://www.thecocktaildb.com/images/media/drink/xjhjdf1630406071.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Directo: Vierta todos los ingredientes en un vaso mezclador con cubitos de hielo. Agite bien. Colar en una copa de cóctel de martini fría. Corta la maracuyá por la mitad y úsala como guarnición. Vierta el prosecco en un vaso de chupito frío y sírvalo junto con el martini.');
+INSERT INTO `cocteles` (`id`, `nombre`, `miniatura`, `categoria`, `tipo`, `vaso`, `instrucciones`) VALUES
+(178358, 'Mango Mojito', 'https://www.thecocktaildb.com/images/media/drink/wfqmgm1630406820.jpg', 'Cocktail', 'Alcoholico', 'Jar', 'Exprimir el zumo de 1½ limas y mezclarlo con el mango para obtener un puré suave.\r\nCorte el resto de las limas en cuartos y, a continuación, vuelva a cortar cada gajo por la mitad. Ponga 2 trozos de lima en un vaso alto para cada persona y añada 1 cucharadita de azúcar glas y 5-6 hojas de menta a cada vaso. Aplástelo todo con un batidor o con la punta de un rodillo para liberar todos los sabores de la lima y la menta.\r\nDivida el puré de mango entre los vasos y añada 30 ml de ron blanco y un puñado de hielo picado a cada uno, removiendo bien para mezclarlo todo. Completar con agua con gas para servir y decorar con más menta, si se desea.'),
+(178359, 'Kiwi Martini', 'https://www.thecocktaildb.com/images/media/drink/bmxmyq1630407098.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'El martini de kiwi es un cóctel de vodka muy divertido y una de las mejores bebidas que utilizan fruta fresca. Aunque hay algunas recetas circulando por ahí, esta es una de las más fáciles y es un martini verde absolutamente delicioso de beber.\r\n\r\nPara esta receta, basta con mezclar rodajas de kiwi con sirope simple y agitarlo con vodka. Es una bebida que cualquiera puede preparar en minutos y un cóctel perfecto para presumir de tu vodka favorito.'),
+(17836, 'Acapulco', 'https://www.thecocktaildb.com/images/media/drink/il9e0r1582478841.jpg', 'Ordinary Drink', 'Alcoholico', 'Old-fashioned glass', 'Mezclar y agitar todos los ingredientes (excepto la menta) con hielo y colar en un vaso old-fashioned sobre cubitos de hielo. Añada la ramita de menta y sirva.'),
+(178360, 'Lemon Elderflower Spritzer', 'https://www.thecocktaildb.com/images/media/drink/125w0o1630407389.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Vierte todos los ingredientes sobre hielo, remueve y ¡a disfrutar!\r\n'),
+(178362, 'Vodka Slime', 'https://www.thecocktaildb.com/images/media/drink/apex461643588115.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llene el vaso con hielo. Añada el vodka, el 7-up y termine con el zumo de lima.'),
+(178363, 'Vodka Lemon', 'https://www.thecocktaildb.com/images/media/drink/mql55h1643820632.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'El vodka limón se prepara directamente en un vaso highball o en un vaso grande: pon 6-7 cubitos de hielo en el vaso, vierte el vodka, la limonada y mezcla con una cuchara de bar. Por último, decore con una rodaja de limón y, si lo prefiere, añada unas hojas de menta. Tu vodka limón está listo para servir.'),
+(178364, 'Vodka Tonic', 'https://www.thecocktaildb.com/images/media/drink/9koz3f1643821062.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Lavar y cortar 1 gajo y 1 rodaja de lima o limón.\r\nLlenar un vaso con hielo fresco.\r\nVierta la dosis deseada de vodka y complete con la tónica.\r\nExprima la rodaja de lima en el vaso y decore con la rodaja.\r\nEso es todo, muy sencillo: ¡es la receta de la felicidad!'),
+(178365, 'Gin Tonic', 'https://www.thecocktaildb.com/images/media/drink/qcgz0t1643821443.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Llenar un vaso highball con hielo, verter la ginebra, completar con agua tónica y exprimir una rodaja de limón y decorar con una rodaja de limón.'),
+(178366, 'Gin Lemon', 'https://www.thecocktaildb.com/images/media/drink/6gdohq1681212476.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Para la preparación del gin lemon no necesitarás la coctelera. Llene el vaso con hielo, vierta la ginebra y la limonada por encima. Mezcle suavemente y decore con una rodaja de limón. Los que lo prefieran también pueden añadir unas hojas de menta. Su gin lemon está listo para servir.'),
+(178367, 'Ramos Gin Fizz', 'https://www.thecocktaildb.com/images/media/drink/967t911643844053.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Preparar todos los ingredientes en la encimera para poder trabajar bien y rápido, especialmente la nata y la clara de huevo.\r\n\r\nVierta todos los ingredientes en una coctelera.\r\n\r\nAgita enérgicamente durante 1 minuto: la nata y la clara de huevo deben mezclarse perfectamente, así que no tengas prisa.\r\n\r\nAhora abre la coctelera, pon un poco de hielo y agita durante 1-2 minutos. Depende de cuánto tiempo puedas resistir.\r\n\r\nVierte en un vaso highball, añade un chorrito de soda y adorna al gusto.\r\n\r\nEl Gin Fizz de Ramos se tomaba antiguamente como bebida tonificante o incluso como desayuno, pruébelo como aperitivo y después de cenar y descubrirá una pequeña joya hoy perdida.'),
+(178368, 'Planter’s Punch', 'https://www.thecocktaildb.com/images/media/drink/jn6o251643844541.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Exprimir una naranja y colar el zumo. Poner todos los ingredientes en una coctelera con hielo y agitar durante al menos 12 segundos. Cuélalo en un vaso highball y decóralo con un trozo de piña o la fruta que prefieras.'),
+(178369, 'Cocktail Horse’s Neck', 'https://www.thecocktaildb.com/images/media/drink/4vobt21643844913.jpg', 'Cocktail', 'Alcoholico', 'Highball glass', 'Lave y cepille un limón ecológico sin tratar y, a continuación, corte una espiral de piel de limón, utilizando una peladora de cítricos. Si es demasiado grande, córtela con un cuchillo afilado.\r\n\r\nPon un poco de hielo en un vaso alto, coloca la piel de limón dentro y vierte el coñac, añade la cerveza de jengibre y deja caer 2-3 gotas de Angostura. Es fácil de hacer, pero una vez que lo pruebes te encantará.'),
+(17837, 'Adam', 'https://www.thecocktaildb.com/images/media/drink/v0at4i1582478473.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En una coctelera llena hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Agitar bien. Colar en una copa de cóctel.'),
+(178370, 'Mauresque', 'https://www.thecocktaildb.com/images/media/drink/duwfa11686236556.jpg', 'Cocktail', 'Alcoholico', 'Collins glass', '1 - Vierta el Ricard (o pastis)\n2 - Vierta el sirope de orgeat\n3 - Por último, vierta el agua y añada cubitos de hielo a su gusto.\n\nAñada los cubitos de hielo al final, de lo contrario el sirope y el pastis no se mezclan bien.'),
+(178371, 'Old Cuban', 'https://www.thecocktaildb.com/images/media/drink/eo8gfx1699022995.jpg', 'Cocktail', 'Alcoholico', 'Cocktail glass', 'Agite con hielo un puñado de menta, 2 onzas de ron blanco, 1 onza de sirope de azúcar, 1 onza de zumo de lima y 2 chorritos de amargo de angostura. Cuele dos veces en un vaso y añada 2 onzas de prosecco.'),
+(17838, 'Adonis Cocktail', 'https://www.thecocktaildb.com/images/media/drink/xrvruq1472812030.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'Remover todos los ingredientes con hielo, colar el contenido en una copa de cóctel y servir.'),
+(17839, 'Affair', 'https://www.thecocktaildb.com/images/media/drink/h5za6y1582477994.jpg', 'Ordinary Drink', 'Alcoholico', 'Highball glass', 'Vierta el aguardiente, el zumo de naranja y el zumo de arándanos sobre hielo en un vaso alto. Añadir club soda y servir.'),
+(17840, 'Affinity', 'https://www.thecocktaildb.com/images/media/drink/wzdtnn1582477684.jpg', 'Ordinary Drink', 'Alcoholico', 'Cocktail glass', 'En un vaso mezclador lleno hasta la mitad con cubitos de hielo, mezcle todos los ingredientes. Remover bien. Colar en una copa de cóctel.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ingredientes`
+--
+
+CREATE TABLE `ingredientes` (
+	`id` int(11) NOT NULL,
+	`nombre` varchar(255) DEFAULT NULL,
+	`nombre_en` varchar(255) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ingredientes`
+--
+
+INSERT INTO `ingredientes` (`id`, `nombre`, `nombre_en`) VALUES
+(1, NULL, 'Vodka'),
+(2, NULL, 'Gin'),
+(3, NULL, 'Rum'),
+(4, NULL, 'Tequila'),
+(5, NULL, 'Scotch'),
+(6, NULL, 'Absolut Kurant'),
+(7, NULL, 'Absolut Peppar'),
+(8, NULL, 'Absolut Vodka'),
+(9, NULL, 'Advocaat'),
+(10, NULL, 'Aejo Rum'),
+(11, NULL, 'Aftershock'),
+(12, NULL, 'Agave Syrup'),
+(13, NULL, 'Ale'),
+(14, NULL, 'Allspice'),
+(16, NULL, 'Almond Flavoring'),
+(17, NULL, 'Almond'),
+(18, NULL, 'Amaretto'),
+(19, NULL, 'Angelica Root'),
+(20, NULL, 'Angostura Bitters'),
+(21, NULL, 'Anis'),
+(22, NULL, 'Anise'),
+(23, NULL, 'Anisette'),
+(24, NULL, 'Aperol'),
+(25, NULL, 'Apfelkorn'),
+(26, NULL, 'Apple Brandy'),
+(27, NULL, 'Apple Cider'),
+(28, NULL, 'Apple Juice'),
+(29, NULL, 'Apple Schnapps'),
+(30, NULL, 'Apple'),
+(31, NULL, 'Applejack'),
+(32, NULL, 'Apricot Brandy'),
+(33, NULL, 'Apricot Nectar'),
+(34, NULL, 'Apricot'),
+(35, NULL, 'Aquavit'),
+(36, NULL, 'Asafoetida'),
+(37, NULL, 'Añejo Rum'),
+(39, NULL, 'Bacardi Limon'),
+(40, NULL, 'Bacardi'),
+(43, NULL, 'Baileys Irish Cream'),
+(44, NULL, 'Banana Liqueur'),
+(45, NULL, 'Banana Rum'),
+(46, NULL, 'Banana Syrup'),
+(47, NULL, 'Banana'),
+(48, NULL, 'Barenjager'),
+(49, NULL, 'Basil'),
+(51, NULL, 'Beef Stock'),
+(52, NULL, 'Beer'),
+(53, NULL, 'Benedictine'),
+(54, NULL, 'Berries'),
+(55, NULL, 'Bitter lemon'),
+(56, NULL, 'Bitters'),
+(57, NULL, 'Black Pepper'),
+(58, NULL, 'Black Rum'),
+(59, NULL, 'Black Sambuca'),
+(60, NULL, 'Blackberries'),
+(61, NULL, 'Blackberry Brandy'),
+(62, NULL, 'Blackberry Schnapps'),
+(63, NULL, 'Blackcurrant Cordial'),
+(64, NULL, 'Blackcurrant Schnapps'),
+(65, NULL, 'Blackcurrant Squash'),
+(66, NULL, 'Blended Whiskey'),
+(67, NULL, 'Blue Curacao'),
+(68, NULL, 'Blue Maui'),
+(69, NULL, 'Blueberries'),
+(70, NULL, 'Blueberry Schnapps'),
+(71, NULL, 'Bourbon'),
+(74, NULL, 'Brandy'),
+(77, NULL, 'Brown Sugar'),
+(79, NULL, 'Butter'),
+(80, NULL, 'Butterscotch Schnapps'),
+(81, NULL, 'Cachaca'),
+(82, NULL, 'Calvados'),
+(83, NULL, 'Campari'),
+(84, NULL, 'Canadian Whisky'),
+(85, NULL, 'Candy'),
+(86, NULL, 'Cantaloupe'),
+(87, NULL, 'Caramel Coloring'),
+(88, NULL, 'Carbonated Soft Drink'),
+(89, NULL, 'Carbonated Water'),
+(90, NULL, 'Cardamom'),
+(93, NULL, 'Cayenne Pepper'),
+(94, NULL, 'Celery Salt'),
+(95, NULL, 'Celery'),
+(96, NULL, 'Chambord Raspberry Liqueur'),
+(97, NULL, 'Champagne'),
+(99, NULL, 'Cherries'),
+(100, NULL, 'Cherry Brandy'),
+(101, NULL, 'Cherry Cola'),
+(102, NULL, 'Cherry Grenadine'),
+(103, NULL, 'Cherry Heering'),
+(104, NULL, 'Cherry Juice'),
+(105, NULL, 'Cherry Liqueur'),
+(106, NULL, 'Cherry'),
+(112, NULL, 'Chocolate Ice-cream'),
+(113, NULL, 'Chocolate Liqueur'),
+(114, NULL, 'Chocolate Milk'),
+(115, NULL, 'Chocolate Syrup'),
+(116, NULL, 'Chocolate'),
+(120, NULL, 'Cider'),
+(121, NULL, 'Cinnamon Schnapps'),
+(122, NULL, 'Cinnamon'),
+(123, NULL, 'Citrus Vodka'),
+(124, NULL, 'Clamato Juice'),
+(126, NULL, 'Cloves'),
+(127, NULL, 'Club Soda'),
+(128, NULL, 'Coca-Cola'),
+(130, NULL, 'Cocktail Onion'),
+(131, NULL, 'Cocoa Powder'),
+(132, NULL, 'Coconut Cream'),
+(133, NULL, 'Coconut Liqueur'),
+(134, NULL, 'Coconut Milk'),
+(135, NULL, 'Coconut Rum'),
+(136, NULL, 'Coconut Syrup'),
+(137, NULL, 'Coffee Brandy'),
+(138, NULL, 'Coffee Liqueur'),
+(139, NULL, 'Coffee'),
+(141, NULL, 'Cognac'),
+(142, NULL, 'Cointreau'),
+(143, NULL, 'Cola'),
+(144, NULL, 'Cold Water'),
+(145, NULL, 'Condensed Milk'),
+(147, NULL, 'Coriander'),
+(149, NULL, 'Corn Syrup'),
+(151, NULL, 'Cornstarch'),
+(152, NULL, 'Corona'),
+(154, NULL, 'Cranberries'),
+(155, NULL, 'Cranberry Juice'),
+(156, NULL, 'Cranberry Liqueur'),
+(157, NULL, 'Cranberry Vodka'),
+(158, NULL, 'Cream of Coconut'),
+(159, NULL, 'Cream Sherry'),
+(160, NULL, 'Cream Soda'),
+(161, NULL, 'Cream'),
+(162, NULL, 'Creme De Almond'),
+(163, NULL, 'Creme De Banane'),
+(164, NULL, 'Creme De Cacao'),
+(165, NULL, 'Creme De Cassis'),
+(166, NULL, 'Creme De Noyaux'),
+(167, NULL, 'Creme Fraiche'),
+(168, NULL, 'Crown Royal'),
+(169, NULL, 'Crystal Light'),
+(171, NULL, 'Cucumber'),
+(172, NULL, 'Cumin Powder'),
+(173, NULL, 'Cumin Seed'),
+(174, NULL, 'Curacao'),
+(175, NULL, 'Cynar'),
+(176, NULL, 'Daiquiri Mix'),
+(177, NULL, 'Dark Chocolate'),
+(178, NULL, 'Dark Creme De Cacao'),
+(179, NULL, 'Dark Rum'),
+(180, NULL, 'Dark Soy Sauce'),
+(181, NULL, 'Demerara Sugar'),
+(186, NULL, 'Dr. Pepper'),
+(187, NULL, 'Drambuie'),
+(188, NULL, 'Dried Oregano'),
+(189, NULL, 'Dry Vermouth'),
+(190, NULL, 'Dubonnet Blanc'),
+(191, NULL, 'Dubonnet Rouge'),
+(192, NULL, 'Egg White'),
+(193, NULL, 'Egg Yolk'),
+(194, NULL, 'Egg'),
+(195, NULL, 'Eggnog'),
+(199, NULL, 'Erin Cream'),
+(200, NULL, 'Espresso'),
+(201, NULL, 'Everclear'),
+(203, NULL, 'Fanta'),
+(205, NULL, 'Fennel Seeds'),
+(207, NULL, 'Firewater'),
+(208, NULL, 'Flaked Almonds'),
+(210, NULL, 'Food Coloring'),
+(211, NULL, 'Forbidden Fruit'),
+(212, NULL, 'Frangelico'),
+(215, NULL, 'Fresca'),
+(216, NULL, 'Fresh Basil'),
+(217, NULL, 'Fresh Lemon Juice'),
+(220, NULL, 'Fruit Juice'),
+(221, NULL, 'Fruit Punch'),
+(222, NULL, 'Fruit'),
+(223, NULL, 'Galliano'),
+(224, NULL, 'Garlic Sauce'),
+(226, NULL, 'Gatorade'),
+(228, NULL, 'Ginger Ale'),
+(229, NULL, 'Ginger Beer'),
+(230, NULL, 'Ginger'),
+(231, NULL, 'Glycerine'),
+(232, NULL, 'Godiva Liqueur'),
+(233, NULL, 'Gold rum'),
+(234, NULL, 'Gold Tequila'),
+(235, NULL, 'Goldschlager'),
+(237, NULL, 'Grain Alcohol'),
+(238, NULL, 'Grand Marnier'),
+(239, NULL, 'Granulated Sugar'),
+(240, NULL, 'Grape juice'),
+(241, NULL, 'Grape soda'),
+(242, NULL, 'Grapefruit Juice'),
+(243, NULL, 'Grapes'),
+(245, NULL, 'Green Chartreuse'),
+(246, NULL, 'Green Creme de Menthe'),
+(247, NULL, 'Green Ginger Wine'),
+(248, NULL, 'Green Olives'),
+(250, NULL, 'Grenadine'),
+(252, NULL, 'Ground Ginger'),
+(253, NULL, 'Guava juice'),
+(254, NULL, 'Guinness stout'),
+(255, NULL, 'Guinness'),
+(256, NULL, 'Half-and-half'),
+(257, NULL, 'Hawaiian punch'),
+(258, NULL, 'Hazelnut liqueur'),
+(259, NULL, 'Heavy cream'),
+(260, NULL, 'Honey'),
+(261, NULL, 'Hooch'),
+(264, 'Chocolate Caliente ', 'Hot Chocolate'),
+(265, NULL, 'Hot Damn'),
+(266, NULL, 'Hot Sauce'),
+(268, NULL, 'Hpnotiq'),
+(269, NULL, 'Ice-Cream'),
+(270, 'Hielo', 'Ice'),
+(271, NULL, 'Iced tea'),
+(272, NULL, 'Irish cream'),
+(273, NULL, 'Irish Whiskey'),
+(275, NULL, 'Jack Daniels'),
+(276, NULL, 'Jello'),
+(277, NULL, 'Jelly'),
+(278, NULL, 'Jagermeister'),
+(279, NULL, 'Jim Beam'),
+(280, NULL, 'Johnnie Walker'),
+(282, NULL, 'Kahlua'),
+(283, NULL, 'Key Largo Schnapps'),
+(284, NULL, 'Kirschwasser'),
+(285, NULL, 'Kiwi liqueur'),
+(286, NULL, 'Kiwi'),
+(287, NULL, 'Kool-Aid'),
+(288, NULL, 'Kummel'),
+(289, NULL, 'Lager'),
+(293, 'Zumo de limón ', 'Lemon Juice'),
+(294, NULL, 'Lemon Peel'),
+(295, NULL, 'Lemon soda'),
+(296, NULL, 'Lemon vodka'),
+(297, NULL, 'Lemon-lime soda'),
+(298, NULL, 'lemon-lime'),
+(299, NULL, 'lemon'),
+(300, NULL, 'Lemonade'),
+(303, NULL, 'Licorice Root'),
+(304, NULL, 'Light Cream'),
+(305, NULL, 'Light Rum'),
+(306, NULL, 'Lillet'),
+(307, NULL, 'Lime juice cordial'),
+(308, NULL, 'Lime Juice'),
+(309, NULL, 'Lime liqueur'),
+(310, NULL, 'Lime Peel'),
+(311, NULL, 'Lime vodka'),
+(312, NULL, 'Lime'),
+(313, NULL, 'Limeade'),
+(314, NULL, 'Madeira'),
+(315, NULL, 'Malibu Rum'),
+(317, NULL, 'Mandarin'),
+(318, NULL, 'Mandarine napoleon'),
+(319, NULL, 'Mango'),
+(320, NULL, 'Maple syrup'),
+(321, NULL, 'Maraschino cherry juice'),
+(322, NULL, 'Maraschino Cherry'),
+(323, NULL, 'Maraschino Liqueur'),
+(324, NULL, 'Margarita mix'),
+(325, NULL, 'Marjoram leaves'),
+(326, NULL, 'Marshmallows'),
+(327, NULL, 'Maui'),
+(328, NULL, 'Melon Liqueur'),
+(329, NULL, 'Melon Vodka'),
+(330, NULL, 'Mezcal'),
+(331, NULL, 'Midori Melon Liqueur'),
+(332, NULL, 'Midori'),
+(333, NULL, 'Milk'),
+(336, NULL, 'Mint syrup'),
+(337, NULL, 'Mint'),
+(338, NULL, 'Mountain Dew'),
+(344, NULL, 'Nutmeg'),
+(346, NULL, 'Olive Oil'),
+(347, NULL, 'Olive'),
+(348, NULL, 'Onion'),
+(350, NULL, 'Orange Bitters'),
+(351, NULL, 'Orange Curacao'),
+(352, NULL, 'Orange Juice'),
+(353, NULL, 'Orange liqueur'),
+(354, NULL, 'Orange Peel'),
+(355, NULL, 'Orange rum'),
+(356, NULL, 'Orange Soda'),
+(357, NULL, 'Orange spiral'),
+(358, NULL, 'Orange vodka'),
+(359, NULL, 'Orange'),
+(361, NULL, 'Oreo cookie'),
+(362, NULL, 'Orgeat Syrup'),
+(363, NULL, 'Ouzo'),
+(364, NULL, 'Oyster Sauce'),
+(365, NULL, 'Papaya juice'),
+(366, NULL, 'Papaya'),
+(367, NULL, 'Parfait amour'),
+(372, NULL, 'Passion fruit juice'),
+(373, NULL, 'Passion fruit syrup'),
+(374, NULL, 'Passoa'),
+(375, NULL, 'Peach brandy'),
+(376, NULL, 'Peach juice'),
+(377, NULL, 'Peach liqueur'),
+(378, NULL, 'Peach Nectar'),
+(379, NULL, 'Peach Schnapps'),
+(380, NULL, 'Peach Vodka'),
+(381, NULL, 'Peach'),
+(382, NULL, 'Peachtree schnapps'),
+(383, NULL, 'Peanut Oil'),
+(386, NULL, 'Pepper'),
+(387, NULL, 'Peppermint extract'),
+(388, NULL, 'Peppermint Schnapps'),
+(389, NULL, 'Pepsi Cola'),
+(390, NULL, 'Pernod'),
+(391, NULL, 'Peychaud bitters'),
+(392, NULL, 'Pina colada mix'),
+(393, NULL, 'Pineapple Juice'),
+(394, NULL, 'Pineapple rum'),
+(395, NULL, 'Pineapple vodka'),
+(396, NULL, 'Pineapple-orange-banana juice'),
+(397, NULL, 'Pineapple'),
+(398, NULL, 'Pink lemonade'),
+(399, NULL, 'Pisang Ambon'),
+(400, NULL, 'Pisco'),
+(402, NULL, 'Plain Chocolate'),
+(403, NULL, 'Plain Flour'),
+(405, NULL, 'Plums'),
+(406, NULL, 'Port'),
+(409, NULL, 'Powdered Sugar'),
+(411, NULL, 'Purple passion'),
+(412, NULL, 'Raisins'),
+(413, NULL, 'Raspberry cordial'),
+(414, NULL, 'Raspberry Jam'),
+(415, NULL, 'Raspberry Juice'),
+(416, NULL, 'Raspberry Liqueur'),
+(417, NULL, 'Raspberry schnapps'),
+(418, NULL, 'Raspberry syrup'),
+(419, NULL, 'Raspberry Vodka'),
+(421, NULL, 'Red Chile Flakes'),
+(422, NULL, 'Red Chili Flakes'),
+(423, NULL, 'Red Hot Chili Flakes'),
+(425, NULL, 'Red Wine'),
+(426, NULL, 'Rhubarb'),
+(427, NULL, 'Ricard'),
+(429, NULL, 'Rock Salt'),
+(430, NULL, 'Root beer schnapps'),
+(431, NULL, 'Root beer'),
+(432, NULL, 'Roses sweetened lime juice'),
+(433, NULL, 'Rosewater'),
+(435, NULL, 'Rumple Minze'),
+(436, NULL, 'Rye Whiskey'),
+(437, NULL, 'Sake'),
+(439, NULL, 'Salt'),
+(440, NULL, 'Sambuca'),
+(441, NULL, 'Sarsaparilla'),
+(442, NULL, 'Schnapps'),
+(443, NULL, 'Schweppes Lemon'),
+(444, NULL, 'Schweppes Russchian'),
+(448, NULL, 'Sherbet'),
+(449, NULL, 'Sherry'),
+(452, NULL, 'Sirup of roses'),
+(453, NULL, 'Sloe Gin'),
+(455, NULL, 'Soda Water'),
+(456, NULL, 'Sour Apple Pucker'),
+(457, NULL, 'Sour Mix'),
+(458, NULL, 'Southern Comfort'),
+(459, NULL, 'Soy Milk'),
+(460, NULL, 'Soy Sauce'),
+(461, NULL, 'Soya Milk'),
+(462, NULL, 'Soya Sauce'),
+(464, NULL, 'Spiced Rum'),
+(466, NULL, 'Sprite'),
+(467, NULL, 'Squeezed Orange'),
+(468, NULL, 'Squirt'),
+(470, NULL, 'Strawberries'),
+(471, NULL, 'Strawberry juice'),
+(472, NULL, 'Strawberry liqueur'),
+(473, NULL, 'Strawberry Schnapps'),
+(474, NULL, 'Strawberry syrup'),
+(475, NULL, 'Sugar Syrup'),
+(476, NULL, 'Sugar'),
+(477, NULL, 'Sunny delight'),
+(478, NULL, 'Surge'),
+(479, NULL, 'Swedish punsch'),
+(480, NULL, 'Sweet and Sour'),
+(481, NULL, 'Sweet Cream'),
+(482, NULL, 'Sweet Vermouth'),
+(483, NULL, 'Tabasco Sauce'),
+(484, NULL, 'Tang'),
+(485, NULL, 'Tawny port'),
+(486, NULL, 'Tea'),
+(487, NULL, 'Tennessee whiskey'),
+(488, NULL, 'Tequila rose'),
+(490, NULL, 'Tia Maria'),
+(492, NULL, 'Tomato Juice'),
+(494, NULL, 'Tomato'),
+(497, NULL, 'Tonic Water'),
+(498, NULL, 'Triple Sec'),
+(499, NULL, 'Tropicana'),
+(500, NULL, 'Tuaca'),
+(502, NULL, 'Vanilla extract'),
+(503, NULL, 'Vanilla Ice-Cream'),
+(504, NULL, 'Vanilla liqueur'),
+(505, NULL, 'Vanilla schnapps'),
+(506, NULL, 'Vanilla syrup'),
+(507, NULL, 'Vanilla vodka'),
+(508, NULL, 'Vanilla'),
+(510, NULL, 'Vermouth'),
+(511, NULL, 'Vinegar'),
+(513, NULL, 'Water'),
+(514, NULL, 'Watermelon schnapps'),
+(515, NULL, 'Whipped Cream'),
+(516, NULL, 'Whipping Cream'),
+(519, NULL, 'White chocolate liqueur'),
+(520, NULL, 'White Creme de Menthe'),
+(521, NULL, 'White grape juice'),
+(522, NULL, 'White port'),
+(523, NULL, 'White Rum'),
+(524, NULL, 'White Vinegar'),
+(525, NULL, 'White Wine'),
+(526, NULL, 'Wild Turkey'),
+(527, NULL, 'Wildberry schnapps'),
+(528, NULL, 'Wine'),
+(529, NULL, 'Worcestershire Sauce'),
+(530, NULL, 'Wormwood'),
+(531, NULL, 'Yeast'),
+(532, NULL, 'Yellow Chartreuse'),
+(533, NULL, 'Yoghurt'),
+(534, NULL, 'Yukon Jack'),
+(535, NULL, 'Zima'),
+(537, NULL, 'Caramel Sauce'),
+(538, NULL, 'Chocolate Sauce'),
+(539, NULL, 'Lillet Blanc'),
+(540, NULL, 'Peach Bitters'),
+(541, NULL, 'Mini-snickers bars'),
+(542, NULL, 'Prosecco'),
+(543, NULL, 'Salted Chocolate'),
+(544, NULL, 'Martini Rosso'),
+(545, NULL, 'Martini Bianco'),
+(546, NULL, 'Martini Extra Dry'),
+(547, NULL, 'Fresh Lime Juice'),
+(548, NULL, 'Fresh Mint'),
+(549, NULL, 'Rosemary'),
+(550, NULL, 'Habanero Peppers'),
+(551, NULL, 'Ilegal Joven mezcal'),
+(552, NULL, 'Elderflower cordial'),
+(553, NULL, 'Rosso Vermouth'),
+(554, NULL, 'Creme de Violette'),
+(555, NULL, 'Cocchi Americano'),
+(556, NULL, 'White Vermouth'),
+(557, NULL, 'Dry Curacao'),
+(558, NULL, 'Nocino'),
+(559, NULL, 'Averna'),
+(560, NULL, 'Ramazzotti'),
+(561, NULL, 'Fernet-Branca'),
+(562, NULL, 'Allspice Dram'),
+(563, NULL, 'Falernum'),
+(564, NULL, 'Singani'),
+(565, NULL, 'Arrack'),
+(566, NULL, 'Blackstrap rum'),
+(567, NULL, 'Ginger Syrup'),
+(568, NULL, 'Honey syrup'),
+(569, NULL, 'Blended Scotch'),
+(570, NULL, 'Islay single malt Scotch'),
+(571, NULL, '151 proof rum'),
+(572, NULL, '7-up'),
+(573, NULL, 'Absinthe'),
+(574, NULL, 'Absolut citron'),
+(575, NULL, 'Creme de Mure'),
+(576, NULL, 'Olive Brine'),
+(577, NULL, 'Pineapple Syrup'),
+(578, NULL, 'St. Germain'),
+(579, NULL, 'Lavender'),
+(600, NULL, 'Whiskey'),
+(601, NULL, 'Whisky'),
+(602, NULL, 'Pomegranate juice'),
+(603, NULL, 'Watermelon'),
+(604, NULL, 'Chareau'),
+(605, NULL, 'Cinnamon Whisky'),
+(606, NULL, 'Red Bull'),
+(607, NULL, 'Diet Coke'),
+(608, NULL, 'Rosemary Syrup'),
+(609, NULL, 'Figs'),
+(610, NULL, 'Thyme'),
+(611, NULL, 'Orange Slice'),
+(612, NULL, 'Blood Orange'),
+(613, NULL, 'Amaro Montenegro'),
+(614, NULL, 'Ruby Port'),
+(615, NULL, 'Rose'),
+(616, NULL, 'Tajin');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tiene`
+--
+
+CREATE TABLE `tiene` (
+	`coctel` int(11) NOT NULL,
+	`ingrediente` int(11) NOT NULL,
+	`medida` varchar(100) DEFAULT NULL,
+	`medida_en` varchar(100) DEFAULT NULL,
+	PRIMARY KEY (`coctel`, `ingrediente`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tiene`
+--
+
+INSERT INTO `tiene` (`coctel`, `ingrediente`, `medida`, `medida_en`) VALUES
+(11000, 305, NULL, '2-3 oz '),
+(11000, 312, NULL, 'Juice of 1 '),
+(11000, 476, NULL, '2 tsp '),
+(11000, 337, NULL, '2-4 '),
+(11000, 455, NULL, NULL),
+(11001, 71, NULL, '4.5 cL'),
+(11001, 20, NULL, '2 dashes'),
+(11001, 476, NULL, '1 cube'),
+(11001, 513, NULL, 'dash'),
+(11002, 1, NULL, '1/2 oz '),
+(11002, 305, NULL, '1/2 oz '),
+(11002, 2, NULL, '1/2 oz '),
+(11002, 4, NULL, '1/2 oz '),
+(11002, 299, NULL, 'Juice of 1/2 '),
+(11002, 128, NULL, '1 splash '),
+(11003, 2, NULL, '1 oz '),
+(11003, 83, NULL, '1 oz '),
+(11003, 482, NULL, '1 oz '),
+(11004, 66, NULL, '2 oz '),
+(11004, 299, NULL, 'Juice of 1/2 '),
+(11004, 409, NULL, '1/2 tsp '),
+(11004, 106, NULL, '1 '),
+(11005, 2, NULL, '1 2/3 oz '),
+(11005, 189, NULL, '1/3 oz '),
+(11005, 347, NULL, '1 '),
+(11006, 305, NULL, '1 1/2 oz '),
+(11006, 312, NULL, 'Juice of 1/2 '),
+(11006, 409, NULL, '1 tsp '),
+(11007, 4, NULL, '1 1/2 oz '),
+(11007, 498, NULL, '1/2 oz '),
+(11007, 308, NULL, '1 oz '),
+(11007, 439, NULL, NULL),
+(11008, 482, NULL, '3/4 oz '),
+(11008, 71, NULL, '2 1/2 oz Blended '),
+(11008, 20, NULL, 'dash '),
+(11008, 270, NULL, '2 or 3 '),
+(11008, 322, NULL, '1 '),
+(11008, 354, NULL, '1 twist of '),
+(11009, 1, NULL, '2 oz '),
+(11009, 308, NULL, '2 oz '),
+(11009, 228, NULL, '8 oz '),
+(11010, 32, NULL, '1 oz '),
+(11010, 498, NULL, '1 oz '),
+(11010, 312, NULL, 'Juice of 1 '),
+(11011, 498, NULL, '1 oz '),
+(11011, 32, NULL, '1 oz '),
+(11011, 293, NULL, '1/2 tsp '),
+(11012, 458, NULL, '1 oz '),
+(11012, 18, NULL, '1 oz '),
+(11012, 453, NULL, '1/2 oz '),
+(11012, 293, NULL, '1 dash '),
+(11013, 350, NULL, '2 dashes '),
+(11013, 2, NULL, '1 1/2 oz '),
+(11013, 532, NULL, '3/4 oz '),
+(11013, 294, NULL, 'Twist of '),
+(11014, 2, NULL, '1/2 oz '),
+(11014, 164, NULL, '1/2 oz white '),
+(11014, 304, NULL, '2 oz '),
+(11014, 344, NULL, NULL),
+(11016, 74, NULL, '1 oz '),
+(11016, 164, NULL, '1 oz white '),
+(11016, 304, NULL, '1 oz '),
+(11016, 344, NULL, NULL),
+(11019, 296, NULL, '1 1/2 oz '),
+(11019, 498, NULL, '1 dash '),
+(11019, 393, NULL, '1 tblsp '),
+(11020, 66, NULL, '1 1/2 oz '),
+(11020, 189, NULL, '1 oz '),
+(11020, 393, NULL, '1 oz '),
+(11021, 189, NULL, '1 oz '),
+(11021, 71, NULL, '1 oz '),
+(11021, 61, NULL, '1 1/2 tsp '),
+(11021, 293, NULL, '1 1/2 tsp '),
+(11021, 294, NULL, '1 twist of '),
+(11022, 189, NULL, '1 oz '),
+(11022, 2, NULL, '1 oz '),
+(11022, 288, NULL, '1/2 tsp '),
+(11023, 179, NULL, '2 oz '),
+(11023, 282, NULL, '1 oz '),
+(11023, 192, NULL, '1 '),
+(11024, 18, NULL, '1/2 oz '),
+(11024, 164, NULL, '1/2 oz white '),
+(11024, 304, NULL, '2 oz '),
+(11025, 18, NULL, '1 1/2 oz '),
+(11025, 304, NULL, '1 1/2 oz '),
+(11026, 18, NULL, '1 1/2 oz '),
+(11026, 312, NULL, '1 '),
+(11027, 18, NULL, '1 1/2 oz '),
+(11027, 308, NULL, '1/2 oz '),
+(11027, 127, NULL, NULL),
+(11028, 18, NULL, '1 1/2 oz '),
+(11028, 520, NULL, '3/4 oz '),
+(11029, 486, NULL, '6 oz hot '),
+(11029, 18, NULL, '2 oz '),
+(11029, 515, NULL, 'Chilled '),
+(11034, 32, NULL, '1/2 oz '),
+(11034, 26, NULL, '1/2 oz '),
+(11034, 2, NULL, '1 oz '),
+(11046, 31, NULL, '1 oz '),
+(11046, 498, NULL, '1 oz '),
+(11046, 293, NULL, '1 oz '),
+(11050, 305, NULL, '1 1/2 oz '),
+(11050, 32, NULL, '1 oz '),
+(11050, 498, NULL, '1 tsp '),
+(11050, 293, NULL, '1/2 oz '),
+(11050, 192, NULL, '1 '),
+(11050, 359, NULL, '1 '),
+(11052, 2, NULL, '2 oz '),
+(11052, 528, NULL, '1 oz Green Ginger '),
+(11052, 53, NULL, '1 tsp '),
+(11052, 312, NULL, '1 '),
+(11053, 97, NULL, 'Chilled '),
+(11053, 246, NULL, '1 tsp '),
+(11054, 2, NULL, '2 oz '),
+(11054, 238, NULL, '1/2 oz '),
+(11054, 293, NULL, '2 tsp '),
+(11054, 294, NULL, '1 twist of '),
+(11055, 482, NULL, '1 1/2 tsp '),
+(11055, 2, NULL, '1 1/2 oz '),
+(11055, 56, NULL, '2 dashes '),
+(11060, 5, NULL, '1 1/2 oz '),
+(11060, 482, NULL, '1/2 oz '),
+(11060, 189, NULL, '1/2 oz '),
+(11060, 56, NULL, '2 dashes '),
+(11064, 305, NULL, '1 1/2 oz '),
+(11064, 498, NULL, '1 tblsp '),
+(11064, 47, NULL, '1 '),
+(11064, 308, NULL, '1 1/2 oz '),
+(11064, 476, NULL, '1 tsp '),
+(11064, 106, NULL, '1 '),
+(11084, 74, NULL, '3/4 oz '),
+(11084, 2, NULL, '3/4 oz '),
+(11084, 189, NULL, '3/4 oz '),
+(11084, 89, NULL, NULL),
+(11084, 294, NULL, NULL),
+(11102, 138, NULL, '3/4 oz '),
+(11102, 1, NULL, '1 1/2 oz '),
+(11106, 482, NULL, '1 oz '),
+(11106, 453, NULL, '1 1/2 oz '),
+(11106, 294, NULL, '1 twist of '),
+(11112, 4, NULL, '1 oz '),
+(11112, 492, NULL, '2 oz '),
+(11112, 293, NULL, '1 dash '),
+(11112, 483, NULL, '1 dash '),
+(11112, 94, NULL, '1 dash '),
+(11112, 299, NULL, '1 slice '),
+(11113, 1, NULL, '1 1/2 oz '),
+(11113, 492, NULL, '3 oz '),
+(11113, 293, NULL, '1 dash '),
+(11113, 529, NULL, '1/2 tsp '),
+(11113, 483, NULL, '2-3 drops '),
+(11113, 312, NULL, '1 wedge '),
+(11117, 1, NULL, '1 oz '),
+(11117, 67, NULL, '1 oz '),
+(11117, 300, NULL, NULL),
+(11117, 106, NULL, NULL),
+(11118, 4, NULL, '1 1/2 oz '),
+(11118, 67, NULL, '1 oz '),
+(11118, 308, NULL, '1 oz '),
+(11118, 439, NULL, 'Coarse '),
+(11119, 37, NULL, '1 1/2 oz '),
+(11119, 490, NULL, '1/2 oz '),
+(11119, 1, NULL, '1/2 oz '),
+(11119, 352, NULL, '1 oz '),
+(11119, 293, NULL, '1 tsp '),
+(11120, 2, NULL, '1 1/2 oz '),
+(11120, 498, NULL, '1/2 oz '),
+(11120, 67, NULL, '1/2 oz '),
+(11120, 56, NULL, '2 dashes '),
+(11120, 322, NULL, '1 '),
+(11120, 294, NULL, '1 twist of '),
+(11121, 482, NULL, '1 1/2 oz '),
+(11121, 5, NULL, '1 1/2 oz '),
+(11121, 53, NULL, '1 1/4 tsp '),
+(11121, 294, NULL, '1 twist of '),
+(11124, 2, NULL, '2 oz '),
+(11124, 189, NULL, '1/2 oz '),
+(11124, 56, NULL, '2 dashes '),
+(11124, 323, NULL, '1/2 tsp '),
+(11124, 322, NULL, '1 '),
+(11128, 305, NULL, '3/4 oz '),
+(11128, 74, NULL, '3/4 oz '),
+(11128, 498, NULL, '3/4 oz '),
+(11128, 312, NULL, 'Juice of 1/2 '),
+(11129, 66, NULL, '2 oz '),
+(11129, 299, NULL, 'Juice of 1/2 '),
+(11129, 409, NULL, '1 tsp '),
+(11129, 192, NULL, '1 '),
+(11129, 106, NULL, '1 '),
+(11145, 56, NULL, '3 dashes '),
+(11145, 513, NULL, '1 tsp '),
+(11145, 476, NULL, '1 '),
+(11145, 71, NULL, '3 oz '),
+(11145, 359, NULL, '1 '),
+(11145, 322, NULL, '1 '),
+(11146, 476, NULL, '1 tsp superfine '),
+(11146, 513, NULL, '2 tsp '),
+(11146, 293, NULL, '1 oz '),
+(11146, 71, NULL, '2 oz '),
+(11146, 294, NULL, '1 twist of '),
+(11147, 71, NULL, '2 oz '),
+(11147, 293, NULL, '1 oz '),
+(11147, 476, NULL, '1/2 tsp superfine '),
+(11147, 359, NULL, '1 '),
+(11147, 322, NULL, '1 '),
+(11149, 2, NULL, '1 1/2 oz '),
+(11149, 498, NULL, '1 oz '),
+(11149, 293, NULL, '1 tsp '),
+(11149, 250, NULL, '1/2 tsp '),
+(11149, 192, NULL, '1 '),
+(11157, 476, NULL, '1 tsp superfine '),
+(11157, 127, NULL, '3 oz '),
+(11157, 299, NULL, '1 '),
+(11157, 74, NULL, '2 oz '),
+(11157, 322, NULL, '1 '),
+(11157, 359, NULL, '1 '),
+(11164, 74, NULL, '2 oz '),
+(11164, 194, NULL, '1 whole '),
+(11164, 476, NULL, '1 tsp superfine '),
+(11164, 304, NULL, '1/2 oz '),
+(11164, 344, NULL, '1/8 tsp grated '),
+(11170, 74, NULL, '2 oz '),
+(11170, 299, NULL, 'Juice of 1/2 '),
+(11170, 409, NULL, '1/2 tsp '),
+(11170, 106, NULL, '1 '),
+(11202, 476, NULL, '2 tsp'),
+(11202, 312, NULL, '1 '),
+(11202, 81, NULL, '2 1/2 oz '),
+(11205, 66, NULL, '2 oz '),
+(11205, 299, NULL, 'Juice of 1 '),
+(11205, 312, NULL, 'Juice of 1 '),
+(11205, 409, NULL, '1 tblsp'),
+(11205, 250, NULL, '1/4 tsp'),
+(11205, 89, NULL, NULL),
+(11222, 305, NULL, '2 oz '),
+(11222, 498, NULL, '1 1/2 tsp '),
+(11222, 308, NULL, '1 1/2 tsp '),
+(11222, 323, NULL, '1 1/2 tsp '),
+(11224, 2, NULL, '2 oz '),
+(11224, 293, NULL, '1/2 oz '),
+(11224, 323, NULL, '1 tsp '),
+(11224, 350, NULL, '1 dash '),
+(11224, 193, NULL, '1 '),
+(11227, 97, NULL, 'Chilled '),
+(11227, 476, NULL, '1 piece '),
+(11227, 56, NULL, '2 dashes '),
+(11227, 294, NULL, '1 twist of '),
+(11227, 141, NULL, '1 dash'),
+(11239, 305, NULL, '1 1/4 oz '),
+(11239, 100, NULL, '1 1/2 tsp '),
+(11239, 304, NULL, '1 tblsp '),
+(11242, 305, NULL, '1 oz '),
+(11242, 406, NULL, '1 oz '),
+(11242, 299, NULL, 'Juice of 1/2 '),
+(11242, 409, NULL, '1 tsp '),
+(11242, 192, NULL, '1 '),
+(11242, 89, NULL, NULL),
+(11243, 282, NULL, '1 oz '),
+(11243, 1, NULL, '1/2 oz '),
+(11243, 112, NULL, '5 oz '),
+(11251, 74, NULL, '2 oz '),
+(11251, 498, NULL, '1/2 oz '),
+(11251, 293, NULL, '1 tblsp '),
+(11255, 482, NULL, '1 oz '),
+(11255, 453, NULL, '1/2 oz '),
+(11255, 528, NULL, '1/2 oz Muscatel '),
+(11288, 305, NULL, '2 oz '),
+(11288, 312, NULL, 'Juice of 1/2 '),
+(11288, 128, NULL, NULL),
+(11320, 2, NULL, '1 1/2 oz '),
+(11320, 228, NULL, '4 oz '),
+(11320, 312, NULL, '1 '),
+(11324, 5, NULL, '2 1/2 oz '),
+(11324, 189, NULL, '1 1/2 tsp '),
+(11324, 294, NULL, '1 twist of '),
+(11326, 191, NULL, '1 1/2 oz '),
+(11326, 2, NULL, '3/4 oz '),
+(11326, 56, NULL, '1 dash '),
+(11326, 294, NULL, '1 twist of '),
+(11338, 74, NULL, '3/4 oz '),
+(11338, 2, NULL, '3/4 oz '),
+(11338, 482, NULL, '3/4 oz '),
+(11338, 89, NULL, NULL),
+(11338, 294, NULL, NULL),
+(11339, 32, NULL, '3/4 oz '),
+(11339, 2, NULL, '1 1/2 oz '),
+(11339, 189, NULL, '3/4 oz '),
+(11339, 250, NULL, '1 tsp '),
+(11339, 293, NULL, '1/4 tsp '),
+(11339, 106, NULL, '1 '),
+(11368, 2, NULL, '2 oz '),
+(11368, 498, NULL, '1/2 oz '),
+(11369, 5, NULL, '1 oz '),
+(11369, 482, NULL, '1 oz '),
+(11369, 56, NULL, '1 dash '),
+(11369, 475, NULL, '1/4 tsp '),
+(11375, 18, NULL, '1/2 oz '),
+(11375, 164, NULL, '1/2 oz '),
+(11375, 304, NULL, '2 oz '),
+(11390, 305, NULL, '2 oz '),
+(11390, 308, NULL, '1 tblsp '),
+(11390, 337, NULL, '6 '),
+(11390, 476, NULL, '1 tsp '),
+(11391, 305, NULL, '1 1/2 oz '),
+(11391, 397, NULL, '4 chunks '),
+(11391, 308, NULL, '1 tblsp '),
+(11391, 476, NULL, '1/2 tsp '),
+(11396, 2, NULL, '1 1/2 oz '),
+(11396, 74, NULL, '1 oz '),
+(11396, 482, NULL, '1 oz '),
+(11396, 127, NULL, '1 oz '),
+(11403, 2, NULL, '2 oz '),
+(11403, 497, NULL, '5 oz '),
+(11403, 312, NULL, '1 '),
+(11407, 2, NULL, '2 oz '),
+(11407, 89, NULL, NULL),
+(11407, 409, NULL, NULL),
+(11407, 357, NULL, NULL),
+(11407, 294, NULL, NULL),
+(11408, 2, NULL, '2 oz '),
+(11408, 293, NULL, '1 oz '),
+(11408, 476, NULL, '1/2 tsp superfine '),
+(11408, 250, NULL, '1/2 tsp '),
+(11408, 322, NULL, '1 '),
+(11408, 359, NULL, '1 '),
+(11410, 2, NULL, '2 oz '),
+(11410, 299, NULL, 'Juice of 1/2 '),
+(11410, 409, NULL, '1 tsp '),
+(11410, 89, NULL, NULL),
+(11415, 2, NULL, '2 oz '),
+(11415, 299, NULL, 'Juice of 1/2 '),
+(11415, 409, NULL, '1 tsp '),
+(11415, 513, NULL, '1 tsp '),
+(11415, 354, NULL, 'Twist of '),
+(11416, 2, NULL, '2 oz '),
+(11416, 89, NULL, '1 oz '),
+(11416, 476, NULL, '1 cube '),
+(11416, 337, NULL, '4 '),
+(11416, 359, NULL, '1 slice '),
+(11416, 106, NULL, '1 '),
+(11418, 2, NULL, '1 1/2 oz '),
+(11418, 250, NULL, '1 tsp '),
+(11418, 409, NULL, '1 tblsp '),
+(11418, 397, NULL, '3 chunks'),
+(11418, 470, NULL, '2 '),
+(11418, 89, NULL, NULL),
+(11419, 308, NULL, '1 1/2 oz '),
+(11419, 476, NULL, '1 tsp superfine '),
+(11419, 2, NULL, '2 oz '),
+(11419, 56, NULL, '1 dash '),
+(11419, 127, NULL, '3 oz '),
+(11420, 2, NULL, '2 oz '),
+(11420, 513, NULL, '2 tsp '),
+(11420, 409, NULL, '1/2 tsp '),
+(11420, 294, NULL, '1 twist of '),
+(11423, 5, NULL, '1 1/2 oz '),
+(11423, 18, NULL, '3/4 oz '),
+(11424, 1, NULL, '1 1/2 oz '),
+(11424, 18, NULL, '3/4 oz '),
+(11433, 2, NULL, '1 1/2 oz '),
+(11433, 498, NULL, '1 oz '),
+(11433, 393, NULL, '1 oz '),
+(11433, 250, NULL, '1/2 tsp '),
+(11433, 397, NULL, '1 '),
+(11462, 1, NULL, '1 oz '),
+(11462, 223, NULL, '1/2 oz '),
+(11462, 352, NULL, '4 oz '),
+(11470, 305, NULL, '1 oz '),
+(11470, 393, NULL, '1 oz '),
+(11470, 293, NULL, '1 tsp '),
+(11472, 2, NULL, '2 oz '),
+(11472, 498, NULL, '1/2 oz '),
+(11472, 393, NULL, '1 tblsp '),
+(11476, 5, NULL, '1 1/2 oz '),
+(11476, 482, NULL, '3/4 oz '),
+(11476, 350, NULL, '2 dashes '),
+(11476, 347, NULL, '1 '),
+(11524, 305, NULL, '1/2 oz '),
+(11524, 66, NULL, '1 1/2 oz '),
+(11524, 299, NULL, 'Juice of 1/2 '),
+(11524, 409, NULL, '1 tsp '),
+(11524, 89, NULL, NULL),
+(11528, 273, NULL, '1 oz '),
+(11528, 375, NULL, '1/2 oz '),
+(11528, 352, NULL, '1 oz '),
+(11528, 480, NULL, '1 oz '),
+(11528, 359, NULL, '1 slice '),
+(11528, 106, NULL, '1 '),
+(11542, 26, NULL, '1 1/2 oz '),
+(11542, 250, NULL, '1 tsp '),
+(11542, 312, NULL, 'Juice of 1/2 '),
+(11558, 66, NULL, '1 1/2 oz '),
+(11558, 299, NULL, 'Juice of 1/2 '),
+(11558, 409, NULL, '1 tsp '),
+(11558, 406, NULL, '1 tblsp'),
+(11558, 192, NULL, '1 '),
+(11558, 89, NULL, NULL),
+(11566, 2, NULL, '1 1/2 oz '),
+(11566, 245, NULL, '1/2 oz '),
+(11566, 532, NULL, '1/2 oz '),
+(11580, 71, NULL, '2 oz '),
+(11580, 293, NULL, '1 oz '),
+(11580, 476, NULL, '1 tsp superfine '),
+(11580, 127, NULL, '3 oz '),
+(11580, 322, NULL, '1 '),
+(11580, 359, NULL, '1 '),
+(11600, 1, NULL, '1 oz '),
+(11600, 498, NULL, '1 oz '),
+(11600, 308, NULL, '1 oz '),
+(11604, 71, NULL, '3 oz '),
+(11604, 53, NULL, '1/2 oz '),
+(11604, 294, NULL, '1 twist of '),
+(11634, 2, NULL, '2 oz '),
+(11634, 304, NULL, '2 tsp '),
+(11634, 409, NULL, '1 tsp '),
+(11634, 299, NULL, 'Juice of 1/2'),
+(11634, 192, NULL, '1 '),
+(11634, 89, NULL, NULL),
+(11658, 5, NULL, '2 oz '),
+(11658, 187, NULL, '1/2 oz '),
+(11658, 189, NULL, '1/2 oz '),
+(11658, 294, NULL, '1 twist of '),
+(11662, 2, NULL, '1 1/2 oz '),
+(11662, 323, NULL, '1/2 oz '),
+(11662, 350, NULL, '2 dashes '),
+(11664, 482, NULL, '3/4 oz '),
+(11664, 2, NULL, '1 1/2 oz '),
+(11666, 89, NULL, NULL),
+(11666, 2, NULL, NULL),
+(11666, 189, NULL, NULL),
+(11666, 409, NULL, NULL),
+(11666, 357, NULL, NULL),
+(11666, 294, NULL, NULL),
+(11670, 179, NULL, '1 1/2 oz '),
+(11670, 490, NULL, '1/2 oz '),
+(11690, 305, NULL, '1 oz '),
+(11690, 362, NULL, '1/2 oz '),
+(11690, 498, NULL, '1/2 oz '),
+(11690, 480, NULL, '1 1/2 oz '),
+(11690, 106, NULL, '1 '),
+(11720, 2, NULL, '1 oz '),
+(11720, 189, NULL, '1 oz '),
+(11720, 498, NULL, '1/4 tsp '),
+(11720, 350, NULL, '1 dash '),
+(11720, 106, NULL, '1 '),
+(11728, 2, NULL, '1 2/3 oz '),
+(11728, 189, NULL, '1/3 oz '),
+(11728, 347, NULL, '1 '),
+(11766, 71, NULL, '2 oz '),
+(11766, 179, NULL, '1 oz '),
+(11766, 259, NULL, '1/2 oz '),
+(11786, 74, NULL, '1 oz '),
+(11786, 305, NULL, '1/2 oz '),
+(11786, 71, NULL, '1/2 oz '),
+(11786, 299, NULL, 'Juice of 1/2'),
+(11786, 409, NULL, '1 tblsp'),
+(11786, 89, NULL, NULL),
+(11798, 305, NULL, '1 1/2 oz '),
+(11798, 242, NULL, '3 oz '),
+(11798, 56, NULL, '1 dash '),
+(11870, 100, NULL, '1/2 oz '),
+(11870, 2, NULL, '1 1/2 oz '),
+(11870, 352, NULL, '4 oz '),
+(11870, 228, NULL, NULL),
+(11872, 164, NULL, '1/2 oz white '),
+(11872, 18, NULL, '1/2 oz '),
+(11872, 498, NULL, '1/2 oz '),
+(11872, 1, NULL, '1/2 oz '),
+(11872, 304, NULL, '1 oz '),
+(11989, 425, NULL, '2 oz '),
+(11989, 250, NULL, '1 oz '),
+(11989, 297, NULL, NULL),
+(12055, 2, NULL, '1 oz '),
+(12055, 480, NULL, '2 oz '),
+(12055, 194, NULL, '1 whole '),
+(12055, 128, NULL, NULL),
+(12067, 476, NULL, '1 tsp superfine '),
+(12067, 127, NULL, '3 oz '),
+(12067, 299, NULL, '1 '),
+(12067, 179, NULL, '2 oz '),
+(12067, 322, NULL, '1 '),
+(12067, 359, NULL, '1 '),
+(12071, 3, NULL, '2 oz light or dark '),
+(12071, 297, NULL, '4 oz '),
+(12071, 299, NULL, '1 '),
+(12087, 305, NULL, '2 oz '),
+(12087, 333, NULL, '1 cup '),
+(12087, 409, NULL, '1 tsp '),
+(12087, 344, NULL, NULL),
+(12089, 305, NULL, '1 1/2 oz '),
+(12089, 571, NULL, '1 tsp '),
+(12089, 409, NULL, '1/2 tsp '),
+(12089, 56, NULL, '1 dash '),
+(12089, 513, NULL, '1 tsp '),
+(12089, 310, NULL, 'Twist of '),
+(12097, 3, NULL, '2 oz light or dark '),
+(12097, 409, NULL, '2 tsp '),
+(12097, 294, NULL, '1 twist of '),
+(12097, 513, NULL, '2 tsp '),
+(12101, 5, NULL, '1 1/2 oz '),
+(12101, 187, NULL, '1/2 oz '),
+(12101, 294, NULL, '1 twist of '),
+(12127, 427, NULL, '1 tsp '),
+(12127, 476, NULL, '1/2 tsp superfine '),
+(12127, 391, NULL, '2 dashes '),
+(12127, 513, NULL, '1 tsp '),
+(12127, 71, NULL, '2 oz '),
+(12127, 294, NULL, '1 twist of '),
+(12130, 74, NULL, '1 oz '),
+(12130, 18, NULL, '1 oz '),
+(12130, 304, NULL, '1 oz '),
+(12138, 5, NULL, '2 oz '),
+(12138, 74, NULL, '4 dashes '),
+(12138, 174, NULL, '4 dashes '),
+(12138, 359, NULL, '1 slice '),
+(12138, 337, NULL, '1 '),
+(12188, 449, NULL, '2 oz cream '),
+(12188, 409, NULL, '1 tsp '),
+(12188, 194, NULL, '1 whole '),
+(12188, 333, NULL, NULL),
+(12188, 344, NULL, NULL),
+(12308, 32, NULL, '1 oz '),
+(12308, 352, NULL, '1 oz '),
+(12308, 480, NULL, '1 oz '),
+(12362, 4, NULL, '2 oz '),
+(12362, 293, NULL, '1 tblsp '),
+(12362, 250, NULL, '3/4 oz '),
+(12362, 192, NULL, '1 '),
+(12362, 228, NULL, NULL),
+(12402, 2, NULL, '2 oz '),
+(12402, 293, NULL, '1 oz '),
+(12402, 476, NULL, '1 tsp superfine '),
+(12402, 127, NULL, '3 oz '),
+(12402, 322, NULL, '1 '),
+(12402, 359, NULL, '1 '),
+(12436, 305, NULL, '3 oz '),
+(12436, 320, NULL, '1 oz '),
+(12436, 293, NULL, '1 oz '),
+(12444, 305, NULL, '1 oz '),
+(12444, 482, NULL, '1/2 oz '),
+(12444, 299, NULL, 'Juice of 1/2 '),
+(12444, 409, NULL, '1 tsp '),
+(12444, 192, NULL, '1 '),
+(12446, 179, NULL, '2 oz '),
+(12446, 100, NULL, '1/2 oz '),
+(12452, 1, NULL, '1 1/2 oz '),
+(12452, 293, NULL, '3 oz '),
+(12452, 240, NULL, '3 oz unsweetened '),
+(12452, 409, NULL, '1 tsp '),
+(12452, 359, NULL, '1 slice '),
+(12518, 5, NULL, '1 1/2 oz '),
+(12518, 528, NULL, '1 oz Green Ginger '),
+(12528, 1, NULL, '2 oz '),
+(12528, 138, NULL, '1 oz '),
+(12528, 304, NULL, NULL),
+(12560, 250, NULL, '1 part '),
+(12560, 352, NULL, '4 parts '),
+(12560, 393, NULL, '4 parts '),
+(12562, 250, NULL, '1 cl '),
+(12562, 352, NULL, '1 cl '),
+(12562, 393, NULL, '2 cl '),
+(12562, 161, NULL, '4 cl '),
+(12572, 393, NULL, '10 cl '),
+(12572, 372, NULL, '6 cl '),
+(12572, 293, NULL, '1 cl '),
+(12572, 250, NULL, '1 cl '),
+(12618, 293, NULL, '5 cl '),
+(12618, 352, NULL, '15 cl '),
+(12618, 475, NULL, '2-3 cl '),
+(12618, 455, NULL, NULL),
+(12630, 475, NULL, '2 tsp '),
+(12630, 293, NULL, NULL),
+(12630, 228, NULL, NULL),
+(12656, 470, NULL, '1/2 lb frozen '),
+(12656, 47, NULL, '1 frozen '),
+(12656, 533, NULL, '1 cup plain '),
+(12656, 333, NULL, '1 cup '),
+(12656, 260, NULL, ' to taste\n'),
+(12658, 470, NULL, '1/2 lb frozen '),
+(12658, 47, NULL, '1 frozen '),
+(12658, 28, NULL, '2 cups fresh '),
+(12670, 28, NULL, '1 can frozen '),
+(12670, 470, NULL, '1 cup '),
+(12670, 476, NULL, '2 tblsp '),
+(12670, 299, NULL, '1 '),
+(12670, 30, NULL, '1 '),
+(12670, 455, NULL, '1 L '),
+(12670, 270, NULL, NULL),
+(12672, 533, NULL, '1 cup '),
+(12672, 220, NULL, '1 cup '),
+(12674, 533, NULL, '1 cup fruit '),
+(12674, 47, NULL, '1 '),
+(12674, 352, NULL, '4 oz frozen '),
+(12674, 222, NULL, '1/2 piece textural '),
+(12674, 270, NULL, '6 '),
+(12688, 333, NULL, '2 cups '),
+(12688, 115, NULL, NULL),
+(12688, 336, NULL, NULL),
+(12690, 533, NULL, '1/2 cup plain '),
+(12690, 513, NULL, '1 1/4 cup cold '),
+(12690, 173, NULL, '1/2 tsp ground roasted '),
+(12690, 439, NULL, '1/4 tsp '),
+(12690, 337, NULL, '1/4 tsp dried '),
+(12692, 533, NULL, '1 cup '),
+(12692, 513, NULL, '2 cups cold '),
+(12692, 439, NULL, '1 tsp '),
+(12692, 36, NULL, '1 pinch '),
+(12694, 533, NULL, '2 cups '),
+(12694, 270, NULL, '4-6 '),
+(12694, 476, NULL, NULL),
+(12694, 312, NULL, NULL),
+(12694, 439, NULL, NULL),
+(12696, 533, NULL, '1 cup '),
+(12696, 513, NULL, '2 cups cold '),
+(12696, 476, NULL, '4 tblsp '),
+(12696, 439, NULL, 'pinch '),
+(12696, 293, NULL, '2 tblsp '),
+(12698, 319, NULL, '2 '),
+(12698, 533, NULL, '2 cups '),
+(12698, 476, NULL, '1/2 cup '),
+(12698, 513, NULL, '1 cup iced '),
+(12702, 230, NULL, '2 pieces '),
+(12702, 513, NULL, '1 gal '),
+(12702, 299, NULL, '1 lb '),
+(12702, 476, NULL, '1 cup '),
+(12702, 93, NULL, 'ground '),
+(12704, 312, NULL, 'Juice of 1 '),
+(12704, 476, NULL, '1 tblsp '),
+(12704, 455, NULL, ' (seltzer water)\n'),
+(12704, 310, NULL, NULL),
+(12706, 308, NULL, '4 cl '),
+(12706, 2, NULL, '2 cl '),
+(12706, 24, NULL, '4 cl '),
+(12708, 86, NULL, 'Juice of 1/2 '),
+(12708, 47, NULL, '1 '),
+(12710, 54, NULL, '1 cup '),
+(12710, 30, NULL, '2 '),
+(12712, 243, NULL, '1 cup '),
+(12712, 299, NULL, '1/4 '),
+(12712, 397, NULL, '1/2 '),
+(12714, 286, NULL, '3 '),
+(12714, 366, NULL, '1/2 '),
+(12716, 319, NULL, '1 '),
+(12716, 359, NULL, '2 '),
+(12718, 230, NULL, '1/4 inch '),
+(12718, 397, NULL, '1/2 '),
+(12720, 230, NULL, '1 inch '),
+(12720, 299, NULL, '1/4 '),
+(12720, 513, NULL, '1 cup hot '),
+(12726, 492, NULL, '2 cups '),
+(12726, 293, NULL, '1-2 tblsp '),
+(12726, 94, NULL, '1 dash '),
+(12728, 533, NULL, '1 cup '),
+(12728, 222, NULL, '1 cup '),
+(12728, 270, NULL, NULL),
+(12730, 131, NULL, '1/2 cup '),
+(12730, 476, NULL, '1 cup '),
+(12730, 151, NULL, '7 tsp '),
+(12730, 513, NULL, '1/2 cup '),
+(12730, 333, NULL, '1 qt '),
+(12732, 333, NULL, '6 cups '),
+(12732, 116, NULL, '3 oz Mexican '),
+(12732, 122, NULL, '1 tsp powdered '),
+(12732, 194, NULL, '3 '),
+(12734, 116, NULL, '125 gr'),
+(12734, 333, NULL, '3/4 L '),
+(12734, 513, NULL, NULL),
+(12736, 259, NULL, '2 oz '),
+(12736, 333, NULL, '6-8 oz '),
+(12736, 122, NULL, '1 stick '),
+(12736, 508, NULL, '1 '),
+(12736, 116, NULL, '2 oz finely chopped dark '),
+(12736, 515, NULL, 'Fresh '),
+(12738, 116, NULL, '12 oz fine '),
+(12738, 79, NULL, '1 tsp '),
+(12738, 502, NULL, '1/2 tsp '),
+(12738, 256, NULL, '1 cup '),
+(12738, 326, NULL, 'mini '),
+(12744, 476, NULL, '5 tblsp '),
+(12744, 131, NULL, '3 tblsp '),
+(12744, 439, NULL, '1 dash '),
+(12744, 513, NULL, '3 tblsp hot '),
+(12744, 333, NULL, '2 cups '),
+(12744, 502, NULL, '1/4 tsp '),
+(12746, 131, NULL, '2 tsp '),
+(12746, 476, NULL, '1 tsp '),
+(12746, 502, NULL, '1/2 tsp '),
+(12746, 333, NULL, '12 oz '),
+(12748, 333, NULL, '2 cups '),
+(12748, 116, NULL, '4 oz chopped bittersweet or semi-sweet '),
+(12748, 354, NULL, '3 2-inch strips '),
+(12748, 200, NULL, '1/2 tsp instant '),
+(12748, 344, NULL, '1/8 tsp ground '),
+(12750, 333, NULL, '2 cups '),
+(12750, 116, NULL, '2 oz sweet '),
+(12750, 122, NULL, '1/2 tsp '),
+(12750, 193, NULL, '2 beaten '),
+(12752, 223, NULL, '1/2 oz '),
+(12752, 574, NULL, '1/2 oz '),
+(12752, 299, NULL, ' wedge\n'),
+(12752, 476, NULL, 'Bacardi '),
+(12752, 571, NULL, NULL),
+(12754, 1, NULL, '1 oz '),
+(12754, 379, NULL, '3/4 oz '),
+(12754, 155, NULL, NULL),
+(12754, 352, NULL, NULL),
+(12756, 1, NULL, '4 cl '),
+(12756, 308, NULL, '1 dash '),
+(12756, 455, NULL, NULL),
+(12758, 380, NULL, '5 parts '),
+(12758, 293, NULL, '3 parts '),
+(12758, 223, NULL, '1 part '),
+(12758, 452, NULL, '1 part '),
+(12760, 363, NULL, '1 part '),
+(12760, 43, NULL, '1 part '),
+(12760, 2, NULL, '2 parts '),
+(12760, 238, NULL, '1/2 part '),
+(12762, 18, NULL, '1 part '),
+(12762, 278, NULL, '1 part '),
+(12762, 282, NULL, '1 part '),
+(12762, 333, NULL, '2 1/2 parts '),
+(12764, 139, NULL, '1 part '),
+(12764, 237, NULL, '2 parts '),
+(12766, 464, NULL, '1 1/2 cl '),
+(12766, 228, NULL, NULL),
+(12766, 312, NULL, NULL),
+(12766, 270, NULL, NULL),
+(12768, 139, NULL, '1/2 cup black '),
+(12768, 333, NULL, '1/2 cup '),
+(12768, 476, NULL, '1-2 tsp '),
+(12770, 139, NULL, '1/4 cup instant '),
+(12770, 476, NULL, '1/4 cup '),
+(12770, 513, NULL, '1/4 cup hot '),
+(12770, 333, NULL, '4 cups cold '),
+(12772, 282, NULL, '2 tsp '),
+(12772, 139, NULL, 'Strong cold '),
+(12774, 513, NULL, '2 cups '),
+(12774, 486, NULL, '3-4 tsp '),
+(12774, 230, NULL, '1 chunk dried '),
+(12774, 90, NULL, '3-4 crushed '),
+(12774, 126, NULL, '3 '),
+(12774, 122, NULL, '1 piece '),
+(12774, 57, NULL, '1-2 whole '),
+(12774, 476, NULL, ' to taste\n'),
+(12774, 333, NULL, 'to taste'),
+(12776, 200, NULL, NULL),
+(12776, 260, NULL, 'Unsweetened '),
+(12776, 131, NULL, NULL),
+(12780, 139, NULL, NULL),
+(12780, 122, NULL, NULL),
+(12782, 139, NULL, '6 tblsp ground'),
+(12782, 147, NULL, '1/4 tsp '),
+(12782, 90, NULL, '4-5 whole green '),
+(12782, 476, NULL, NULL),
+(12782, 516, NULL, NULL),
+(12782, 270, NULL, NULL),
+(12784, 139, NULL, 'black'),
+(12784, 476, NULL, NULL),
+(12784, 161, NULL, ' pods\n'),
+(12784, 90, NULL, NULL),
+(12786, 486, NULL, '1/4 cup Thai '),
+(12786, 513, NULL, '1/2 cup boiling '),
+(12786, 145, NULL, '2 tsp sweetened '),
+(12786, 270, NULL, 'cubes'),
+(12786, 337, NULL, 'garnish'),
+(12790, 1, NULL, '1 bottle '),
+(12790, 476, NULL, '50 gr '),
+(12790, 22, NULL, '50 ml pure '),
+(12790, 303, NULL, '1 tblsp '),
+(12790, 530, NULL, '1 '),
+(12792, 476, NULL, '1 cup'),
+(12792, 513, NULL, '3/4 cup '),
+(12792, 34, NULL, '2 '),
+(12792, 16, NULL, '1 tblsp '),
+(12792, 237, NULL, '1/2 cup pure '),
+(12792, 74, NULL, '1 cup '),
+(12792, 210, NULL, '3 drops yellow '),
+(12792, 231, NULL, '1/2 tsp '),
+(12794, 19, NULL, '3 tblsp chopped'),
+(12794, 17, NULL, '1 tblsp chopped '),
+(12794, 14, NULL, '1 cracked '),
+(12794, 122, NULL, '1 one-inch '),
+(12794, 22, NULL, '3-6 crushed '),
+(12794, 147, NULL, '1/8 tsp powdered '),
+(12794, 325, NULL, '1 tblsp fresh chopped '),
+(12794, 1, NULL, '1.5 cup '),
+(12794, 476, NULL, '1/2 cup granulated '),
+(12794, 513, NULL, '1/4 cup '),
+(12794, 210, NULL, '1 drop yellow '),
+(12796, 359, NULL, '3 large '),
+(12796, 1, NULL, '3 cups '),
+(12796, 476, NULL, '1 1/3 cup superfine '),
+(12798, 139, NULL, '10 tblsp instant '),
+(12798, 502, NULL, '4 tblsp '),
+(12798, 476, NULL, '2 1/2 cups '),
+(12798, 1, NULL, '1 qt '),
+(12798, 513, NULL, '2 1/2 cups '),
+(12800, 513, NULL, '2 cups '),
+(12800, 476, NULL, '2 cups white '),
+(12800, 139, NULL, '1/2 cup instant '),
+(12800, 508, NULL, '1/2'),
+(12800, 1, NULL, '1 1/2 cup'),
+(12800, 87, NULL, NULL),
+(12802, 154, NULL, '1/2 kg chopped '),
+(12802, 476, NULL, '3/4 L '),
+(12802, 305, NULL, '1/2 L '),
+(12808, 476, NULL, '8 cups '),
+(12808, 513, NULL, '6 cups '),
+(12808, 237, NULL, '1 pint '),
+(12808, 387, NULL, '1 oz pure '),
+(12808, 210, NULL, '1 tblsp green '),
+(12854, 280, NULL, '1 fifth '),
+(12854, 260, NULL, '1 1/2 cup mild '),
+(12854, 19, NULL, '2 tsp dried and chopped '),
+(12854, 205, NULL, '1/4 tsp crushed '),
+(12854, 294, NULL, '2 2 inch strips '),
+(12856, 513, NULL, '1 cup '),
+(12856, 77, NULL, '3/4-1 cup '),
+(12856, 139, NULL, '4 tsp '),
+(12856, 3, NULL, '1 cup '),
+(12856, 502, NULL, '4 tsp '),
+(12862, 513, NULL, '3/4 cup '),
+(12862, 230, NULL, '2 tsp '),
+(12862, 253, NULL, '2 cups '),
+(12862, 293, NULL, '1 1/2 tblsp '),
+(12862, 397, NULL, '1 1/2 cup '),
+(12862, 476, NULL, '1 cup '),
+(12862, 393, NULL, '3-4 cups '),
+(12870, 486, NULL, '1 quart black '),
+(12870, 436, NULL, '1 quart '),
+(12870, 425, NULL, '1 fifth '),
+(12870, 3, NULL, '1 pint Jamaican '),
+(12870, 74, NULL, '1/2 pint '),
+(12870, 53, NULL, '1 1/2 oz '),
+(12870, 352, NULL, '1 pint '),
+(12870, 293, NULL, '1/2 pint '),
+(12876, 201, NULL, '2 pint '),
+(12876, 528, NULL, '1 bottle Boone Strawberry Hill '),
+(12876, 352, NULL, '1/2 gal '),
+(12876, 287, NULL, '1 gal Tropical Berry '),
+(12890, 155, NULL, '4 cups '),
+(12890, 476, NULL, '1 1/2 cup '),
+(12890, 393, NULL, '4 cups '),
+(12890, 16, NULL, '1 tblsp '),
+(12890, 228, NULL, '2 qt '),
+(12954, 240, NULL, NULL),
+(12954, 88, NULL, ', orange\n'),
+(12954, 448, NULL, NULL),
+(12988, 513, NULL, '3 cups '),
+(12988, 476, NULL, '1 cup '),
+(12988, 126, NULL, '12 '),
+(12988, 122, NULL, '2 '),
+(12988, 294, NULL, '1 '),
+(12988, 425, NULL, '750 ml '),
+(12988, 74, NULL, '1/4 cup '),
+(13020, 425, NULL, '1 bottle '),
+(13020, 476, NULL, '1/2 cup '),
+(13020, 352, NULL, '1 cup '),
+(13020, 293, NULL, '1 cup '),
+(13020, 126, NULL, NULL),
+(13020, 122, NULL, NULL),
+(13024, 425, NULL, '2 bottles '),
+(13024, 476, NULL, '1 cup '),
+(13024, 513, NULL, '2 cups hot '),
+(13024, 30, NULL, '1 cup'),
+(13024, 359, NULL, ' wedges\n'),
+(13024, 312, NULL, ' wedges\n'),
+(13024, 299, NULL, NULL),
+(13024, 215, NULL, NULL),
+(13026, 425, NULL, '1 1/2 L '),
+(13026, 476, NULL, '1 cup '),
+(13026, 299, NULL, '1 large '),
+(13026, 359, NULL, '1 large '),
+(13026, 30, NULL, '1 large '),
+(13026, 74, NULL, '3-4 oz plain '),
+(13026, 455, NULL, NULL),
+(13032, 378, NULL, '46 oz '),
+(13032, 352, NULL, '20 oz '),
+(13032, 77, NULL, '1/2 cup '),
+(13032, 122, NULL, '3 3-inch '),
+(13032, 126, NULL, '1/2 tsp '),
+(13032, 308, NULL, '2 tblsp '),
+(13036, 299, NULL, 'Juice of 1 '),
+(13036, 476, NULL, '1 tblsp '),
+(13036, 470, NULL, '8-10 ripe '),
+(13036, 513, NULL, '1 cup '),
+(13058, 425, NULL, '1 bottle '),
+(13058, 299, NULL, '2 '),
+(13058, 352, NULL, '1 cup '),
+(13058, 359, NULL, '3 '),
+(13058, 393, NULL, '1 cup '),
+(13072, 1, NULL, '2 oz '),
+(13072, 105, NULL, '2 oz '),
+(13072, 155, NULL, '4 oz '),
+(13072, 352, NULL, '4 oz '),
+(13086, 300, NULL, '5 oz '),
+(13086, 1, NULL, '1 oz '),
+(13086, 67, NULL, '1/2 oz '),
+(13086, 498, NULL, '1/2 oz '),
+(13086, 476, NULL, NULL),
+(13086, 270, NULL, NULL),
+(13162, 282, NULL, '1 cl '),
+(13162, 43, NULL, '1 cl '),
+(13162, 212, NULL, '1 1/2 '),
+(13162, 139, NULL, '4 cl hot '),
+(13162, 161, NULL, NULL),
+(13190, 1, NULL, '1 shot '),
+(13190, 18, NULL, '1 shot '),
+(13190, 453, NULL, '1 shot '),
+(13190, 498, NULL, '1 shot '),
+(13190, 155, NULL, NULL),
+(13192, 3, NULL, '1/2 oz '),
+(13192, 1, NULL, '1/2 oz '),
+(13192, 2, NULL, '1/2 oz '),
+(13192, 67, NULL, '1/2 oz '),
+(13192, 457, NULL, '2 oz '),
+(13192, 297, NULL, '1 splash '),
+(13196, 1, NULL, '5 cl '),
+(13196, 312, NULL, '1/2 '),
+(13196, 20, NULL, '4 dashes '),
+(13196, 497, NULL, '1 dl Schweppes '),
+(13196, 270, NULL, '4 '),
+(13200, 600, NULL, '12 oz '),
+(13200, 52, NULL, '12 oz '),
+(13200, 300, NULL, '12 oz frozen '),
+(13200, 270, NULL, '1 cup crushed '),
+(13202, 18, NULL, '1 oz '),
+(13202, 1, NULL, '1 oz '),
+(13202, 571, NULL, '1 oz Bacardi '),
+(13202, 186, NULL, '1 oz '),
+(13202, 52, NULL, '1 oz '),
+(13204, 574, NULL, '2 oz '),
+(13204, 238, NULL, '1 oz '),
+(13204, 293, NULL, '2 oz sweetened '),
+(13204, 127, NULL, '1 oz '),
+(13206, 312, NULL, '2 '),
+(13206, 476, NULL, '2 tblsp '),
+(13206, 523, NULL, '2-3 oz '),
+(13206, 270, NULL, 'crushed '),
+(13214, 400, NULL, '2 oz '),
+(13214, 293, NULL, '1 oz '),
+(13214, 476, NULL, '1-2 tblsp '),
+(13214, 270, NULL, '1'),
+(13214, 192, NULL, NULL),
+(13222, 272, NULL, '1/2 oz '),
+(13222, 235, NULL, '1/2 oz '),
+(13332, 282, NULL, '1/3 shot '),
+(13332, 440, NULL, '1/3 shot '),
+(13332, 238, NULL, '1/3 shot '),
+(13423, 1, NULL, '2 cl Smirnoff '),
+(13423, 458, NULL, '2 cl '),
+(13423, 373, NULL, '2 cl '),
+(13423, 480, NULL, '6 cl '),
+(13423, 127, NULL, '1 dash '),
+(13499, 1, NULL, '1 oz '),
+(13499, 282, NULL, '1 oz '),
+(13499, 43, NULL, '1 oz '),
+(13499, 503, NULL, '2 scoops '),
+(13499, 361, NULL, '1 '),
+(13501, 18, NULL, '1/3 '),
+(13501, 43, NULL, '1/3 '),
+(13501, 141, NULL, '1/3 '),
+(13535, 466, NULL, '1 L '),
+(13535, 398, NULL, '2 cups '),
+(13535, 1, NULL, '2 cups '),
+(13539, 1, NULL, '1 1/2 oz '),
+(13539, 271, NULL, '6 oz '),
+(13539, 293, NULL, ' to taste\n'),
+(13581, 380, NULL, '2-3 oz'),
+(13581, 128, NULL, NULL),
+(13675, 440, NULL, '1/4 glass '),
+(13675, 441, NULL, '3/4 glass '),
+(13683, 572, NULL, '1 part '),
+(13683, 29, NULL, '1 part '),
+(13731, 18, NULL, '1 1/2 oz '),
+(13731, 457, NULL, '3 oz '),
+(13751, 179, NULL, '1-2 shot '),
+(13751, 312, NULL, 'Squeeze '),
+(13751, 128, NULL, 'Fill with '),
+(13751, 270, NULL, NULL),
+(13807, 388, NULL, NULL),
+(13807, 282, NULL, NULL),
+(13807, 43, NULL, NULL),
+(13825, 282, NULL, '1 oz '),
+(13825, 43, NULL, '1 oz '),
+(13825, 235, NULL, 'dash '),
+(13825, 259, NULL, '2 oz '),
+(13825, 139, NULL, '2 oz Hazlenut '),
+(13847, 275, NULL, '1 oz '),
+(13847, 18, NULL, '1 oz '),
+(13861, 43, NULL, '1 part '),
+(13861, 212, NULL, '1 part '),
+(13861, 333, NULL, '1 part '),
+(13899, 275, NULL, '1/3 oz '),
+(13899, 280, NULL, '1/3 oz '),
+(13899, 279, NULL, '1/3 oz '),
+(13936, 571, NULL, '5 oz Bacardi '),
+(13936, 392, NULL, 'frozen '),
+(13936, 176, NULL, 'frozen '),
+(13938, 8, NULL, '1 oz '),
+(13938, 2, NULL, '1 oz '),
+(13938, 497, NULL, '4 oz '),
+(13940, 2, NULL, '2 oz dry '),
+(13940, 572, NULL, '4 oz '),
+(13940, 293, NULL, '0.75 oz '),
+(14029, 164, NULL, '1 oz white '),
+(14029, 1, NULL, '1 oz '),
+(14053, 235, NULL, '1 oz '),
+(14053, 80, NULL, '1 oz '),
+(14053, 333, NULL, '1 oz '),
+(14065, 18, NULL, '2 oz '),
+(14065, 3, NULL, '2 oz '),
+(14065, 287, NULL, '4 oz Grape '),
+(14071, 1, NULL, '2 cl '),
+(14071, 133, NULL, '1 cl '),
+(14071, 67, NULL, '1 cl '),
+(14071, 466, NULL, 'Fill with '),
+(14087, 168, NULL, '1 shot '),
+(14087, 18, NULL, '1 shot '),
+(14087, 155, NULL, '1 shot '),
+(14107, 574, NULL, '1 1/2 oz '),
+(14107, 480, NULL, '3/4 oz '),
+(14107, 466, NULL, '1/2 oz '),
+(14107, 455, NULL, '3 oz '),
+(14107, 299, NULL, '1 slice '),
+(14133, 142, NULL, '1/2 oz '),
+(14133, 1, NULL, '1 oz '),
+(14133, 312, NULL, 'Juice of 1/2 '),
+(14133, 155, NULL, '1 splash '),
+(14272, 1, NULL, '1 shot '),
+(14272, 250, NULL, '1 tblsp '),
+(14272, 352, NULL, 'Fill with '),
+(14282, 282, NULL, '3/4 oz '),
+(14282, 223, NULL, '3/4 oz '),
+(14282, 455, NULL, 'Fill with '),
+(14306, 18, NULL, '1 part '),
+(14306, 457, NULL, '1 part '),
+(14306, 352, NULL, '1 part '),
+(14356, 43, NULL, '3/4 oz '),
+(14356, 232, NULL, '3/4 oz '),
+(14356, 282, NULL, '3/4 oz '),
+(14356, 80, NULL, '1/2 oz '),
+(14356, 333, NULL, ' to fill\n'),
+(14360, 6, NULL, '3/4 oz '),
+(14360, 331, NULL, '3/4 oz '),
+(14360, 155, NULL, '1 oz '),
+(14360, 466, NULL, '1 splash '),
+(14364, 300, NULL, '1 can '),
+(14364, 1, NULL, '5 oz '),
+(14364, 3, NULL, '7 oz '),
+(14364, 228, NULL, 'About 1 bottle '),
+(14366, 1, NULL, '1 1/2 shot '),
+(14366, 142, NULL, '1 1/2 shot '),
+(14366, 299, NULL, 'Juice of 1 wedge '),
+(14372, 574, NULL, '2/3 '),
+(14372, 308, NULL, '1/3 '),
+(14372, 270, NULL, 'Fill with '),
+(14372, 497, NULL, 'Top it up with '),
+(14374, 574, NULL, '2/3 part '),
+(14374, 399, NULL, '1/3 part '),
+(14374, 270, NULL, 'cubes'),
+(14374, 55, NULL, NULL),
+(14482, 103, NULL, '1 part '),
+(14482, 455, NULL, '1 part '),
+(14482, 352, NULL, '1 part '),
+(14482, 270, NULL, 'cubes'),
+(14510, 43, NULL, '2 oz '),
+(14510, 503, NULL, '2 scoops '),
+(14510, 161, NULL, NULL),
+(14560, 520, NULL, '1/2 oz '),
+(14560, 458, NULL, '3/4 oz '),
+(14560, 1, NULL, '1/2 oz '),
+(14560, 264, NULL, 'Fill with '),
+(14564, 155, NULL, '2 oz '),
+(14564, 455, NULL, '2 oz '),
+(14564, 331, NULL, '0.5 oz '),
+(14564, 163, NULL, '0.5 oz '),
+(14578, 18, NULL, '1 cl '),
+(14578, 352, NULL, '4 oz '),
+(14578, 250, NULL, '1/4 cl '),
+(14584, 8, NULL, '2 shots '),
+(14584, 271, NULL, '12 oz lemon '),
+(14594, 142, NULL, '5 cl '),
+(14594, 293, NULL, '2 cl '),
+(14594, 270, NULL, 'cubes'),
+(14594, 299, NULL, ' or lime\n'),
+(14598, 507, NULL, '2 1/2 oz '),
+(14598, 238, NULL, '1 splash '),
+(14598, 352, NULL, 'Fill with '),
+(14608, 464, NULL, '1 oz '),
+(14608, 228, NULL, NULL),
+(14610, 571, NULL, '1 oz Bacardi '),
+(14610, 526, NULL, '1 oz '),
+(14622, 1, NULL, '1/3 part '),
+(14622, 241, NULL, '1/3 part '),
+(14622, 352, NULL, '1/3 part '),
+(14622, 270, NULL, 'lots '),
+(14622, 85, NULL, '1 dash '),
+(14642, 282, NULL, '1 oz '),
+(14642, 571, NULL, '1 oz Bacardi '),
+(14642, 250, NULL, '1 dash '),
+(14752, 285, NULL, '1 part '),
+(14752, 55, NULL, '2 parts '),
+(14752, 270, NULL, 'cubes'),
+(14842, 43, NULL, '1 oz '),
+(14842, 520, NULL, '3/4 oz '),
+(14842, 161, NULL, '3/4 oz double '),
+(14978, 3, NULL, 'mikey bottle '),
+(14978, 228, NULL, 'large bottle '),
+(14978, 221, NULL, '355 ml frozen '),
+(14978, 352, NULL, '355 ml frozen '),
+(14978, 270, NULL, 'crushed '),
+(15024, 8, NULL, '2 oz '),
+(15024, 155, NULL, '4 oz '),
+(15024, 228, NULL, '2 oz '),
+(15024, 270, NULL, 'Add '),
+(15026, 157, NULL, '4 cl '),
+(15026, 25, NULL, '2 cl '),
+(15026, 444, NULL, '7 cl '),
+(15026, 28, NULL, '8 cl '),
+(15026, 270, NULL, 'cubes'),
+(15082, 168, NULL, '1 1/2 oz '),
+(15082, 379, NULL, '1 oz '),
+(15082, 96, NULL, '1/2 oz '),
+(15082, 155, NULL, '1 oz '),
+(15092, 352, NULL, '1 part '),
+(15092, 28, NULL, '1 part '),
+(15092, 393, NULL, '1 part '),
+(15092, 270, NULL, NULL),
+(15106, 352, NULL, '4 cl '),
+(15106, 242, NULL, '3 cl '),
+(15106, 28, NULL, '1 cl '),
+(15106, 322, NULL, '1 '),
+(15182, 1, NULL, '2 cl '),
+(15182, 163, NULL, '1 cl '),
+(15182, 352, NULL, NULL),
+(15194, 112, NULL, '2 scoops '),
+(15194, 74, NULL, '2 oz '),
+(15194, 18, NULL, '2 oz '),
+(15200, 135, NULL, '1 oz '),
+(15200, 18, NULL, '1/2 oz '),
+(15200, 352, NULL, '4 oz '),
+(15200, 250, NULL, '1/2 oz '),
+(15224, 315, NULL, '2 parts '),
+(15224, 499, NULL, '2 parts '),
+(15224, 155, NULL, '1 part '),
+(15266, 1, NULL, '3 parts'),
+(15266, 399, NULL, '1 part '),
+(15266, 28, NULL, '6 parts '),
+(15266, 293, NULL, '1 1/2 part '),
+(15266, 300, NULL, NULL),
+(15288, 571, NULL, '1/2 shot Bacardi '),
+(15288, 526, NULL, '1/2 shot '),
+(15300, 2, NULL, '1/2 oz'),
+(15300, 305, NULL, '1/2 oz'),
+(15300, 4, NULL, '1/2 oz'),
+(15300, 498, NULL, '1/2 oz'),
+(15300, 1, NULL, '1/2 oz'),
+(15300, 128, NULL, '1/2 oz'),
+(15300, 480, NULL, '1-2 dash '),
+(15300, 56, NULL, '1 wedge '),
+(15300, 299, NULL, 'Garnish with'),
+(15328, 440, NULL, '2 cl '),
+(15328, 43, NULL, '2 cl '),
+(15328, 520, NULL, '2 cl '),
+(15330, 1, NULL, '1 oz '),
+(15330, 498, NULL, '1 oz '),
+(15330, 352, NULL, '1 oz '),
+(15346, 179, NULL, '1 shot '),
+(15346, 305, NULL, '2 shots '),
+(15346, 1, NULL, '1 shot '),
+(15346, 352, NULL, '1 shot '),
+(15403, 1, NULL, '2 oz '),
+(15403, 444, NULL, NULL),
+(15409, 139, NULL, '3 parts '),
+(15409, 201, NULL, '1 part '),
+(15423, 289, NULL, '16 oz '),
+(15423, 4, NULL, '1.5 oz '),
+(15427, 315, NULL, '1 1/2 cl '),
+(15427, 379, NULL, '1 1/2 cl '),
+(15427, 67, NULL, '1 1/2 cl '),
+(15427, 480, NULL, '3 cl '),
+(15511, 282, NULL, '2 oz '),
+(15511, 333, NULL, '8 oz '),
+(15511, 503, NULL, '2 scoops '),
+(15515, 139, NULL, '8 oz '),
+(15515, 275, NULL, '4 oz '),
+(15515, 18, NULL, '4 oz '),
+(15515, 515, NULL, NULL),
+(15521, 139, NULL, '1 cup'),
+(15521, 35, NULL, '4 cl '),
+(15521, 476, NULL, 'By taste '),
+(15567, 1, NULL, '1/2 '),
+(15567, 300, NULL, '1/2 can '),
+(15567, 513, NULL, '1/2 '),
+(15567, 476, NULL, '10 tsp '),
+(15597, 8, NULL, '1 1/2 oz '),
+(15597, 379, NULL, '1/2 oz '),
+(15597, 133, NULL, '1/2 oz '),
+(15597, 155, NULL, '1 1/2 oz '),
+(15597, 393, NULL, '1 1/2 oz '),
+(15639, 282, NULL, '1/2 oz '),
+(15639, 272, NULL, '1/2 oz '),
+(15639, 18, NULL, '1/2 oz '),
+(15639, 571, NULL, '1/2 oz Bacardi '),
+(15639, 161, NULL, '1 oz '),
+(15675, 1, NULL, '2 oz '),
+(15675, 284, NULL, '1 oz '),
+(15675, 472, NULL, '1 tsp '),
+(15675, 470, NULL, '5 '),
+(15675, 444, NULL, NULL),
+(15691, 52, NULL, NULL),
+(15691, 431, NULL, NULL),
+(15691, 300, NULL, NULL),
+(15691, 128, NULL, ' slice\n'),
+(15691, 572, NULL, NULL),
+(15691, 165, NULL, NULL),
+(15691, 299, NULL, NULL),
+(15761, 59, NULL, '25 ml '),
+(15761, 352, NULL, 'Add 250 ml '),
+(15801, 331, NULL, '1.5 oz '),
+(15801, 535, NULL, '12 oz '),
+(15841, 337, NULL, '1/2 handful '),
+(15841, 293, NULL, '3 cl '),
+(15841, 179, NULL, '1/8 L Jamaican '),
+(15841, 127, NULL, '1/8 L '),
+(15841, 20, NULL, '8 drops '),
+(15849, 32, NULL, '1 qt '),
+(15849, 97, NULL, '4 fifth '),
+(15849, 1, NULL, '1 fifth '),
+(15849, 572, NULL, '4 L '),
+(15849, 352, NULL, '1/2 gal '),
+(15941, 83, NULL, '1 oz '),
+(15941, 482, NULL, '1 oz red '),
+(15941, 294, NULL, 'Twist of '),
+(15941, 354, NULL, 'Twist of '),
+(15951, 270, NULL, 'cubes'),
+(15951, 115, NULL, NULL),
+(15951, 100, NULL, NULL),
+(15951, 1, NULL, NULL),
+(15951, 333, NULL, NULL),
+(16031, 52, NULL, '12 oz '),
+(16031, 572, NULL, '12 oz '),
+(16041, 458, NULL, '750 ml '),
+(16041, 352, NULL, '1 L '),
+(16041, 389, NULL, '750 ml '),
+(16082, 18, NULL, '3/4 oz '),
+(16082, 178, NULL, '1/2 oz '),
+(16082, 139, NULL, '8 oz '),
+(16100, 457, NULL, '2 oz '),
+(16100, 18, NULL, '2 oz '),
+(16100, 4, NULL, '2 oz '),
+(16100, 352, NULL, 'Add splash '),
+(16108, 574, NULL, '2 oz '),
+(16108, 351, NULL, '1/2 oz '),
+(16108, 472, NULL, '1 splash '),
+(16108, 352, NULL, '1 oz '),
+(16134, 574, NULL, '1 shot '),
+(16134, 352, NULL, '1 shot '),
+(16134, 498, NULL, '1 shot '),
+(16134, 228, NULL, 'Fill to top '),
+(16176, 270, NULL, '8 cubes'),
+(16176, 1, NULL, '3 oz '),
+(16176, 378, NULL, '1.5 oz '),
+(16176, 379, NULL, '1.5 oz '),
+(16176, 294, NULL, '1 '),
+(16178, 2, NULL, '2 jiggers '),
+(16178, 1, NULL, '1 jigger '),
+(16178, 250, NULL, '3 dashes '),
+(16178, 308, NULL, '1 shot '),
+(16178, 476, NULL, 'Around rim put 1 pinch '),
+(16178, 475, NULL, '3 dashes '),
+(16178, 455, NULL, 'Fill to top with '),
+(16202, 18, NULL, NULL),
+(16202, 480, NULL, NULL),
+(16202, 331, NULL, NULL),
+(16202, 393, NULL, NULL),
+(16250, 315, NULL, '1 1/2 oz '),
+(16250, 61, NULL, '1 oz '),
+(16250, 352, NULL, '3-4 oz '),
+(16250, 393, NULL, '3-4 oz '),
+(16250, 155, NULL, '3-4 oz '),
+(16271, 164, NULL, '1 1/2 oz '),
+(16271, 67, NULL, '1 oz '),
+(16271, 305, NULL, '1/2 oz '),
+(16275, 270, NULL, '4-5 '),
+(16275, 487, NULL, '2 oz '),
+(16275, 502, NULL, '1 tsp '),
+(16275, 128, NULL, '10-12 oz '),
+(16289, 4, NULL, '3 oz '),
+(16289, 27, NULL, '12 oz '),
+(16295, 179, NULL, '1 shot '),
+(16295, 359, NULL, '1 slice '),
+(16295, 478, NULL, '1/2 glass '),
+(16295, 155, NULL, '1/2 glass '),
+(16311, 275, NULL, '1 oz '),
+(16311, 331, NULL, '1/2 oz '),
+(16311, 457, NULL, '2 oz '),
+(16333, 3, NULL, '1 part '),
+(16333, 1, NULL, '1 part '),
+(16333, 4, NULL, '1 part '),
+(16333, 498, NULL, '1/2 part '),
+(16333, 222, NULL, NULL),
+(16333, 270, NULL, NULL),
+(16333, 439, NULL, '1-3 pint '),
+(16333, 220, NULL, NULL),
+(16354, 1, NULL, '1/3 oz '),
+(16354, 331, NULL, '1/3 oz '),
+(16354, 480, NULL, '1/3 oz '),
+(16405, 18, NULL, '1 shot '),
+(16405, 458, NULL, '1 shot '),
+(16405, 270, NULL, 'cubes'),
+(16405, 457, NULL, NULL),
+(16419, 168, NULL, '1 shot '),
+(16419, 282, NULL, '1 shot '),
+(16419, 161, NULL, 'Fill with '),
+(16485, 282, NULL, '1 oz '),
+(16485, 440, NULL, '1 oz '),
+(16485, 67, NULL, '1 oz '),
+(16485, 43, NULL, '1 oz '),
+(16943, 1, NULL, '1 oz '),
+(16943, 379, NULL, '1 oz '),
+(16943, 352, NULL, '3 oz '),
+(16943, 155, NULL, '3 oz '),
+(16958, 28, NULL, '3 parts '),
+(16958, 315, NULL, '1 part '),
+(16958, 122, NULL, '3 dashes '),
+(16984, 3, NULL, '1 oz '),
+(16984, 1, NULL, '1 oz '),
+(16984, 4, NULL, '1 oz '),
+(16984, 2, NULL, '1 oz '),
+(16984, 498, NULL, '1 oz '),
+(16984, 96, NULL, '1 oz '),
+(16984, 331, NULL, '1 oz '),
+(16984, 315, NULL, '1 oz '),
+(16986, 458, NULL, '2 oz '),
+(16986, 498, NULL, '1/2 oz '),
+(16986, 312, NULL, '2 wedges '),
+(16986, 457, NULL, '2 oz '),
+(16987, 43, NULL, '3/4 oz '),
+(16987, 71, NULL, '3/4 oz '),
+(16987, 1, NULL, '3/4 oz '),
+(16987, 352, NULL, '2-3 oz '),
+(16991, 221, NULL, '2 part '),
+(16991, 466, NULL, '1 part '),
+(16991, 4, NULL, '2 shots '),
+(16991, 571, NULL, 'Float Bacardi '),
+(16992, 201, NULL, '750 ml '),
+(16992, 1, NULL, '1750 ml '),
+(16992, 379, NULL, '1750 ml '),
+(16992, 352, NULL, '1 gal '),
+(16992, 155, NULL, '1 gal '),
+(16995, 352, NULL, '4 oz '),
+(16995, 3, NULL, '1 oz '),
+(16995, 1, NULL, '1 oz '),
+(16995, 161, NULL, '1 package '),
+(16995, 270, NULL, 'Over '),
+(17002, 179, NULL, '1/2 oz '),
+(17002, 1, NULL, '1/2 oz '),
+(17002, 498, NULL, '1/2 oz '),
+(17002, 4, NULL, '1/2 oz '),
+(17002, 328, NULL, '1/2 oz '),
+(17002, 338, NULL, 'Fill with '),
+(17005, 18, NULL, '1 jigger '),
+(17005, 299, NULL, 'Juice of 1/2 '),
+(17005, 270, NULL, NULL),
+(17005, 322, NULL, NULL),
+(17015, 1, NULL, '1 shot '),
+(17015, 282, NULL, '1 shot '),
+(17015, 128, NULL, '1 dash '),
+(17015, 254, NULL, 'Fill with '),
+(17020, 278, NULL, '1 oz '),
+(17020, 235, NULL, '1 oz '),
+(17044, 476, NULL, '2 1/2 cups '),
+(17044, 149, NULL, '1 cup '),
+(17044, 139, NULL, '1 1/2 oz instant '),
+(17044, 502, NULL, '2 oz '),
+(17044, 513, NULL, '3 cups boiling '),
+(17044, 1, NULL, '1 fifth '),
+(17066, 1, NULL, '30 ml '),
+(17066, 2, NULL, '30 ml '),
+(17066, 307, NULL, '45 ml '),
+(17066, 270, NULL, '1/2 glass crushed '),
+(17074, 1, NULL, '1 shot '),
+(17074, 315, NULL, '1 shot '),
+(17074, 234, NULL, '1 shot '),
+(17074, 352, NULL, '1 splash '),
+(17074, 393, NULL, '1 splash '),
+(17074, 158, NULL, '1 splash '),
+(17074, 250, NULL, '1 dash '),
+(17074, 270, NULL, 'crushed '),
+(17074, 397, NULL, '1 wedge '),
+(17094, 18, NULL, '1 shot '),
+(17094, 238, NULL, '1 shot '),
+(17094, 458, NULL, '1 shot '),
+(17105, 67, NULL, NULL),
+(17105, 70, NULL, NULL),
+(17105, 1, NULL, NULL),
+(17105, 457, NULL, NULL),
+(17105, 572, NULL, NULL),
+(17108, 128, NULL, '1 dl '),
+(17108, 293, NULL, '7 drops '),
+(17118, 327, NULL, '5 oz blue '),
+(17118, 338, NULL, '5 oz '),
+(17118, 270, NULL, 'cubes'),
+(17120, 201, NULL, '1 fifth '),
+(17120, 1, NULL, '1 fifth Smirnoff red label '),
+(17120, 338, NULL, '2 L '),
+(17120, 478, NULL, '2 L '),
+(17120, 293, NULL, '1 small bottle '),
+(17120, 3, NULL, '1 pint '),
+(17135, 39, NULL, '1 part '),
+(17135, 128, NULL, '2 parts '),
+(17141, 425, NULL, '1/3 part '),
+(17141, 379, NULL, '1 shot '),
+(17141, 389, NULL, '1/3 part '),
+(17141, 352, NULL, '1/3 part '),
+(17167, 419, NULL, '2 oz '),
+(17167, 297, NULL, '4 oz '),
+(17167, 270, NULL, NULL),
+(17168, 498, NULL, '1/2 jigger '),
+(17168, 18, NULL, '3 shots '),
+(17168, 120, NULL, '1/2 cup '),
+(17168, 270, NULL, 'Add 1/2 cup '),
+(17174, 2, NULL, '1 oz'),
+(17174, 4, NULL, '1 oz'),
+(17174, 1, NULL, '1 oz'),
+(17174, 523, NULL, '1 oz'),
+(17174, 498, NULL, '1 oz'),
+(17174, 102, NULL, '1 oz'),
+(17174, 480, NULL, '1 oz'),
+(17174, 127, NULL, '3 oz'),
+(17177, 181, NULL, '2 tsp '),
+(17177, 312, NULL, '1'),
+(17177, 81, NULL, '2 1/2 oz'),
+(17180, 2, NULL, '4.5 cl'),
+(17180, 293, NULL, '1.5 cl'),
+(17180, 323, NULL, '1.5 cl'),
+(17181, 1, NULL, '70ml/2fl oz'),
+(17181, 189, NULL, '1 tbsp'),
+(17181, 576, NULL, '2 tbsp'),
+(17181, 299, NULL, '1 wedge'),
+(17181, 347, NULL, '1'),
+(17182, 400, NULL, '5 cl'),
+(17182, 308, NULL, '2.5 cl'),
+(17182, 577, NULL, '2.5 cl'),
+(17182, 578, NULL, '1.5 cl'),
+(17182, 20, NULL, '2 Dashes'),
+(17182, 386, NULL, 'Pinch'),
+(17182, 579, NULL, '2 sprigs'),
+(17183, 305, NULL, '1 3/4 oz Bacardi '),
+(17183, 308, NULL, '1 oz '),
+(17183, 475, NULL, '1/2 tsp '),
+(17183, 250, NULL, '1 dash '),
+(17184, 74, NULL, '1 oz '),
+(17184, 305, NULL, '1 oz '),
+(17184, 498, NULL, '1 oz '),
+(17184, 293, NULL, '1 oz '),
+(17185, 2, NULL, '2 oz '),
+(17185, 323, NULL, '1/4 tsp '),
+(17185, 293, NULL, '1/4 tsp '),
+(17185, 350, NULL, '2 dashes '),
+(17185, 106, NULL, '1 '),
+(17186, 2, NULL, '1 1/2 oz '),
+(17186, 250, NULL, '2 tsp '),
+(17186, 299, NULL, 'Juice of 1/2 '),
+(17186, 192, NULL, '1 '),
+(17187, 2, NULL, '6 cl'),
+(17187, 540, NULL, '2 dashes'),
+(17187, 337, NULL, '2 Fresh leaves'),
+(17188, 305, NULL, '1 1/2 oz '),
+(17188, 393, NULL, '1 oz '),
+(17188, 323, NULL, '1/2 tsp '),
+(17188, 250, NULL, '1/2 tsp '),
+(17188, 322, NULL, '1 '),
+(17189, 2, NULL, '2 oz '),
+(17189, 53, NULL, '1 tsp '),
+(17189, 352, NULL, '1/2 oz '),
+(17189, 250, NULL, '1 tsp '),
+(17191, 179, NULL, '1 part '),
+(17191, 362, NULL, '1/2 part '),
+(17191, 352, NULL, '2 parts '),
+(17191, 393, NULL, '1 part '),
+(17195, 97, NULL, '6 oz '),
+(17195, 379, NULL, '1 oz '),
+(17196, 1, NULL, '1 1/4 oz '),
+(17196, 308, NULL, '1/4 oz '),
+(17196, 142, NULL, '1/4 oz '),
+(17196, 155, NULL, '1/4 cup '),
+(17197, 2, NULL, '1 1/2 oz '),
+(17197, 476, NULL, '2 tsp superfine '),
+(17197, 293, NULL, '1 1/2 oz '),
+(17197, 97, NULL, '4 oz Chilled '),
+(17197, 359, NULL, '1 '),
+(17197, 322, NULL, '1 '),
+(17198, 141, NULL, '1 1/2 oz '),
+(17198, 18, NULL, '3/4 oz '),
+(17199, 223, NULL, '2 parts'),
+(17199, 498, NULL, '2 parts'),
+(17199, 352, NULL, '2 parts'),
+(17199, 161, NULL, '1 part'),
+(17200, 246, NULL, '3/4 oz '),
+(17200, 164, NULL, '3/4 oz white '),
+(17200, 304, NULL, '3/4 oz '),
+(17201, 3, NULL, '12 parts'),
+(17201, 242, NULL, '8 parts'),
+(17201, 323, NULL, '3 parts'),
+(17201, 308, NULL, '3 parts'),
+(17202, 294, NULL, '1 long strip '),
+(17202, 74, NULL, '2 oz '),
+(17202, 228, NULL, '5 oz '),
+(17202, 56, NULL, '2 dashes '),
+(17204, 1, NULL, '1/2 oz '),
+(17204, 4, NULL, '1/2 oz '),
+(17204, 305, NULL, '1/2 oz '),
+(17204, 2, NULL, '1/2 oz '),
+(17204, 128, NULL, '1 dash '),
+(17204, 294, NULL, 'Twist of '),
+(17206, 337, NULL, '4 fresh '),
+(17206, 71, NULL, '2 1/2 oz '),
+(17206, 409, NULL, '1 tsp '),
+(17206, 513, NULL, '2 tsp '),
+(17207, 305, NULL, '3 oz '),
+(17207, 134, NULL, '3 tblsp '),
+(17207, 397, NULL, '3 tblsp '),
+(17209, 3, NULL, '4.5 cl'),
+(17209, 223, NULL, '1.5 cl'),
+(17209, 393, NULL, '6 cl'),
+(17209, 308, NULL, ' 1 dash'),
+(17209, 542, NULL, 'top up '),
+(17210, 2, NULL, '4 cl'),
+(17210, 293, NULL, '1.5 cl'),
+(17210, 475, NULL, '1 cl'),
+(17210, 575, NULL, '1.5 cl'),
+(17211, 179, NULL, '5 cl'),
+(17211, 229, NULL, '10 cl'),
+(17212, 1, NULL, '5 cl'),
+(17212, 282, NULL, '1 cl'),
+(17212, 475, NULL, '1 dash'),
+(17213, 1, NULL, '4.5 cl'),
+(17213, 416, NULL, '1.5 cl'),
+(17213, 393, NULL, '1.5 cl'),
+(17215, 542, NULL, '6 cl'),
+(17215, 83, NULL, '4 cl'),
+(17215, 455, NULL, 'splash'),
+(17216, 4, NULL, '4.5 cl'),
+(17216, 308, NULL, '1.5 cl'),
+(17216, 12, NULL, '2 spoons'),
+(17217, 4, NULL, '6 cl'),
+(17217, 492, NULL, '3 cl'),
+(17217, 352, NULL, '3 cl'),
+(17217, 308, NULL, '1.5 cl'),
+(17217, 475, NULL, '1 dash'),
+(17217, 439, NULL, '1 pinch'),
+(17218, 2, NULL, '6 cl'),
+(17218, 1, NULL, '1.5 cl'),
+(17218, 539, NULL, '0.75 cl'),
+(17219, 523, NULL, '3 cl'),
+(17219, 223, NULL, '1.5 cl'),
+(17219, 498, NULL, '1.5 cl'),
+(17219, 308, NULL, '1.5 cl'),
+(17220, 503, NULL, '2 scoops '),
+(17220, 80, NULL, '1 part '),
+(17220, 333, NULL, 'full glass '),
+(17220, 1, NULL, '2 parts '),
+(17221, 503, NULL, '3 cups '),
+(17221, 333, NULL, '1 cup '),
+(17221, 232, NULL, '1/2 cup '),
+(17221, 515, NULL, 'for topping'),
+(17221, 537, NULL, '4 tablespoons\r\n'),
+(17221, 538, NULL, '4 tablespoons\r\n'),
+(17221, 541, NULL, '15\r\n'),
+(17222, 2, NULL, '1 3/4 shot '),
+(17222, 238, NULL, '1 Shot '),
+(17222, 293, NULL, '1/4 Shot'),
+(17222, 250, NULL, '1/8 Shot'),
+(17223, 2, NULL, '2 shots '),
+(17223, 482, NULL, '1 shot '),
+(17223, 352, NULL, '1 shot '),
+(17223, 20, NULL, '3 dashes '),
+(17224, 1, NULL, '1 shot '),
+(17224, 155, NULL, '2 shots '),
+(17224, 97, NULL, 'Top up with'),
+(17225, 2, NULL, '2 shots '),
+(17225, 250, NULL, '1/2 shot '),
+(17225, 259, NULL, '1/2 shot '),
+(17225, 333, NULL, '1/2 shot'),
+(17225, 192, NULL, '1/2 Fresh'),
+(17226, 2, NULL, '1 shot '),
+(17226, 141, NULL, '1 shot '),
+(17226, 165, NULL, '1 shot '),
+(17226, 217, NULL, '1/8 shot '),
+(17227, 482, NULL, '2 shots '),
+(17227, 189, NULL, '1 shot '),
+(17227, 455, NULL, 'Top up with\r\n'),
+(17228, 2, NULL, '1 1/2 shot '),
+(17228, 510, NULL, '1 1/2 shot '),
+(17229, 3, NULL, '1 shot '),
+(17229, 189, NULL, '1/2 shot '),
+(17229, 141, NULL, '1/2 shot '),
+(17229, 2, NULL, '1/2 shot '),
+(17229, 547, NULL, '1/4 shot'),
+(17229, 475, NULL, '1/4 shot'),
+(17229, 513, NULL, '1/2 shot '),
+(17230, 2, NULL, '2 oz '),
+(17230, 250, NULL, '1 tsp '),
+(17230, 299, NULL, 'Juice of 1/2 '),
+(17230, 455, NULL, 'Top up with'),
+(17230, 312, NULL, 'Garnish'),
+(17233, 2, NULL, '50 ml '),
+(17233, 113, NULL, '30 ml '),
+(17233, 18, NULL, '15 ml'),
+(17233, 538, NULL, 'Garnish'),
+(17233, 543, NULL, 'Grated'),
+(17239, 510, NULL, '25 ml'),
+(17239, 322, NULL, '15 ml'),
+(17239, 475, NULL, '10 ml'),
+(17239, 300, NULL, '100 ml'),
+(17239, 60, NULL, '2'),
+(17241, 3, NULL, '1 1/2 oz'),
+(17241, 233, NULL, '1 1/2 oz'),
+(17241, 571, NULL, '1 oz'),
+(17241, 390, NULL, '1 tsp'),
+(17241, 250, NULL, '1 tsp'),
+(17241, 308, NULL, '1 tsp'),
+(17241, 20, NULL, '1 drop'),
+(17242, 2, NULL, '50 ml'),
+(17242, 165, NULL, '20 ml'),
+(17242, 547, NULL, '15 ml'),
+(17242, 229, NULL, '75 ml'),
+(17242, 312, NULL, '1'),
+(17242, 230, NULL, '1 long strip'),
+(17245, 2, NULL, '50 ml'),
+(17245, 67, NULL, '15 ml'),
+(17245, 497, NULL, '100 ml'),
+(17245, 549, NULL, 'Garnish with'),
+(17246, 330, NULL, '2 oz'),
+(17246, 113, NULL, '3/4 oz'),
+(17246, 138, NULL, '1/2 oz'),
+(17247, 245, NULL, '1 oz'),
+(17247, 323, NULL, '1 oz'),
+(17247, 308, NULL, '1 oz'),
+(17247, 2, NULL, '1 oz'),
+(17248, 2, NULL, '1 oz'),
+(17248, 306, NULL, '1 oz'),
+(17248, 482, NULL, '1 oz'),
+(17248, 354, NULL, '1'),
+(17249, 2, NULL, '1 1/2 oz'),
+(17249, 351, NULL, '3/4 oz'),
+(17249, 308, NULL, '3/4 oz'),
+(17249, 20, NULL, '1 dash'),
+(17249, 350, NULL, '1 dash'),
+(17250, 2, NULL, '3/4 oz'),
+(17250, 498, NULL, '3/4 oz'),
+(17250, 539, NULL, '3/4 oz'),
+(17250, 293, NULL, '3/4 oz'),
+(17250, 573, NULL, '1 dash'),
+(17251, 83, NULL, '1 oz'),
+(17251, 482, NULL, '1 oz'),
+(17251, 436, NULL, '1 1/4 oz'),
+(17251, 354, NULL, '1'),
+(17252, 1, NULL, '1 1/2 oz'),
+(17252, 242, NULL, '3 oz'),
+(17253, 241, NULL, '3 oz'),
+(17253, 4, NULL, '1 1/2 oz'),
+(17254, 350, NULL, '1 dash'),
+(17254, 245, NULL, '1 oz'),
+(17254, 2, NULL, '1 oz'),
+(17254, 482, NULL, '1 oz'),
+(17255, 2, NULL, '2 1/2 oz'),
+(17255, 308, NULL, '1/2 oz'),
+(17255, 475, NULL, '1/2 oz'),
+(17255, 312, NULL, '1'),
+(17256, 2, NULL, '1 1/2 oz'),
+(17256, 482, NULL, '1 1/2 oz'),
+(17256, 323, NULL, '1 tsp'),
+(17256, 20, NULL, '2 dashes'),
+(17266, 282, NULL, '2 parts'),
+(17266, 43, NULL, '2 parts'),
+(17266, 80, NULL, '4 parts'),
+(17266, 278, NULL, '1 part'),
+(17266, 235, NULL, '1/2 part'),
+(17267, 3, NULL, '3 parts'),
+(17267, 179, NULL, '1 part'),
+(17267, 44, NULL, '1 part'),
+(17267, 250, NULL, '1 part'),
+(17267, 393, NULL, '2 parts'),
+(17267, 352, NULL, '2 parts'),
+(17267, 480, NULL, '1 part'),
+(17268, 3, NULL, '4 parts'),
+(17268, 179, NULL, '2 parts'),
+(17268, 374, NULL, '1 part'),
+(17268, 67, NULL, '1 part'),
+(17268, 480, NULL, '6 parts'),
+(17268, 270, NULL, 'cubes'),
+(17824, 2, NULL, '50 ml'),
+(17824, 552, NULL, '15 ml'),
+(17824, 553, NULL, '15 ml'),
+(17824, 497, NULL, '75 ml'),
+(17824, 312, NULL, '2 Wedges'),
+(17824, 230, NULL, '1 Slice'),
+(17824, 337, NULL, '1 Large Sprig'),
+(17825, 264, NULL, '4 oz'),
+(17825, 245, NULL, '1 oz'),
+(17825, 103, NULL, '1 oz'),
+(17826, 273, NULL, '50 ml'),
+(17826, 18, NULL, '50 ml'),
+(17826, 155, NULL, '4 oz'),
+(17827, 436, NULL, '2 oz'),
+(17827, 83, NULL, '1 oz'),
+(17827, 189, NULL, '1 oz'),
+(17828, 273, NULL, '2 oz'),
+(17828, 482, NULL, '1 oz'),
+(17828, 245, NULL, '1/2 oz'),
+(17829, 569, NULL, '2 oz'),
+(17829, 293, NULL, '3/4 oz'),
+(17829, 568, NULL, '2 tsp'),
+(17829, 567, NULL, '2 tsp'),
+(17829, 570, NULL, '1/4 oz'),
+(17830, 312, NULL, '1/2'),
+(17830, 563, NULL, '1/3 oz'),
+(17830, 20, NULL, '2 dashes'),
+(17830, 37, NULL, '1 oz'),
+(17830, 566, NULL, '1 oz'),
+(178306, 440, NULL, '1 part'),
+(178306, 272, NULL, '1 part'),
+(178307, 4, NULL, '1 shot'),
+(178307, 572, NULL, '1 part'),
+(178308, 542, NULL, '6 cl'),
+(178308, 24, NULL, '4 cl'),
+(178308, 455, NULL, 'Top'),
+(178309, 3, NULL, '1 shot'),
+(178309, 506, NULL, '1/2 shot'),
+(178309, 200, NULL, '1 shot'),
+(178309, 139, NULL, '1 shot'),
+(17831, 305, NULL, '2 oz '),
+(17831, 229, NULL, '4 oz '),
+(17831, 294, NULL, '1 twist of '),
+(178310, 436, NULL, '2 oz'),
+(178310, 189, NULL, '1 oz'),
+(178310, 323, NULL, '1/4 oz'),
+(178310, 20, NULL, '3 dashes'),
+(178310, 322, NULL, '1'),
+(178311, 571, NULL, '1 shot'),
+(178311, 5, NULL, '1/2 shot'),
+(178311, 56, NULL, '3 drops'),
+(178311, 530, NULL, '1 Fresh'),
+(178311, 270, NULL, 'cubes'),
+(178312, 1, NULL, '10 shots');
+INSERT INTO `tiene` (`coctel`, `ingrediente`, `medida`, `medida_en`) VALUES
+(178312, 470, NULL, '3 cups'),
+(178312, 308, NULL, '1/2 cup'),
+(178312, 297, NULL, '12 oz'),
+(178312, 412, NULL, '1 cup'),
+(178312, 69, NULL, '1 cup'),
+(178313, 104, NULL, '1 bottle'),
+(178313, 354, NULL, '3'),
+(178313, 422, NULL, '1'),
+(178313, 126, NULL, '10'),
+(178313, 230, NULL, '6'),
+(178313, 1, NULL, '20 cl'),
+(178314, 2, NULL, '6 cl'),
+(178314, 293, NULL, '2 cl'),
+(178314, 475, NULL, '2 cl'),
+(178314, 49, NULL, 'Whole'),
+(178315, 2, NULL, '5 cl'),
+(178315, 308, NULL, '2 cl'),
+(178315, 229, NULL, '10 cl'),
+(178315, 171, NULL, 'Chopped'),
+(178315, 299, NULL, 'Chopped'),
+(178316, 523, NULL, '6 cl'),
+(178316, 260, NULL, '2 cl'),
+(178316, 293, NULL, '2 cl'),
+(178317, 233, NULL, '6 cl'),
+(178317, 352, NULL, '2 cl'),
+(178317, 308, NULL, '2 cl'),
+(178317, 498, NULL, '2 jiggers'),
+(178318, 1, NULL, '1 oz'),
+(178318, 432, NULL, '1 oz'),
+(178318, 155, NULL, '1 oz'),
+(178318, 466, NULL, 'Top'),
+(178319, 268, NULL, '2 oz'),
+(178319, 393, NULL, '1 oz'),
+(178319, 44, NULL, '1 oz'),
+(17832, 305, NULL, '1 oz '),
+(17832, 37, NULL, '1 oz '),
+(17832, 352, NULL, '1 oz '),
+(17832, 293, NULL, '1/2 oz '),
+(17832, 228, NULL, '3 oz '),
+(17832, 294, NULL, '1 twist of '),
+(178320, 315, NULL, '1 oz'),
+(178320, 44, NULL, '1 oz'),
+(178320, 393, NULL, 'Top'),
+(178321, 18, NULL, '4 cl'),
+(178321, 352, NULL, '6 cl'),
+(178321, 525, NULL, '15 cl'),
+(178321, 354, NULL, 'Garnish with'),
+(178322, 476, NULL, '60 ml'),
+(178322, 14, NULL, '1 tblsp'),
+(178322, 3, NULL, '20 cl'),
+(178322, 308, NULL, '90 ml'),
+(178322, 97, NULL, '6 cl'),
+(178322, 357, NULL, 'Garnish with'),
+(178323, 1, NULL, '1 shot'),
+(178323, 475, NULL, '1/2 shot'),
+(178323, 372, NULL, 'Full Glass'),
+(178325, 24, NULL, '100 ml'),
+(178325, 542, NULL, '150 ml'),
+(178325, 455, NULL, 'Top'),
+(178326, 312, NULL, '1'),
+(178326, 299, NULL, '1'),
+(178326, 525, NULL, '750 ml'),
+(178326, 470, NULL, '1 cup'),
+(178326, 30, NULL, '1 cup'),
+(178326, 26, NULL, '3 shots'),
+(178326, 455, NULL, 'Top'),
+(178327, 4, NULL, '4 oz'),
+(178327, 242, NULL, '4 oz'),
+(178327, 547, NULL, '1 oz'),
+(178327, 393, NULL, '8 oz'),
+(178327, 312, NULL, 'Garnish with'),
+(178327, 386, NULL, 'Rimmed'),
+(178328, 3, NULL, '2 shots'),
+(178328, 33, NULL, '1 shot'),
+(178328, 602, NULL, '1 shot'),
+(178328, 299, NULL, 'Juice of 1/2'),
+(178328, 455, NULL, 'Top'),
+(178329, 3, NULL, '2 shots'),
+(178329, 308, NULL, '1 shot'),
+(178329, 192, NULL, '1 shot'),
+(178329, 56, NULL, '1 dash'),
+(178329, 476, NULL, 'Ground'),
+(178329, 344, NULL, 'Top'),
+(17833, 31, NULL, '1 1/2 oz '),
+(17833, 242, NULL, '1 oz '),
+(178330, 2, NULL, '1 shot'),
+(178330, 328, NULL, '1 shot'),
+(178330, 350, NULL, '1 dash'),
+(178330, 293, NULL, '1 dash'),
+(178330, 542, NULL, 'Top'),
+(178331, 3, NULL, '1 shot'),
+(178331, 133, NULL, '1 shot'),
+(178331, 69, NULL, 'Garnish with'),
+(178331, 393, NULL, 'Dash'),
+(178331, 542, NULL, 'Top'),
+(178332, 603, NULL, '1/2 cup'),
+(178332, 337, NULL, '5'),
+(178332, 242, NULL, '1/3 Cup'),
+(178332, 312, NULL, 'Juice of 1/2'),
+(178332, 4, NULL, '1 shot'),
+(178333, 71, NULL, '2 oz'),
+(178333, 418, NULL, '1/2 oz'),
+(178333, 337, NULL, '8'),
+(178334, 573, NULL, '2 shots'),
+(178334, 97, NULL, 'Top'),
+(178335, 133, NULL, '30 ml'),
+(178335, 242, NULL, '75 ml'),
+(178335, 455, NULL, 'Top'),
+(178336, 179, NULL, '2 shots'),
+(178336, 308, NULL, '1 shot'),
+(178336, 476, NULL, 'Dash'),
+(178336, 69, NULL, 'Whole'),
+(178336, 297, NULL, 'Top'),
+(178337, 83, NULL, '1 1/2 oz'),
+(178337, 352, NULL, '2 1/2 oz'),
+(178337, 229, NULL, '2 1/2 oz'),
+(178337, 354, NULL, 'Garnish with'),
+(178338, 3, NULL, '40 ml'),
+(178338, 374, NULL, '20 ml'),
+(178338, 308, NULL, '30 ml'),
+(178338, 373, NULL, '15 ml'),
+(178338, 540, NULL, 'Dash'),
+(178338, 337, NULL, 'Garnish with'),
+(178339, 305, NULL, '1 oz'),
+(178339, 2, NULL, '1 oz'),
+(178339, 482, NULL, '0.75 oz'),
+(178339, 83, NULL, '0.75 oz'),
+(178339, 293, NULL, 'Dash'),
+(178339, 362, NULL, 'Dash'),
+(178339, 354, NULL, 'Garnish with'),
+(17834, 2, NULL, '1 1/2 oz '),
+(17834, 350, NULL, '1 dash '),
+(17834, 359, NULL, 'Juice of 1/4 '),
+(17834, 106, NULL, '1 '),
+(178340, 2, NULL, '30 ml'),
+(178340, 83, NULL, '30 ml'),
+(178340, 352, NULL, '90 ml'),
+(178340, 354, NULL, 'Garnish with'),
+(178341, 2, NULL, '1 shot'),
+(178341, 352, NULL, 'Top'),
+(178341, 293, NULL, 'Top'),
+(178341, 608, NULL, '25 ml'),
+(178341, 455, NULL, 'Top'),
+(178341, 549, NULL, 'Garnish with'),
+(178341, 354, NULL, 'Garnish with'),
+(178342, 2, NULL, '2 oz'),
+(178342, 455, NULL, '5 oz'),
+(178342, 312, NULL, '1/4'),
+(178343, 52, NULL, '4 oz'),
+(178343, 492, NULL, '4 oz'),
+(178343, 308, NULL, '1 tblsp'),
+(178343, 266, NULL, 'Dash'),
+(178343, 529, NULL, 'Dash'),
+(178343, 460, NULL, 'Dash'),
+(178344, 1, NULL, '2 oz'),
+(178344, 260, NULL, '1 tsp'),
+(178344, 609, NULL, '3'),
+(178344, 610, NULL, '1 Sprig'),
+(178344, 20, NULL, '2 dashes'),
+(178344, 497, NULL, 'Top'),
+(178345, 600, NULL, '50 ml'),
+(178345, 260, NULL, '15 ml'),
+(178345, 122, NULL, '1'),
+(178345, 299, NULL, '1'),
+(178345, 126, NULL, '2'),
+(178346, 81, NULL, '60 ml'),
+(178346, 312, NULL, '1'),
+(178346, 552, NULL, '3 cl'),
+(178347, 4, NULL, '1 2/3 oz'),
+(178347, 83, NULL, '1/4 oz'),
+(178347, 308, NULL, '3/4 oz'),
+(178347, 352, NULL, '1/2 oz'),
+(178347, 608, NULL, '1/2 oz'),
+(178347, 439, NULL, 'Dash'),
+(178348, 4, NULL, '2 shots'),
+(178348, 242, NULL, 'Top'),
+(178348, 308, NULL, 'Juice of 1'),
+(178348, 12, NULL, '1 tsp'),
+(178348, 386, NULL, 'Dash'),
+(178349, 1, NULL, '1 oz'),
+(178349, 613, NULL, '1 oz'),
+(178349, 614, NULL, '1 oz'),
+(178349, 612, NULL, '1 tsp'),
+(178349, 20, NULL, 'Dash'),
+(178349, 354, NULL, 'Garnish with'),
+(17835, 179, NULL, '1 1/2 oz '),
+(17835, 378, NULL, '2 oz '),
+(17835, 352, NULL, '3 oz '),
+(178350, 179, NULL, '1 shot'),
+(178350, 83, NULL, '1 shot'),
+(178350, 163, NULL, '1/2 shot'),
+(178350, 393, NULL, 'Top'),
+(178350, 308, NULL, 'Top'),
+(178352, 615, NULL, '750 ml'),
+(178352, 476, NULL, '1/2 cup'),
+(178352, 470, NULL, '8 oz'),
+(178352, 293, NULL, '2-3 oz'),
+(178353, 312, NULL, 'Chopped'),
+(178353, 29, NULL, '1 shot'),
+(178353, 141, NULL, '1 shot'),
+(178353, 230, NULL, 'Top'),
+(178354, 2, NULL, '1 shot'),
+(178354, 133, NULL, '1 shot'),
+(178354, 552, NULL, '25 ml'),
+(178354, 308, NULL, '30 ml'),
+(178354, 60, NULL, 'Garnish with'),
+(178355, 2, NULL, '2 oz'),
+(178355, 293, NULL, '0.75 oz'),
+(178355, 475, NULL, '0.75 oz'),
+(178355, 60, NULL, 'Ground'),
+(178355, 455, NULL, 'Top'),
+(178355, 337, NULL, 'Garnish with'),
+(178356, 419, NULL, '50 ml'),
+(178356, 155, NULL, '25 ml'),
+(178356, 300, NULL, '25 ml'),
+(178356, 67, NULL, '10 ml'),
+(178356, 475, NULL, '10 ml'),
+(178356, 308, NULL, 'Dash'),
+(178356, 337, NULL, 'Sprig'),
+(178357, 1, NULL, '3 cl'),
+(178357, 374, NULL, '3 cl'),
+(178357, 372, NULL, '1 cl'),
+(178357, 312, NULL, '1 cl'),
+(178357, 542, NULL, '1 shot'),
+(178358, 312, NULL, '3'),
+(178358, 319, NULL, '1 Fresh'),
+(178358, 337, NULL, 'Sprig'),
+(178358, 523, NULL, '200 ml'),
+(178358, 270, NULL, 'cubes'),
+(178358, 455, NULL, 'Top'),
+(178359, 286, NULL, '1/2'),
+(178359, 475, NULL, '1 tsp'),
+(178359, 1, NULL, '1 1/2 oz'),
+(17836, 305, NULL, '1 1/2 oz '),
+(17836, 498, NULL, '1 1/2 tsp '),
+(17836, 308, NULL, '1 tblsp '),
+(17836, 476, NULL, '1 tsp '),
+(17836, 192, NULL, '1 '),
+(17836, 337, NULL, '1 '),
+(178360, 552, NULL, '2 tsp'),
+(178360, 1, NULL, '1 shot'),
+(178360, 455, NULL, '1/3 cup'),
+(178360, 217, NULL, 'Top'),
+(178362, 466, NULL, '1 cup'),
+(178362, 308, NULL, '1/2 shot'),
+(178362, 1, NULL, '1 1/2 shot'),
+(178363, 1, NULL, '5 cl'),
+(178363, 293, NULL, '7 cl'),
+(178363, 294, NULL, '1 Slice'),
+(178363, 270, NULL, 'cubes'),
+(178364, 1, NULL, '4 cl'),
+(178364, 497, NULL, '10 cl'),
+(178364, 294, NULL, '1 Slice'),
+(178365, 2, NULL, '4 cl'),
+(178365, 497, NULL, '10 cl'),
+(178365, 294, NULL, '1 Slice'),
+(178365, 270, NULL, 'cubes'),
+(178366, 2, NULL, '6 cl'),
+(178366, 293, NULL, '8 cl'),
+(178366, 294, NULL, '1 Slice'),
+(178366, 270, NULL, 'cubes'),
+(178367, 2, NULL, '4.5 cL'),
+(178367, 293, NULL, '3 cl'),
+(178367, 475, NULL, '3 cl'),
+(178367, 161, NULL, '6 cl'),
+(178367, 192, NULL, '1'),
+(178367, 502, NULL, '2 drop'),
+(178367, 455, NULL, '2 cl'),
+(178368, 179, NULL, '4.5 cL'),
+(178368, 352, NULL, '3 cl'),
+(178368, 393, NULL, '3.5 cl'),
+(178368, 250, NULL, '1 cl'),
+(178368, 475, NULL, '1 cl'),
+(178368, 20, NULL, '4 drops'),
+(178369, 141, NULL, '4 cl'),
+(178369, 229, NULL, '100 ml'),
+(178369, 20, NULL, '3 drops'),
+(178369, 294, NULL, '1'),
+(17837, 179, NULL, '2 oz '),
+(17837, 293, NULL, '1 oz '),
+(17837, 250, NULL, '1 tsp '),
+(178370, 427, NULL, '3 cl'),
+(178370, 362, NULL, '1 cl'),
+(178370, 513, NULL, 'Full Glass'),
+(178371, 523, NULL, '2 oz'),
+(178371, 475, NULL, '1 oz'),
+(178371, 308, NULL, '1 oz'),
+(178371, 20, NULL, '2 dashes'),
+(178371, 542, NULL, '2 oz'),
+(17838, 482, NULL, '3/4 oz '),
+(17838, 449, NULL, '1 1/2 oz dry '),
+(17838, 350, NULL, '1 dash '),
+(17839, 473, NULL, '2 oz '),
+(17839, 352, NULL, '2 oz '),
+(17839, 155, NULL, '2 oz '),
+(17839, 127, NULL, NULL),
+(17840, 5, NULL, '1 1/2 oz '),
+(17840, 482, NULL, '1 oz '),
+(17840, 189, NULL, '1 oz '),
+(17840, 350, NULL, '2 dashes ');
+
+CREATE OR REPLACE VIEW `medidas` AS
+	SELECT tiene.coctel "id", ingredientes.id "ingrediente", ingredientes.nombre, ingredientes.nombre_en, tiene.medida, tiene.medida_en FROM tiene, ingredientes
+		WHERE tiene.ingrediente = ingredientes.id;
+
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
