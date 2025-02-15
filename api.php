@@ -69,9 +69,15 @@ class GenericAPI
     {
         if (isset($_GET['action']) && $_GET['action'] === $this->entity) {
             if (isset($_GET['id'])) {
-                // Mostrar un solo registro si existe el ID
-                $response = $this->db->getRecord($this->entity, $_GET['id']);
-                echo json_encode($response, JSON_PRETTY_PRINT);
+                if (isset($_GET['multiple'])) {
+                    // Mostrar todos los registros que coincidan con el ID
+                    $response = $this->db->getRecords($this->entity, $_GET['id']);
+                    echo json_encode($response, JSON_PRETTY_PRINT);
+                } else {
+                    // Mostrar un solo registro si existe el ID
+                    $response = $this->db->getRecord($this->entity, $_GET['id']);
+                    echo json_encode($response, JSON_PRETTY_PRINT);
+                }
             } else {
                 // Mostrar todos los registros
                 $response = $this->db->getAllRecords($this->entity);
