@@ -22,6 +22,14 @@ class DB
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Obtiene varios registros
+    public function getRecords($entity, $id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM $entity WHERE id = :id");
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
     // Obtener todos los registros
     public function getAllRecords($entity)
     {
